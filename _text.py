@@ -6,16 +6,33 @@ import pygame.freetype
 class Text(pygame.sprite.Sprite):
     """Class for creating text sprites in pygame significantly more easily and
     more organised. """
-    def __init__(self, text, size, fgcolour, bgcolour, startx, starty,
-                 centerx=False, centery=False):
+    def __init__(self, text, size, alignment, fgcolour, bgcolour, startx,
+                 starty):
         super().__init__()
 
-        # store arguments
+        # ----- store arguments ----- #
         self._text = text
         self.fgcolour = fgcolour
         self.bgcolour = bgcolour
         self._startx = startx
         self._starty = starty
+        # ----- configure text sprite alignment ----- #
+
+        # +-------------+---------------+--------------+
+        # | top left    | top center    | top right    |
+        # +-------------+---------------+--------------+
+        # | middle left | middle center | middle right |
+        # +-------------+---------------+--------------+
+        # | bottom left | bottom center | bottom right |
+        # +-------------+---------------+--------------+
+
+        valid_alignments = ["top_left", "top_center", "top_right",
+                            "middle_left", "middle_center", "middle_right",
+                            "bottom_left", "bottom_center", "bottom_right"]
+        if alignment in valid_alignments:
+            self.alignment = alignment
+        else:
+            raise Exception("Invalid alignment argument given.")
 
         # ----- configure text sprite font size ----- #
         # specific font size given
@@ -75,6 +92,28 @@ class Text(pygame.sprite.Sprite):
                 else:
                     self.font_size += 1
 
+    def align(self):
+        """Align the text sprite using the alignment set in self.alignment
+        relative to the startx, starty point."""
+        if self.alignment == "top_left":
+            self.rect.topleft = self.startx, self.starty
+        elif self.alignment == "top_center":
+            self.rect.centerx, self.rect.y = self.startx, self.starty
+        elif self.alignment == "top_right":
+            self.rect.topright = self.startx, self.starty
+        elif self.alignment == "middle_left":
+            self.rect.midleft = self.startx, self.starty
+        elif self.alignment == "middle_center":
+            self.rect.center = self.startx, self.starty
+        elif self.alignment == "middle_right":
+            self.rect.midright = self.startx, self.starty
+        elif self.alignment == "bottom_left":
+            self.rect.bottomleft = self.startx, self.starty
+        elif self.alignment == "bottom_center":
+            self.rect.centerx, self.rect.bottom = self.startx, self.starty
+        else:
+            self.rect.bottomright = self.startx, self.starty
+
     def rect_info(self):
         """For debugging, outputs generated text sprite's rect details
         for help adjusting on text placement"""
@@ -93,7 +132,7 @@ class Text(pygame.sprite.Sprite):
         # parameters: text, fgcolour, bgcolour
         self.image, self.rect = self.font.render(self.text, self.fgcolour,
                                                  self.bgcolour)
-        self.rect.x, self.rect.y = self.startx, self.starty
+        self.align()
 
     @property
     def text(self):
