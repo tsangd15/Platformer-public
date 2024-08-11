@@ -80,7 +80,7 @@ class Text(pygame.sprite.Sprite):
     def update_font(self):
         """Update the Font object with new font size."""
         # parameters: font file/name, font size
-        self.font = pygame.freetype.Font("PressStart2P-Regular.ttf",
+        self.font = pygame.freetype.Font("assets/PressStart2P-Regular.ttf",
                                          self.font_size)
 
     def rect_info(self):
