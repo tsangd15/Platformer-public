@@ -127,9 +127,8 @@ class LevelMain():
         self.load_map(map_name)
 
         # Setting up sprite lists
-        self.allsprites = pygame.sprite.Group()  # TEMPORARY SPRITE GROUP
         self.sprites = pygame.sprite.Group()
-        self.entities = pygame.sprite.Group()
+        self.entities = pygame.sprite.Group()  # any sprite that moves
         self.platforms = pygame.sprite.Group()
         self.finishpoints = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
@@ -172,8 +171,8 @@ class LevelMain():
         # Creating sprites then adding to sprite lists
         self.enemy = Enemy(YELLOW, 80, 80)
 
-        self.allsprites.add(self.enemy)
         self.sprites.add(self.enemy)
+        self.entities.add(self.enemy)
         self.enemies.add(self.enemy)
 
         for row in range(NUMBEROFROWS):
@@ -183,15 +182,13 @@ class LevelMain():
                     # colour, width, height, xpos, ypos
                     plat = Platform(RED, PLATFORMLENGTH, PLATFORMLENGTH,
                                     col*PLATFORMLENGTH, row*PLATFORMLENGTH)
-                    self.allsprites.add(plat)
                     self.sprites.add(plat)
                     self.platforms.add(plat)
 
                 elif self.gamemap[row][col] == 2:  # player
                     self.player = Player(BLUE, 40, 70, col*PLATFORMLENGTH,
                                          row*PLATFORMLENGTH)
-                    self.allsprites.add(self.player, self.player.stats)
-                    self.sprites.add(self.player)
+                    self.sprites.add(self.player, self.player.stats)
                     self.entities.add(self.player)
 
                 elif self.gamemap[row][col] == 3:  # finish point
@@ -199,7 +196,6 @@ class LevelMain():
                                                 PLATFORMLENGTH,
                                                 col*PLATFORMLENGTH,
                                                 row*PLATFORMLENGTH)
-                    self.allsprites.add(self.finishpoint)
                     self.sprites.add(self.finishpoint)
                     self.finishpoints.add(self.finishpoint)
 
@@ -243,7 +239,7 @@ class LevelMain():
                     key.hit()  # for each enemy in the value, inflict hit
                     self.player.score += 5
 
-            self.allsprites.add(entity.projectiles)
+            self.sprites.add(entity.projectiles)
 
     def check_finish(self):
         """Method to check if the level is finished (completed/failed).
@@ -323,8 +319,8 @@ class LevelMain():
 
         self.handle_events()
 
-        # call update function for each sprite in sprites list
-        self.sprites.update()
+        # call update function for each entity sprite
+        self.entities.update()
 
         # move player
         self.moveplayer()

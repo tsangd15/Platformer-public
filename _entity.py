@@ -13,6 +13,9 @@ class Entity(pygame.sprite.Sprite):
         self.image.set_colorkey(BLACK)  # greenscreen effect for images
         self.color = color
 
+        # instantiate projectiles sprite group
+        self.projectiles = pygame.sprite.Group()
+
         # draw the square
         pygame.draw.rect(self.image, color, [0, 0, width, height])
         self.rect = self.image.get_rect()

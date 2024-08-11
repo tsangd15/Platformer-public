@@ -12,7 +12,6 @@ class Player(Entity):
     """Class for player"""
     def __init__(self, color, width, height, startx, starty):
         super().__init__(color, width, height, startx, starty)
-        self.projectiles = pygame.sprite.Group()
         self.defaulthealth = 25
         self.dead = False
         self.sprinting = False

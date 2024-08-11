@@ -83,7 +83,7 @@ class Program():
 
             self.screen.fill(GREEN)
 
-            level.allsprites.draw(self.screen)
+            level.sprites.draw(self.screen)
 
             pygame.display.flip()
 
