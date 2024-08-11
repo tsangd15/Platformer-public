@@ -8,19 +8,21 @@ from _enemy_vision import EnemyVision
 
 class Enemy(Entity):
     """Class for enemy"""
-    def __init__(self, color, width, height, startx, starty, vision):
+    def __init__(self, color, width, height, startx, starty, vision,
+                 responsetime=1000, firecooldown=320, fireinaccuracy=15,
+                 vel_x=2, vel_y=-16):
         super().__init__(color, width, height, startx, starty)
         self.health = 50
         self.number = 0
 
         # time to respond to player detection in milliseconds
-        self.responsetime = 1000
+        self.responsetime = responsetime
 
         # control firerate
-        self.firecooldown = 320
+        self.firecooldown = firecooldown
         self.lastfired = pygame.time.get_ticks()
         # control fire inaccuracy
-        self.inaccuracy = 15
+        self.inaccuracy = fireinaccuracy
 
         self.vision = EnemyVision(vision)
 
@@ -32,6 +34,13 @@ class Enemy(Entity):
         self.vectortoplayer = ()
 
         self.onplatform = False
+
+        # sprite default velocities
+        self.defaultvelocity_x = vel_x
+        self.defaultvelocity_y = vel_y
+        # raise exception if invalid vel_y passed
+        if vel_y >= 0:
+            raise Exception(f"Vertical velocity not negative! Given: {vel_y}")
 
     def fire(self, projectile_velocity):
         """Spawns a projectile and adds it to the projectiles sprite group
@@ -64,18 +73,18 @@ class Enemy(Entity):
         handling falling."""
         # jump if on platform
         if self.jumping and self.onplatform:
-            self.jumpmomentum = -16
+            self.jumpmomentum = self.defaultvelocity_y
             self.onplatform = False
 
         # move right
         if self.movingright:
-            self.velocity_x = 2
+            self.velocity_x = self.defaultvelocity_x
             # cant be sure player is still on a platform so enable gravity
             self.onplatform = False
 
         # move left
         if self.movingleft:
-            self.velocity_x = -2
+            self.velocity_x = -self.defaultvelocity_x
             # cant be sure player is still on a platform so enable gravity
             self.onplatform = False
 
