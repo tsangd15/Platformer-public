@@ -13,7 +13,7 @@ class Screen():
         self.screens = screens
 
         # store currently selected screen choice
-        self._selected = None
+        self._selected = self.screens[0]
 
         # define sprite groups
         self.sprites = pygame.sprite.Group()
@@ -68,22 +68,22 @@ class Screen():
 
     def set_selected_idle(self):
         """Set the currently selected screen's button to idle state."""
-        set_button_idle(self.buttons, self.selected)
+        set_button_idle(self.buttons, self.selected.upper())
 
     def set_selected_hover(self):
         """Set the currently selected screen's button to hover state."""
-        set_button_hover(self.buttons, self.selected)
+        set_button_hover(self.buttons, self.selected.upper())
 
     def set_selected_click(self):
         """Set the currently selected screen's button to click state."""
-        set_button_click(self.buttons, self.selected)
+        set_button_click(self.buttons, self.selected.upper())
 
     def is_button_hover(self):
         """Check if cursor is hovering over a button."""
         for button in self.buttons:
             if is_point_within_rect(self.cursor, button):
                 self.set_selected_idle()
-                self.selected = button.text
+                self.selected = button.text.lower()
                 self.set_selected_hover()
 
     def move_select_up(self):
