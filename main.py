@@ -11,10 +11,19 @@ from _enemy import Enemy
 
 
 def list_collisions(sprite, spritelist):
-    """Takes in a singular sprite and spritelist
+    """Input singular sprite and spritelist
     Returns list of sprites in spritelist that collide with the singular
     sprite."""
     collisionslist = pygame.sprite.spritecollide(sprite, spritelist, False)
+    return collisionslist
+
+
+def list_groupcollisions(group1, group2):
+    """Returns collisions between sprites in two sprite groups.
+    Returns dictionary with each sprite in group1 that collided as a key and
+    each sprite in group2 that collided as a value for the respective sprite
+    it collided with in group1. key:value"""
+    collisionslist = pygame.sprite.groupcollide(group1, group2, False, False)
     return collisionslist
 
 
@@ -136,6 +145,7 @@ class Game():
         self.sprites = pygame.sprite.Group()
         self.entities = pygame.sprite.Group()
         self.platforms = pygame.sprite.Group()
+        self.enemies = pygame.sprite.Group()
 
         # Creating sprites then adding to sprite lists
         self.player = Player(BLUE, 40, 70)
@@ -143,6 +153,7 @@ class Game():
         self.sprites.add(self.player)
         self.entities.add(self.player)
         self.sprites.add(self.enemy)
+        self.enemies.add(self.enemy)
 
         for row in range(NUMBEROFROWS):
             for col in range(NUMBEROFCOLUMNS):
@@ -172,19 +183,25 @@ class Game():
 
     def moveprojectiles(self):
         """Iterates through each projectile in each entity's 'projectiles'
-        sprite group attribute and moves them using their stored velocity, if
-        they collide with a platform or go off screen, it is despawned."""
+        sprite group attribute and moves them using their stored velocity. If
+        the projectile moves off screen, collides with a platform or enemy, it
+        is despawned. Damage inflicted on enemy if enemy collision."""
         for entity in self.entities:
             for projectile in entity.projectiles:
+                # --- move projectile and/or kill if platform collision --- #
                 collisions = move(projectile, self.platforms)
                 if True in collisions.values():
                     # kill projectile if it hits a platform
                     projectile.kill()
 
-                damage = list_collisions(self.enemy, entity.projectiles)
-                for i in damage:
-                    self.enemy.hit()  # inflict damage on enemy
-                    i.kill()  # kill projectile if it hits an enemy
+            # --- kill projectile on enemy collision and inflict damage --- #
+            damage = list_groupcollisions(entity.projectiles, self.enemies)
+            # iterate through each item (key, value) in dictionary
+            for item in damage.items():
+                item[0].kill()  # for each projectile (key), kill/despawn
+
+                for key in item[1]:  # iterate through each value
+                    key.hit()  # for each enemy in the value, inflict hit
 
             entity.projectiles.draw(self.screen)
 
