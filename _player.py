@@ -14,7 +14,7 @@ class Player(Entity):
         super().__init__(color, width, height, startx, starty)
         self.projectiles = pygame.sprite.Group()
         self.defaulthealth = 25
-        self.gameover = False
+        self.dead = False
         self.sprinting = False
 
         # ------ COOLDOWNS AND LAST EVENTS ------ #
@@ -157,8 +157,8 @@ class Player(Entity):
         if self.health.value <= 0:
             # check for insufficient lives
             if self.lives.value <= 0:
-                self.gameover = True
-                print("GAMEOVER")
+                self.dead = True
+                print("dead")
             else:
                 self.respawn()
                 print("RESPAWNED")

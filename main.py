@@ -271,10 +271,13 @@ class Game():
             entity.projectiles.draw(self.screen)
 
     def check_finish(self):
-        """Method to check for player collision with finish points.
-        If so, level is completed, carry out actions on level complete."""
+        """Method to check if the level is finished (completed/failed).
+        If player collides with finish points, level completed.
+        If player dead attribute true, level failed."""
         if list_collisions(self.player, self.finishpoints) != []:
             self.level_completed()
+        elif self.player.dead:
+            self.level_failed()
 
     def level_completed(self):
         """Display Level Completed Screen"""
