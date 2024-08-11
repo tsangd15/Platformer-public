@@ -128,6 +128,11 @@ class Enemy(Entity):
             self.fire(self.vectortoplayer)
             print("firing!!!")
 
+    def kill_projectiles(self):
+        """Kill all projectiles belonging to the sprite."""
+        for projectile in self.projectiles:
+            projectile.kill()
+
     def update(self):
         """Method to check if health is below 0, if so, despawn enemy.
         Update sfx attribute to turn on/off sound effects."""
@@ -136,6 +141,7 @@ class Enemy(Entity):
         self.move_2d()
 
         if self.health <= 0:
+            self.kill_projectiles()
             self.vision.kill()
             self.kill()
 
