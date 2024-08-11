@@ -13,6 +13,7 @@ class Player(Entity):
     def __init__(self, color, width, height, startx, starty):
         super().__init__(color, width, height, startx, starty)
         self.defaulthealth = 25
+        self.defaultstamina = 100
         self.dead = False
         self.sprinting = False
 
@@ -39,7 +40,7 @@ class Player(Entity):
         # stamina starty = health startx + health height - health outline
         # = 5+20-2 = 23
         self.stamina = ProgressBar(300, 20, GREEN, YELLOW, WINDOW_WIDTH/2-150,
-                                   23, 100)
+                                   23, self.defaultstamina)
         self.lives = LivesIndicator(560, 24)
         self.stats.add(self.score_text, self.health.bars, self.stamina.bars,
                        self.lives)
@@ -68,9 +69,11 @@ class Player(Entity):
         self.number += 1
 
     def respawn(self):
-        """Decrease lives and reset health for respawn."""
+        """Decrease lives, reset health & stamina and teleport to spawn
+        location for respawn."""
         self.lives.value -= 1
         self.health.value = self.defaulthealth
+        self.stamina.value = self.defaultstamina
         self.rect.x, self.rect.y = self.startx, self.starty
 
     def replenish_health(self, now):
