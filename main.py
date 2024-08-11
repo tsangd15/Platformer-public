@@ -128,6 +128,8 @@ class Game():
                         self.player.movingright = True
                     if event.key == pygame.K_w:
                         self.player.jumping = True
+                    if event.key == pygame.K_SPACE:
+                        self.sprites.add(self.player.fire())
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
