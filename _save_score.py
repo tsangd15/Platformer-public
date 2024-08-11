@@ -7,7 +7,7 @@ from _button import Button
 from _platform import Platform
 from _functions import return_button, is_point_within_rect
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RED, BLACK, CYAN,
-                       YELLOW)
+                       YELLOW, PINK)
 
 
 class SaveScore(Screen):
@@ -61,15 +61,22 @@ class SaveScore(Screen):
         """Add text to sprite group to be blitted to screen."""
         text_main = Text("Save Score", (400, 200), "top_center", BLUE, None,
                          WINDOW_WIDTH/2, 20)
+        text_save_global = Text("Global Save saves locally and to the game " +
+                                "server.", 16, "top_center", PINK, None,
+                                WINDOW_WIDTH/2, 80)
+        text_save_local = Text("Local Save only saves to the local game's " +
+                               "files.", 16, "top_center", PINK, None,
+                               WINDOW_WIDTH/2, 110)
         text_instruction = Text("Enter Player Tag:", 25, "top_center", BLUE,
                                 None, WINDOW_WIDTH/2, 150)
-        self.sprites.add(text_main, text_instruction)
+        self.sprites.add(text_main, text_save_global, text_save_local,
+                         text_instruction)
 
     def add_text_alert(self):
         """Add a text alert sprite. This will be used to display notifications
         where needed."""
         self.alert_text = Text("", 20, "top_center", RED, None,
-                               WINDOW_WIDTH / 2, 350)
+                               WINDOW_WIDTH / 2, 284)
         self.sprites.add(self.alert_text)
 
     def add_buttons(self):
@@ -86,7 +93,7 @@ class SaveScore(Screen):
         # each iteration height increments 55
         # zip function to handle parallel iterator variables: item_name, height
         for item_name, height in zip(self.screens,
-                                     range(400, 400+55*len(self.screens)+1, 55)
+                                     range(320, 320+55*len(self.screens)+1, 55)
                                      ):
             button = Button(350, 50, item_name, 30, "top_center",
                             button_idlecolor, button_hovercolor,
@@ -101,15 +108,16 @@ class SaveScore(Screen):
         """Instantiate and add the textbox and text sprites to the sprite
         group to be blitted to the screen."""
         # textbox sprite
+        # (144, 45) is max size of 3 letter text, + 10 to pad around text
         self.text_box = Platform(RED, 144 + 10, 45 + 10, 0, 0)
         # center the box to the center of the screen dimensions
         self.text_box.rect.centerx = WINDOW_WIDTH / 2
-        self.text_box.rect.centery = WINDOW_HEIGHT / 2
+        self.text_box.rect.centery = (WINDOW_HEIGHT / 2) - 60
         self.sprites.add(self.text_box)
 
         # text sprite
         self.text_sprite = Text(self.text, 50, "middle_center", BLUE, None,
-                                WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+                                WINDOW_WIDTH / 2, (WINDOW_HEIGHT / 2) - 60)
         self.sprites.add(self.text_sprite)
 
     def handle_events_keyboard(self, event):

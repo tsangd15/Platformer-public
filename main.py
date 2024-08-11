@@ -232,7 +232,8 @@ class Program():
     def save_score(self, level_sprites, score):
         """Display save score screen"""
         print("ran save_score()")
-        screen_calls = {"save": None,
+        screen_calls = {"global_save": None,
+                        "local_save": None,
                         "root_menu": None,
                         "quit": quit_program}
         save_score = SaveScore(tuple(screen_calls), score)
@@ -253,7 +254,7 @@ class Program():
                     return "gotoroot"
                 if next_screen == "quit":
                     screen_calls[next_screen]()
-                elif next_screen == "save":
+                elif next_screen == "local_save":
                     save_score.save()
 
             self.screen.fill(GREEN)
