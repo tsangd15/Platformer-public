@@ -31,7 +31,7 @@ class Player(Entity):
         # ------ STATS PANEL ------ #
         self.stats = pygame.sprite.Group()
         self._score = 0
-        self.score_text = Text("Score: 0", 25, RED, None, 10, 5)
+        self.score_text = Text("Score: 0", 25, "top_left", RED, None, 10, 5)
         self.health = ProgressBar(300, 20, RED, YELLOW, WINDOW_WIDTH/2-150,
                                   5, self.defaulthealth)
         # to make the outline between the two bars consistent:
