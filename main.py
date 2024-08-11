@@ -162,7 +162,8 @@ class Program():
             next_screen = complete.update()
             if next_screen is not None:
                 if next_screen == "save_score":
-                    screen_return = screen_calls[next_screen](score)
+                    screen_return = screen_calls[next_screen](level_sprites,
+                                                              score)
                     if screen_return == "gotoroot":
                         return "gotoroot"
                 elif next_screen == "root_menu":
@@ -200,7 +201,8 @@ class Program():
             next_screen = fail.update()
             if next_screen is not None:
                 if next_screen == "save_score":
-                    screen_return = screen_calls[next_screen](score)
+                    screen_return = screen_calls[next_screen](level_sprites,
+                                                              score)
                     if screen_return == "gotoroot":
                         return "gotoroot"
                 elif next_screen == "root_menu":
@@ -219,13 +221,18 @@ class Program():
 
             pygame.display.flip()
 
-    def save_score(self, score):
+    def save_score(self, level_sprites, score):
         """Display save score screen"""
         print("ran save_score()")
         screen_calls = {"save": None,
                         "root_menu": None,
                         "quit": quit_program}
         save_score = SaveScore(tuple(screen_calls), score)
+
+        # create transparent background
+        background = pygame.Surface([WINDOW_WIDTH, WINDOW_HEIGHT])
+        background.fill(GREEN)
+        background.set_alpha(200)
 
         while True:
             self.clock.tick(25)
@@ -242,6 +249,11 @@ class Program():
                     save_score.save()
 
             self.screen.fill(GREEN)
+
+            level_sprites.draw(self.screen)
+
+            # draw background on top of level sprites
+            self.screen.blit(background.convert_alpha(), (0, 0))
 
             save_score.sprites.draw(self.screen)
 
