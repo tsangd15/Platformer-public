@@ -133,9 +133,6 @@ class SaveScore(Screen):
                 self.confirmed = True
             elif event.key == pygame.K_BACKSPACE:
                 self.backspace = True
-            elif event.key == pygame.K_ESCAPE:  # escape key
-                self.selected = "resume"
-                self.confirmed = True
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
