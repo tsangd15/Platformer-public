@@ -68,13 +68,13 @@ class Enemy(Entity):
 
         # move right
         if self.movingright:
-            self.velocity_x = 4
+            self.velocity_x = 2
             # cant be sure player is still on a platform so enable gravity
             self.onplatform = False
 
         # move left
         if self.movingleft:
-            self.velocity_x = -4
+            self.velocity_x = -2
             # cant be sure player is still on a platform so enable gravity
             self.onplatform = False
 

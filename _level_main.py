@@ -330,6 +330,49 @@ class LevelMain(Screen):
                 # report no sighting of player
                 enemy.spotted(False)
 
+    def list_platforms_beneath(self, sprite):
+        """Method to return list of platforms directly under a sprite."""
+        # move sprite down 1 pixel on screen
+        sprite.rect.y += 1
+        # carry out collision check between sprite and platforms
+        collisionslist = list_collisions(sprite, self.platforms)
+        # move sprite up 1 pixel to original position
+        sprite.rect.y -= 1
+        # return list of collisions
+        return collisionslist
+
+    def update_enemy_movement(self):
+        """Update an enemy sprite's knowledge of platforms it is colliding
+        with."""
+        for enemy in self.enemies:
+            # return list of platforms colliding with enemy
+            collided_platforms = self.list_platforms_beneath(enemy)
+
+            # if list not empty (i.e. there are platforms colliding with enemy)
+            if collided_platforms:
+                left_edge = None
+                right_edge = None
+                for platform in collided_platforms:
+                    # locate left edge
+                    if ((left_edge is None) or
+                       (platform.rect.left < left_edge)):
+                        left_edge = platform.rect.left
+                    # locate right edge
+                    if ((right_edge is None) or
+                       (platform.rect.right > right_edge)):
+                        right_edge = platform.rect.right
+
+                # check if enemy at left edge
+                if enemy.rect.left < left_edge:
+                    # move in opposite direction
+                    enemy.movingleft = False
+                    enemy.movingright = True
+                # check if enemy at right edge
+                elif enemy.rect.right > right_edge:
+                    # move in opposite direction
+                    enemy.movingright = False
+                    enemy.movingleft = True
+
     def check_finish(self):
         """Method to check if the level is finished (completed/failed).
         If player collides with finish points, level completed.
@@ -433,6 +476,9 @@ class LevelMain(Screen):
 
         # update enemies sight
         self.update_enemy_vision()
+
+        # update enemy movement
+        self.update_enemy_movement()
 
         # check for game finish
         self.check_finish()
