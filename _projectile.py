@@ -1,12 +1,12 @@
 """Projectile Class Module"""
 import pygame
-from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK
+from _settings import BLACK
 
 
 class Projectile(pygame.sprite.Sprite):
     """Class for projectiles"""
     def __init__(self, color, startx, starty, velocity_x, velocity_y,
-                 width=100, height=100):
+                 width=9, height=9):
         super().__init__()
         self.image = pygame.Surface([width, height])
         self.image.fill(BLACK)
@@ -21,15 +21,3 @@ class Projectile(pygame.sprite.Sprite):
         self.rect.y = starty
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
-
-    def update(self):
-        """Update velocity each frame"""
-        self.rect.x += self.velocity_x
-        self.rect.y += self.velocity_y
-
-        # kill if off-screen
-        if ((self.rect.left > WINDOW_WIDTH) or
-           (self.rect.right < 0) or
-           (self.rect.bottom < 0) or
-           (self.rect.top > WINDOW_HEIGHT)):
-            self.kill()
