@@ -16,10 +16,14 @@ class Entity(pygame.sprite.Sprite):
         # draw the square
         pygame.draw.rect(self.image, color, [0, 0, width, height])
         self.rect = self.image.get_rect()
+
+        # set start pos and save spawn pos
         self.startx = startx
         self.starty = starty
         self.rect.x = self.startx
         self.rect.y = self.starty
+
+        # defining attributes
         self.velocity_x = 0
         self.velocity_y = 0
         self.movingleft = False
