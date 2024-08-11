@@ -70,3 +70,16 @@ def set_button_click(button_group, button_text):
         if button.text == button_text:
             button.state_click()
             return
+
+
+def is_point_within_rect(point, sprite):
+    """Check if a point is within a pygame sprite's dimensions.
+    Tuple/list in form (x, y) should be passed to point.
+    Pygame sprite object should be passed to sprite."""
+    point_x = point[0]
+    point_y = point[1]
+
+    if (sprite.rect.left <= point_x <= sprite.rect.right and
+       sprite.rect.top <= point_y <= sprite.rect.bottom):
+        return True
+    return False
