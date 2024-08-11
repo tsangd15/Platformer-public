@@ -17,7 +17,7 @@ class Projectile(pygame.sprite.Sprite):
         pygame.draw.rect(self.image, color, [0, 0, width, height])
         self.rect = self.image.get_rect()
 
-        self.rect.x = startx
-        self.rect.y = starty
+        self.rect.centerx = startx
+        self.rect.centery = starty
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
