@@ -157,12 +157,17 @@ class Program():
 
             pygame.display.flip()
 
-    def level_complete(self, level_sprites, score):
+    def level_complete(self, level_sprites, score, allow_save=True):
         """Display level pause screen"""
         print("ran level_complete()")
-        screen_calls = {"save_score": self.save_score,
-                        "root_menu": None,
-                        "quit": quit_program}
+        if allow_save:
+            screen_calls = {"save_score": self.save_score,
+                            "root_menu": None,
+                            "quit": quit_program}
+        else:
+            screen_calls = {"root_menu": None,
+                            "quit": quit_program}
+
         complete = LevelComplete(tuple(screen_calls), score)
 
         # create transparent background
@@ -196,12 +201,19 @@ class Program():
 
             pygame.display.flip()
 
-    def level_fail(self, level_sprites, score):
+    def level_fail(self, level_sprites, score, allow_save=True):
         """Display level pause screen"""
         print("ran level_fail()")
-        screen_calls = {"save_score": self.save_score,
-                        "root_menu": None,
-                        "quit": quit_program}
+        if allow_save:
+            screen_calls = {"save_score": self.save_score,
+                            "retry": None,
+                            "root_menu": None,
+                            "quit": quit_program}
+        else:
+            screen_calls = {"retry": None,
+                            "root_menu": None,
+                            "quit": quit_program}
+
         fail = LevelFail(tuple(screen_calls), score)
 
         # create transparent background
