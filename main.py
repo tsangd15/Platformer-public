@@ -259,7 +259,7 @@ class Program():
         """Display game tutorial screen"""
         print("ran tutorial()")
 
-    def options(self):
+    def options(self, level_sprites=None):
         """Display options screen"""
         screen_calls = {"quit": quit_program,
                         "back": None,
@@ -284,6 +284,10 @@ class Program():
                     screen_calls[next_screen]()
 
             self.screen.fill(BLACK)
+
+            # display level sprites if provided
+            if level_sprites is not None:
+                level_sprites.draw(self.screen)
 
             options.sprites.draw(self.screen)
 
