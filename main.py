@@ -77,7 +77,7 @@ def move(sprite, platformlist):
             sprite.kill()
         # if player, check if 200 pixels below screen
         else:
-            if (sprite.rect.top > WINDOW_HEIGHT+200):
+            if sprite.rect.top > WINDOW_HEIGHT+200:
                 # kill player by deducting significant health
                 sprite.hit(200)
 
@@ -327,6 +327,11 @@ class Game():
 
         self.sprites.remove(text_main)
 
+    def update_mouse(self):
+        """Updates the mouse's stored location"""
+        # store current cursor location
+        self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
+
     def rungame(self):
         """Run Main Game"""
         # game running flag
@@ -337,8 +342,7 @@ class Game():
 
             self.clock.tick(FPS)
 
-            # store current cursor location
-            mouse_x, mouse_y = pygame.mouse.get_pos()
+            self.update_mouse()
 
             # keybind detection
             for event in pygame.event.get():
@@ -361,7 +365,8 @@ class Game():
                     if event.key == pygame.K_SPACE:  # Spacebar: shoot
                         # generate velocity vector from player to cursor
                         projectile_vector = vector(self.player.rect.center,
-                                                   [mouse_x, mouse_y], 10)
+                                                   [self.mouse_x,
+                                                    self.mouse_y], 10)
                         # spawn projectile with generated velocity
                         self.player.fire(projectile_vector)
                     if event.key == pygame.K_h:
