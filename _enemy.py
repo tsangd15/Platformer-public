@@ -53,8 +53,19 @@ class Enemy(Entity):
         if self.sfx:
             sfx_hit.play()
 
-    def move_horizontally(self):
-        """Move the player horizontally."""
+    def move_2d(self):
+        """Move the sprite horizontally (left/right) and vertically (jump/fall).
+
+        This method will make the entity jump if its on a platform (i.e.
+        onplatform attribute is True) at the time it wants to jump.
+
+        Additionally, this method handles vertical acceleration, in turn,
+        handling falling."""
+        # jump if on platform
+        if self.jumping and self.onplatform:
+            self.jumpmomentum = -16
+            self.onplatform = False
+
         # move right
         if self.movingright:
             self.velocity_x = 4
@@ -65,19 +76,6 @@ class Enemy(Entity):
         if self.movingleft:
             self.velocity_x = -4
             # cant be sure player is still on a platform so enable gravity
-            self.onplatform = False
-
-    def move_vertically(self):
-        """Move the sprite vertically (jump/fall).
-
-        This method will make the entity jump if its on a platform (i.e.
-        onplatform attribute is True) at the time it wants to jump.
-
-        Additionally, this method handles vertical acceleration, in turn,
-        handling falling."""
-        # jump if on platform
-        if self.jumping and self.onplatform:
-            self.jumpmomentum = -14
             self.onplatform = False
 
         if not self.onplatform:
@@ -135,8 +133,7 @@ class Enemy(Entity):
         Update sfx attribute to turn on/off sound effects."""
         super().update()
 
-        self.move_horizontally()
-        self.move_vertically()
+        self.move_2d()
 
         if self.health <= 0:
             self.vision.kill()
