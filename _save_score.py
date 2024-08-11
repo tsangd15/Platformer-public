@@ -12,8 +12,10 @@ from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RED, BLACK, CYAN,
 
 class SaveScore(Screen):
     """Class to save score to scores.json"""
-    def __init__(self, screens):
+    def __init__(self, screens, score):
         super().__init__(screens)
+        # store the level's final score
+        self.score = score
 
         # add screen specific event handlers to list of event handlers
         self.event_handlers.extend((self.handle_events_keyboard,

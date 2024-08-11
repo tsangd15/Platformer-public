@@ -9,8 +9,10 @@ from _functions import is_point_within_rect, return_button
 
 class LevelFail(Screen):
     """Class for level fail screen"""
-    def __init__(self, screens):
+    def __init__(self, screens, score):
         super().__init__(screens)
+        # store the level's final score
+        self.score = score
 
         # add screen specific event handlers to list of event handlers
         self.event_handlers.extend((self.handle_events_keyboard,
@@ -23,8 +25,10 @@ class LevelFail(Screen):
     def add_text(self):
         """Add text to sprite group to be blitted to screen."""
         text_main = Text("Level Failed!", 60, "top_center", BLUE, None,
-                         WINDOW_WIDTH/2, 85)
-        self.sprites.add(text_main)
+                         WINDOW_WIDTH/2, 65)
+        text_score = Text(f"Score: {self.score}", 30, "top_center", BLUE, None,
+                          WINDOW_WIDTH/2, 135)
+        self.sprites.add(text_main, text_score)
 
     def add_buttons(self):
         """Instantiate and add each button to sprites and buttons

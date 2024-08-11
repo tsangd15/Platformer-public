@@ -82,7 +82,8 @@ class Program():
                 if next_screen == "quit":
                     screen_calls[next_screen]()
                 elif "level_" in next_screen:
-                    screen_return = screen_calls[next_screen](level.sprites)
+                    screen_return = (screen_calls[next_screen]
+                                     (level.sprites, level.player.score))
                     # if the user requested to go back to root menu
                     if screen_return == "gotoroot":
                         return
@@ -155,24 +156,27 @@ class Program():
 
             pygame.display.flip()
 
-    def level_fail(self, level_sprites):
+    def level_fail(self, level_sprites, score):
         """Display level pause screen"""
         print("ran level_fail()")
         screen_calls = {"save_score": self.save_score,
                         "root_menu": None,
                         "quit": quit_program}
-        fail = LevelFail(tuple(screen_calls))
+        fail = LevelFail(tuple(screen_calls), score)
 
         while True:
             self.clock.tick(25)
 
             next_screen = fail.update()
             if next_screen is not None:
-                if next_screen == "root_menu":
+                if next_screen == "save_score":
+                    screen_return = screen_calls[next_screen](score)
+                    if screen_return == "gotoroot":
+                        return "gotoroot"
+                elif next_screen == "root_menu":
                     return "gotoroot"
-                screen_return = screen_calls[next_screen]()
-                if screen_return == "gotoroot":
-                    return "gotoroot"
+                else:
+                    screen_calls[next_screen]()
 
             self.screen.fill(GREEN)
 
@@ -182,12 +186,12 @@ class Program():
 
             pygame.display.flip()
 
-    def save_score(self):
+    def save_score(self, score):
         """Display save score screen"""
         print("ran save_score()")
         screen_calls = {"root_menu": None,
                         "quit": quit_program}
-        save_score = SaveScore(tuple(screen_calls))
+        save_score = SaveScore(tuple(screen_calls), score)
 
         while True:
             self.clock.tick(25)
