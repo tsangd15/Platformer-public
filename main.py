@@ -170,7 +170,9 @@ class Program():
             if next_screen is not None:
                 if next_screen == "root_menu":
                     return "gotoroot"
-                screen_calls[next_screen]()
+                screen_return = screen_calls[next_screen]()
+                if screen_return == "gotoroot":
+                    return "gotoroot"
 
             self.screen.fill(GREEN)
 
@@ -194,10 +196,10 @@ class Program():
             # in item_calls dict
             next_screen = save_score.update()
             if next_screen is not None:
+                if next_screen == "root_menu":
+                    return "gotoroot"
                 if next_screen == "quit":
                     screen_calls[next_screen]()
-                else:
-                    return
 
             self.screen.fill(GREEN)
 

@@ -3,9 +3,11 @@ import pygame
 from _screen import Screen
 from _leaderboard_handler import ScoreHandler
 from _text import Text
+from _button import Button
 from _platform import Platform
 from _functions import return_button, is_point_within_rect
-from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RED
+from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RED, BLACK, CYAN,
+                       YELLOW)
 
 
 class SaveScore(Screen):
@@ -19,6 +21,7 @@ class SaveScore(Screen):
 
         # add the text and button sprites
         self.add_text()
+        self.add_buttons()
 
         # hold if backspace is held down
         self.backspace = False
@@ -49,6 +52,31 @@ class SaveScore(Screen):
         text_instruction = Text("Enter Player Tag:", 25, "top_center", BLUE,
                                 None, WINDOW_WIDTH/2, 150)
         self.sprites.add(text_main, text_instruction)
+
+    def add_buttons(self):
+        """Instantiate and add each button to sprites and buttons
+        sprite group.
+        A for loop iterates through all the menu items listed in self.items
+        and creates a Button instance for each which is then added to the
+        sprites and buttons sprite groups."""
+        # define button colours
+        button_idlecolor = (BLACK, RED)
+        button_hovercolor = (CYAN, RED)
+        button_clickcolor = (CYAN, YELLOW)
+
+        # each iteration height increments 55
+        # zip function to handle parallel iterator variables: item_name, height
+        for item_name, height in zip(self.screens,
+                                     range(400, 400+55*len(self.screens)+1, 55)
+                                     ):
+            button = Button(350, 50, item_name, 30, "top_center",
+                            button_idlecolor, button_hovercolor,
+                            button_clickcolor, WINDOW_WIDTH/2, height)
+            self.sprites.add(button)
+            self.buttons.add(button)
+
+        # set top button as highlighted
+        self.set_selected_hover()
 
     def add_textbox(self):
         """Instantiate and add the textbox and text sprites to the sprite
@@ -147,9 +175,11 @@ class SaveScore(Screen):
         """Update the menu by checking for any events and updating attributes
         and button states as needed."""
 
-        # removed update_cursor and update_selected calls as no menu for
-        # screen yet
+        self.update_cursor()
+
         self.handle_events()
+
+        self.update_selected()
 
         self.update_text()
 
