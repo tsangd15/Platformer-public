@@ -30,6 +30,8 @@ class Enemy(Entity):
         # store vector from enemy to player
         self.vectortoplayer = ()
 
+        self.onplatform = False
+
     def fire(self, projectile_velocity):
         """Spawns a projectile and adds it to the projectiles sprite group
         attribute."""
@@ -56,28 +58,38 @@ class Enemy(Entity):
         # move right
         if self.movingright:
             self.velocity_x = 4
+            # cant be sure player is still on a platform so enable gravity
+            self.onplatform = False
 
         # move left
         if self.movingleft:
             self.velocity_x = -4
+            # cant be sure player is still on a platform so enable gravity
+            self.onplatform = False
 
     def move_vertically(self):
         """Move the sprite vertically (jump/fall).
 
-        This method will make the entity jump if its on a platform or just
-        recently (2 frames) left the ground.
+        This method will make the entity jump if its on a platform (i.e.
+        onplatform attribute is True) at the time it wants to jump.
 
         Additionally, this method handles vertical acceleration, in turn,
         handling falling."""
-        # jump as long as they haven't been in the air for longer than 2 frames
-        if self.jumping and self.airduration < 2:
+        # jump if on platform
+        if self.jumping and self.onplatform:
             self.jumpmomentum = -14
+            self.onplatform = False
+
+        if not self.onplatform:
+            # apply gravity velocity
+            self.jumpmomentum += 1
 
         # gradually reduce momentum (i.e. upward acceleration decreases) so
         # that when momentum is positive, player begins to fall (pygame y axis
-        # is 0 at top of screen so up is negative and down is negative)
+        # is 0 at top of screen so up is negative and down is positive)
         self.velocity_y += self.jumpmomentum
-        self.jumpmomentum += 1
+
+        # cap max velocity due to gravity to 4
         if self.jumpmomentum > 4:
             self.jumpmomentum = 4
 

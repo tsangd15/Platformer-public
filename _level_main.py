@@ -72,7 +72,7 @@ def move(sprite, platformlist):
             sprite.rect.bottom = platform.rect.top
             detectedcollisions["bottom"] = True
 
-        if sprite.velocity_y < 0:  # sprite top
+        elif sprite.velocity_y < 0:  # sprite top
             sprite.rect.top = platform.rect.bottom
             detectedcollisions["top"] = True
 
@@ -248,13 +248,12 @@ class LevelMain(Screen):
             collisions = move(enemy, self.platforms)
             if collisions["bottom"]:
                 enemy.jumpmomentum = 0
-                enemy.airduration = 0
-            else:
-                enemy.airduration += 1
+                enemy.onplatform = True
 
             # if player top collides, momentum reset
             if collisions["top"]:
                 enemy.jumpmomentum = 0
+                enemy.onplatform = False
 
     def move_projectiles(self):
         """Iterates through each projectile in each entity's 'projectiles'
