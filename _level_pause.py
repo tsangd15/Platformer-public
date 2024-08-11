@@ -1,7 +1,6 @@
 """Game Level - Pause Module"""
 import pygame
-from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, BLACK, RED, CYAN,
-                       YELLOW)
+from _settings import (WINDOW_WIDTH, BLUE, BLACK, RED, CYAN, YELLOW)
 from _text import Text
 from _button import Button
 
@@ -30,11 +29,9 @@ class LevelPause():
 
     def add_text(self):
         """Add text to sprite group to be blitted to screen."""
-        text_paused = Text("Game Paused", 60, "middle_center", BLUE, None,
-                           WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
-        text_resume = Text("Press ESC to resume game.", 28, "middle_center",
-                           BLUE, None, WINDOW_WIDTH/2, WINDOW_HEIGHT/2+40)
-        self.sprites.add(text_paused, text_resume)
+        text_title = Text("Game Paused", 60, "middle_center", BLUE, None,
+                          WINDOW_WIDTH/2, 100)
+        self.sprites.add(text_title)
 
     def add_buttons(self):
         """Add menu buttons to sprite group to be blitted to screen."""
