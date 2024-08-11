@@ -136,7 +136,7 @@ class LevelPause(Screen):
         for item_name, height in zip(self.screens,
                                      range(190, 190+55*len(self.screens)+1, 55)
                                      ):
-            button = Button(350, 50, item_name.upper(), 30, "top_center",
+            button = Button(350, 50, item_name, 30, "top_center",
                             button_idlecolor, button_hovercolor,
                             button_clickcolor, WINDOW_WIDTH/2, height)
             self.sprites.add(button)

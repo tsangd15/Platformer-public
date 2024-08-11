@@ -68,22 +68,22 @@ class Screen():
 
     def set_selected_idle(self):
         """Set the currently selected screen's button to idle state."""
-        set_button_idle(self.buttons, self.selected.upper())
+        set_button_idle(self.buttons, self.selected)
 
     def set_selected_hover(self):
         """Set the currently selected screen's button to hover state."""
-        set_button_hover(self.buttons, self.selected.upper())
+        set_button_hover(self.buttons, self.selected)
 
     def set_selected_click(self):
         """Set the currently selected screen's button to click state."""
-        set_button_click(self.buttons, self.selected.upper())
+        set_button_click(self.buttons, self.selected)
 
     def is_button_hover(self):
         """Check if cursor is hovering over a button."""
         for button in self.buttons:
             if is_point_within_rect(self.cursor, button):
                 self.set_selected_idle()
-                self.selected = button.text.lower()
+                self.selected = button.text
                 self.set_selected_hover()
 
     def move_select_up(self):
@@ -201,7 +201,7 @@ class Screen():
         for item_name, height in zip(self.screens,
                                      range(190, 190+55*len(self.screens)+1, 55)
                                      ):
-            button = Button(350, 50, item_name.upper(), 30, "top_center",
+            button = Button(350, 50, item_name, 30, "top_center",
                             button_idlecolor, button_hovercolor,
                             button_clickcolor, WINDOW_WIDTH/2, height)
             self.sprites.add(button)
