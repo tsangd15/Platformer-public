@@ -295,6 +295,30 @@ class Game():
 
         self.sprites.remove(text_main)
 
+    def level_failed(self):
+        """Display Level Failed Screen"""
+        waiting = True
+
+        text_main = Text("Level Failed!", (WINDOW_WIDTH-60,
+                         WINDOW_HEIGHT-60), "middle_center", BLUE, None,
+                         WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
+        self.sprites.add(text_main)
+
+        # waiting for user input
+        while waiting:
+            # reduce framerate as not needed
+            self.clock.tick(10)
+
+            self.sprites.draw(self.screen)
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+        self.sprites.remove(text_main)
+
     def rungame(self):
         """Run Main Game"""
         # game running flag
