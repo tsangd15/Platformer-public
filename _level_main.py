@@ -6,6 +6,7 @@ from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLUE, PINK, YELLOW)
 from _platform import Platform
 from _player import Player
 from _enemy import Enemy
+from _projectile import Projectile
 
 
 def list_collisions(sprite, spritelist):
@@ -64,17 +65,17 @@ def move(sprite, platformlist):
             sprite.rect.top = platform.rect.bottom
             detectedcollisions["top"] = True
 
-    # kill sprite if offscreen and not player
+    # kill sprite if offscreen and is projectile
     if ((sprite.rect.left > WINDOW_WIDTH) or
        (sprite.rect.right < 0) or
        (sprite.rect.bottom < 0) or
        (sprite.rect.top > WINDOW_HEIGHT)):
-        if not isinstance(sprite, Player):
+        if isinstance(sprite, Projectile):
             sprite.kill()
-        # if player, check if 200 pixels below screen
+        # check if 200 pixels below screen
         else:
             if sprite.rect.top > WINDOW_HEIGHT+200:
-                # kill player by deducting significant health
+                # kill by deducting significant health
                 sprite.hit(200)
 
     return detectedcollisions
