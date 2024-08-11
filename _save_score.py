@@ -45,8 +45,6 @@ class SaveScore(Screen):
     @text.setter
     def text(self, new_text):
         """Property decorator setter for text attribute"""
-        print("old:", self.text)
-        print("newtext:", new_text)
         if len(new_text) <= 3:
             # check if characters are valid letters
             valid_chars = 0

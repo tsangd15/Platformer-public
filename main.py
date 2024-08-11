@@ -200,7 +200,6 @@ class Program():
     def level_complete(self, level_sprites, score, allow_save=True,
                        allow_continue=False):
         """Display level pause screen"""
-        print("ran level_complete()")
         # build screen_calls dict in correct order
         screen_calls = {}
         if allow_continue:
@@ -245,7 +244,6 @@ class Program():
 
     def level_fail(self, level_sprites, score, allow_save=True):
         """Display level pause screen"""
-        print("ran level_fail()")
         if allow_save:
             screen_calls = {"save_score": self.save_score,
                             "retry": None,
@@ -290,7 +288,6 @@ class Program():
 
     def save_score(self, level_sprites, score):
         """Display save score screen"""
-        print("ran save_score()")
         screen_calls = {"global_save": None,
                         "local_save": None,
                         "root_menu": None,

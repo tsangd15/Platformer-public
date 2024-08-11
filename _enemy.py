@@ -55,7 +55,6 @@ class Enemy(Entity):
     def hit(self, amount):
         """Method to reduce health when hit by projectile."""
         self.health -= amount
-        print("hit", self.number)
         self.number += 1
 
         if self.sfx:
@@ -134,7 +133,6 @@ class Enemy(Entity):
            (now - self.lastfired > self.firecooldown)):
             self.lastfired = now
             self.fire(self.vectortoplayer)
-            print("firing!!!")
 
     def kill_projectiles(self):
         """Kill all projectiles belonging to the sprite."""

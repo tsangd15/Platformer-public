@@ -68,7 +68,6 @@ class Player(Entity):
 
         self.health.value -= amount
 
-        print("hit", self.number)
         self.number += 1
 
         if self.sfx:
@@ -175,10 +174,8 @@ class Player(Entity):
             # check for insufficient lives
             if self.lives.value <= 0:
                 self.dead = True
-                print("dead")
             else:
                 self.respawn()
-                print("RESPAWNED")
 
     def regulate_cooldown(self, time_paused):
         """Adjust the lastfired, lastjumped, lastsprinted and lasthit

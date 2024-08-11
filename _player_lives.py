@@ -47,13 +47,17 @@ class LivesIndicator(pygame.sprite.Sprite):
 
     def update(self):
         """Reset all hearts to empty and fill hearts according to self.value"""
+        # clear sprite surface
         self.image.fill(WHITE)
+
+        # create list to represent each heart's status
         status = ["empty"] * len(self.hearts)
-        print(status)
+
+        # change i number of hearts to 'full' status
         for i in range(self.value):
             status[i] = "full"
-        print(status)
 
+        # set each heart's state
         i = 0
         for heart in self.hearts:
             heart.state = status[i]
