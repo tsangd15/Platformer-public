@@ -58,12 +58,12 @@ class Player(Entity):
 
             self.projectiles.add(projectile)
 
-    def hit(self):
+    def hit(self, amount):
         """Method to reduce health when hit by projectile."""
         now = pygame.time.get_ticks()
         self.lasthit = now
 
-        self.health.value -= 5
+        self.health.value -= amount
 
         print("hit", self.number)
         self.number += 1
