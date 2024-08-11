@@ -84,6 +84,13 @@ def move(sprite, platformlist):
     return detectedcollisions
 
 
+def quit_program():
+    """Safely and swiftly end the program. Calling pygame.quit() saves a 2
+    second wait for the window to close."""
+    pygame.quit()
+    sys.exit()
+
+
 def vector(origin, destination, magnitude):
     """Function to create velocity vectors from 2 points and magnitude.
 
@@ -190,6 +197,8 @@ class Game():
                                                 row*PLATFORMLENGTH)
                     self.sprites.add(self.finishpoint)
                     self.finishpoints.add(self.finishpoint)
+
+        self.update_mouse()
 
     def pause(self):
         """Pause the game, invoked using ESC key"""
@@ -322,8 +331,7 @@ class Game():
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    pygame.quit()
-                    sys.exit()
+                    quit_program()
 
         self.sprites.remove(text_main)
 
@@ -331,6 +339,49 @@ class Game():
         """Updates the mouse's stored location"""
         # store current cursor location
         self.mouse_x, self.mouse_y = pygame.mouse.get_pos()
+
+    def handle_events(self):
+        """Get and handle events in the pygame event queue."""
+        # keybind detection
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                quit_program()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    self.pause()
+                if event.key == pygame.K_x:  # X: end program
+                    quit_program()
+                if event.key == pygame.K_LSHIFT:  # L Shift: sprint
+                    self.player.sprinting = True
+                if event.key == pygame.K_a:  # A: move left
+                    self.player.movingleft = True
+                if event.key == pygame.K_d:  # D: move right
+                    self.player.movingright = True
+                if event.key == pygame.K_w:  # W: jump
+                    self.player.jumping = True
+                if event.key == pygame.K_SPACE:  # Spacebar: shoot
+                    # generate velocity vector from player to cursor
+                    projectile_vector = vector(self.player.rect.center,
+                                               [self.mouse_x,
+                                                self.mouse_y], 10)
+                    # spawn projectile with generated velocity
+                    self.player.fire(projectile_vector)
+                if event.key == pygame.K_h:
+                    self.player.hit(5)
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LSHIFT:  # L Shift: stop sprint
+                    self.player.sprinting = False
+                if event.key == pygame.K_a:  # A: stop moving left
+                    self.player.movingleft = False
+                if event.key == pygame.K_d:  # D: stop moving right
+                    self.player.movingright = False
+                if event.key == pygame.K_w:  # W: stop jumping
+                    self.player.jumping = False
+
+            # if event.type == pygame.
+            # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
 
     def rungame(self):
         """Run Main Game"""
@@ -344,46 +395,7 @@ class Game():
 
             self.update_mouse()
 
-            # keybind detection
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    run = False
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        self.pause()
-                    if event.key == pygame.K_x:  # X: end program
-                        run = False
-                    if event.key == pygame.K_LSHIFT:  # L Shift: sprint
-                        self.player.sprinting = True
-                    if event.key == pygame.K_a:  # A: move left
-                        self.player.movingleft = True
-                    if event.key == pygame.K_d:  # D: move right
-                        self.player.movingright = True
-                    if event.key == pygame.K_w:  # W: jump
-                        self.player.jumping = True
-                    if event.key == pygame.K_SPACE:  # Spacebar: shoot
-                        # generate velocity vector from player to cursor
-                        projectile_vector = vector(self.player.rect.center,
-                                                   [self.mouse_x,
-                                                    self.mouse_y], 10)
-                        # spawn projectile with generated velocity
-                        self.player.fire(projectile_vector)
-                    if event.key == pygame.K_h:
-                        self.player.hit(5)
-
-                if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_LSHIFT:  # L Shift: stop sprint
-                        self.player.sprinting = False
-                    if event.key == pygame.K_a:  # A: stop moving left
-                        self.player.movingleft = False
-                    if event.key == pygame.K_d:  # D: stop moving right
-                        self.player.movingright = False
-                    if event.key == pygame.K_w:  # W: stop jumping
-                        self.player.jumping = False
-
-                # if event.type == pygame.
-                # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
+            self.handle_events()
 
             # --------------- game logic ------------- #
             self.screen.fill(GREEN)
