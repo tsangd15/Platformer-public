@@ -1,6 +1,6 @@
 """Player Class Module"""
 import pygame
-from _entity import Entity
+from _entity import Entity, sfx_fire, sfx_hit, sfx_respawn
 from _projectile import Projectile
 from _settings import WINDOW_WIDTH, GREEN, RED, YELLOW, PURPLE
 from _progressbar import ProgressBar
@@ -57,6 +57,7 @@ class Player(Entity):
                                     projectile_velocity[1])
 
             self.projectiles.add(projectile)
+            sfx_fire.play()
 
     def hit(self, amount):
         """Method to reduce health when hit by projectile."""
@@ -67,6 +68,7 @@ class Player(Entity):
 
         print("hit", self.number)
         self.number += 1
+        sfx_hit.play()
 
     def respawn(self):
         """Decrease lives, reset health & stamina and teleport to spawn
@@ -75,6 +77,7 @@ class Player(Entity):
         self.health.value = self.defaulthealth
         self.stamina.value = self.defaultstamina
         self.rect.x, self.rect.y = self.startx, self.starty
+        sfx_respawn.play()
 
     def replenish_health(self, now):
         """Replenish health slowly if player hasn't taken damage for the

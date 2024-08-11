@@ -1,5 +1,5 @@
 """Enemy Class Module"""
-from _entity import Entity
+from _entity import Entity, sfx_hit
 
 
 class Enemy(Entity):
@@ -14,6 +14,7 @@ class Enemy(Entity):
         self.health -= 5
         print("hit", self.number)
         self.number += 1
+        sfx_hit.play()
 
     def update(self):
         """Method to check if health is below 0, if so, despawn enemy."""

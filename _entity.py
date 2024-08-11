@@ -3,6 +3,17 @@ import pygame
 from _settings import BLACK
 
 
+# --------------- Sound Objects --------------- #
+pygame.mixer.init()
+sfx_fire = pygame.mixer.Sound("assets/SFX_Fire.wav")
+sfx_hit = pygame.mixer.Sound("assets/SFX_Hit.wav")
+sfx_respawn = pygame.mixer.Sound("assets/SFX_Respawn.wav")
+
+sfx_fire.set_volume(0.35)
+sfx_hit.set_volume(0.35)
+sfx_respawn.set_volume(0.35)
+
+
 class Entity(pygame.sprite.Sprite):
     """Class to inherit from for player and NPC sprites. Not to be directly
     used to create objects."""
