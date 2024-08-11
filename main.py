@@ -269,6 +269,11 @@ class Program():
         screen_calls["config_music"] = options.config_music
         screen_calls["config_sound_effects"] = options.config_sound_effects
 
+        # create transparent background
+        background = pygame.Surface([WINDOW_WIDTH, WINDOW_HEIGHT])
+        background.fill(BLACK)
+        background.set_alpha(200)
+
         while True:
             self.clock.tick(25)
 
@@ -288,6 +293,9 @@ class Program():
             # display level sprites if provided
             if level_sprites is not None:
                 level_sprites.draw(self.screen)
+
+            # draw background on top of level sprites
+            self.screen.blit(background.convert_alpha(), (0, 0))
 
             options.sprites.draw(self.screen)
 
