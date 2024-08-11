@@ -4,7 +4,7 @@ from _screen import Screen
 from _button import Button
 from _text import Text
 from _functions import is_point_within_rect, return_button
-from _settings import WINDOW_WIDTH, RED, BLACK, CYAN, YELLOW
+from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLACK, CYAN, YELLOW
 
 
 class RootMenu(Screen):
@@ -24,7 +24,10 @@ class RootMenu(Screen):
         """Add text instances to sprite group to be blitted to screen."""
         text_title = Text("PLATFORMER", (600, 400), "top_center", RED, None,
                           WINDOW_WIDTH/2, 20)
-        self.sprites.add(text_title)
+        text_credits = Text("Audio credits in options screen.", 15,
+                            "bottom_right", RED, None, WINDOW_WIDTH - 10,
+                            WINDOW_HEIGHT - 10)
+        self.sprites.add(text_title, text_credits)
 
     def add_buttons(self):
         """Instantiate and add each button to sprites and buttons

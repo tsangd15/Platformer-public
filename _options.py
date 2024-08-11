@@ -33,7 +33,18 @@ class Options(Screen):
                           WINDOW_WIDTH/2 + 180, 250)
         text_sfx = Text("Sound Effects", 32, "middle_right", BLUE, None,
                         WINDOW_WIDTH/2 + 180, 350)
-        self.sprites.add(text_main, text_music, text_sfx)
+        text_credits1 = Text("Music: Adventure by Alexander Nakarada", 14,
+                             "middle_center", CYAN, None, WINDOW_WIDTH/2, 420)
+        text_credits2 = Text("(www.serpentsoundstudios.com)", 14,
+                             "middle_center", CYAN, None, WINDOW_WIDTH/2, 450)
+        text_credits3 = Text("Licensed under Creative Commons By Attribution" +
+                             " 4.0 License", 13, "middle_center", CYAN, None,
+                             WINDOW_WIDTH/2, 480)
+        text_credits4 = Text("Sound effects made using free software tool " +
+                             "Bfxr by increpare", 13, "middle_center", CYAN,
+                             None, WINDOW_WIDTH/2, 540)
+        self.sprites.add(text_main, text_music, text_sfx, text_credits1,
+                         text_credits2, text_credits3, text_credits4)
 
     def add_buttons(self):
         """Instantiate and add each button to sprites and buttons
