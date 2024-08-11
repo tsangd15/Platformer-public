@@ -47,7 +47,7 @@ class Program():
     def rootmenu(self):
         """Display the root menu for the player to navigate to different
         screens"""
-        item_calls = {"play": self.level_main,              # 0
+        item_calls = {"play": self.play,              # 0
                       "leaderboard": self.leaderboard,     # 1
                       "tutorial": self.tutorial,           # 2
                       "options": self.options,             # 3
@@ -71,6 +71,32 @@ class Program():
             menu.sprites.draw(self.screen)
 
             pygame.display.flip()
+
+    def play(self):
+        """Start standard game series"""
+        tutorial_maps = ["test_map"]
+        total_score = 0
+
+        for i, mapname in enumerate(tutorial_maps):
+            # run map, show continue button if not last map
+            if i == len(tutorial_maps) - 1:
+                result = self.level_main(mapname, allow_continue=False,
+                                         allow_save=True)
+            else:
+                result = self.level_main(mapname, allow_continue=True,
+                                         allow_save=True)
+
+            if isinstance(result, tuple):
+                total_score += result[0]
+                # continue returned
+                if result[1] == "continue":  # (score, "continue")
+                    continue
+                if result[1] == "save":  # (score, "save", level_sprites)
+                    self.save_score(result[2], total_score)
+                elif result[1] == "gotoroot":  # gotoroot returned
+                    return  # (score, "gotoroot")
+                else:
+                    raise Exception("Invalid result returned.")
 
     def level_main(self, mapname=None, allow_save=False, allow_continue=False):
         """Load and run a game level"""
