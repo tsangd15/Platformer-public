@@ -92,17 +92,21 @@ class Program():
     def level_pause(self, level_sprites):
         """Display level pause screen"""
         screen_calls = {"resume": None,
+                        "options": self.options,
                         "quit": quit_program}
 
-        pause = LevelPause()
+        pause = LevelPause(tuple(screen_calls))
 
         while True:
             self.clock.tick(25)
 
             next_screen = pause.update()
             if next_screen is not None:
-                if next_screen != "resume":
+                if next_screen == "quit":
                     screen_calls[next_screen]()
+                elif next_screen == "options":
+                    # pass game level's sprites again to retain background
+                    screen_calls[next_screen](level_sprites)
                 # resume the level by terminating the method
                 else:
                     return pause.duration
