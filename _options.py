@@ -14,7 +14,7 @@ class Options(Screen):
     Imported config is {"music": True,
                         "sound_effects": True}"""
     def __init__(self, screens):
-        super().__init__(screens)
+        super().__init__(screens, has_quit_button=False)
         self.config = load_config()
 
         # add screen specific event handlers to list of event handlers

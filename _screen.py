@@ -8,12 +8,19 @@ class Screen():
     """Screen class to inherit from"""
     # ignore redundant pylint messages
     # pylint: disable=pointless-string-statement, too-many-instance-attributes
-    def __init__(self, screens):
+    def __init__(self, screens, has_quit_button=True):
         # store list of valid next screens
         self.screens = screens
 
+        # define if internal quit button present or not
+        self.has_quit_button = has_quit_button
+
         # store currently selected screen choice
-        self._selected = self.screens[0]
+        if has_quit_button:
+            self._selected = self.screens[0]
+        else:
+            # set selected to second button as there's no internal quit button
+            self._selected = self.screens[1]
 
         # define sprite groups
         self.sprites = pygame.sprite.Group()
@@ -101,6 +108,10 @@ class Screen():
         new_selected_index = ((self.screens.index(self.selected) - 1)
                               % len(self.screens))
 
+        # ignore invisible quit button
+        if (self.has_quit_button is False) and (new_selected_index == 0):
+            new_selected_index = len(self.screens) - 1
+
         # set the new selected item and change its button to hover state
         self.selected = self.screens[new_selected_index]
         self.set_selected_hover()
@@ -116,6 +127,10 @@ class Screen():
         # find the new selected item's index, correct the index with modulo (%)
         new_selected_index = ((self.screens.index(self.selected) + 1)
                               % len(self.screens))
+
+        # ignore invisible quit button
+        if (self.has_quit_button is False) and (new_selected_index == 0):
+            new_selected_index = 1
 
         # set the new selected item and change its button to hover state
         self.selected = self.screens[new_selected_index]
