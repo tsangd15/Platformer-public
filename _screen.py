@@ -13,7 +13,7 @@ class Screen():
         self.screens = screens
 
         # store currently selected screen choice
-        self._next_screen = None
+        self._selected = None
 
         # define sprite groups
         self.sprites = pygame.sprite.Group()
@@ -42,15 +42,15 @@ class Screen():
         self.event_handlers = []
 
     @property
-    def next_screen(self):
-        """Property decorator getter for next_screen attribute"""
-        return self._next_screen
+    def selected(self):
+        """Property decorator getter for selected attribute"""
+        return self._selected
 
-    @next_screen.setter
-    def next_screen(self, screen_name):
-        """Property decorator setter for next_screen attribute"""
+    @selected.setter
+    def selected(self, screen_name):
+        """Property decorator setter for selected attribute"""
         if screen_name in self.screens:
-            self._next_screen = screen_name
+            self._selected = screen_name
         else:
             raise Exception(f"Invalid screen name passed: {screen_name}")
 
@@ -62,28 +62,28 @@ class Screen():
     def terminate(self):
         """Simulate a quit item selection to tell the wider scope to terminate
         the program."""
-        # set next_screen to "quit"
-        self.next_screen = "quit"
+        # set selected to "quit"
+        self.selected = "quit"
         self.confirmed = True
 
     def set_selected_idle(self):
         """Set the currently selected screen's button to idle state."""
-        set_button_idle(self.buttons, self.next_screen)
+        set_button_idle(self.buttons, self.selected)
 
     def set_selected_hover(self):
         """Set the currently selected screen's button to hover state."""
-        set_button_hover(self.buttons, self.next_screen)
+        set_button_hover(self.buttons, self.selected)
 
     def set_selected_click(self):
         """Set the currently selected screen's button to click state."""
-        set_button_click(self.buttons, self.next_screen)
+        set_button_click(self.buttons, self.selected)
 
     def is_button_hover(self):
         """Check if cursor is hovering over a button."""
         for button in self.buttons:
             if is_point_within_rect(self.cursor, button):
                 self.set_selected_idle()
-                self.next_screen = button.text
+                self.selected = button.text
                 self.set_selected_hover()
 
     def move_select_up(self):
@@ -95,11 +95,11 @@ class Screen():
         self.set_selected_idle()
 
         # find the new selected item's index, correct the index with modulo (%)
-        new_selected_index = ((self.screens.index(self.next_screen) - 1)
+        new_selected_index = ((self.screens.index(self.selected) - 1)
                               % len(self.screens))
 
         # set the new selected item and change its button to hover state
-        self.next_screen = self.screens[new_selected_index]
+        self.selected = self.screens[new_selected_index]
         self.set_selected_hover()
 
     def move_select_down(self):
@@ -111,16 +111,16 @@ class Screen():
         self.set_selected_idle()
 
         # find the new selected item's index, correct the index with modulo (%)
-        new_selected_index = ((self.screens.index(self.next_screen) + 1)
+        new_selected_index = ((self.screens.index(self.selected) + 1)
                               % len(self.screens))
 
         # set the new selected item and change its button to hover state
-        self.next_screen = self.screens[new_selected_index]
+        self.selected = self.screens[new_selected_index]
         self.set_selected_hover()
 
     def update_selected(self):
         """Check if the arrow keys are being pressed or mouse has moved. If so,
-        update the menu accordingly by changing self.next_screen and updating
+        update the menu accordingly by changing self.selected and updating
         the button state."""
         now = pygame.time.get_ticks()
 
@@ -149,7 +149,7 @@ class Screen():
         if self.confirmed:
             self.confirmed = False
             self.set_selected_click()
-            return self.next_screen
+            return self.selected
         return None
 
     def handle_events(self):
@@ -237,7 +237,7 @@ class Screen():
         if event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # left click
                 # get the button instance that is selected
-                selected_button = return_button(self.next_screen,
+                selected_button = return_button(self.selected,
                                                 self.buttons)
 
                 # if button returned, check cursor is on the button
