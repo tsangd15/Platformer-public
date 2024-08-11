@@ -9,7 +9,8 @@ class Button(pygame.sprite.Sprite):
     """Class for instantiating individual button sprites. State colours in
     form: textcolor, bgcolor"""
     def __init__(self, width, height, text, textsize, alignment, idlecolor,
-                 hovercolor, clickcolor, startx, starty, alpha=None):
+                 hovercolor, clickcolor, startx, starty, alpha=None,
+                 identifier=None):
         super().__init__()
         self.width = width
         self.height = height
@@ -19,6 +20,11 @@ class Button(pygame.sprite.Sprite):
         self.color_idle = idlecolor
         self.color_hover = hovercolor
         self.color_click = clickcolor
+
+        if identifier is None:
+            self.identifier = self.text
+        else:
+            self.identifier = identifier
 
         self.alpha = alpha
 

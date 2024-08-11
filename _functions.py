@@ -45,29 +45,29 @@ def align(alignment, rect, startx, starty):
         rect.bottomright = startx, starty
 
 
-def set_button_idle(button_group, button_text):
+def set_button_idle(button_group, button_identifier):
     """Function to find a button in a button sprite group and set it to idle
     state."""
     for button in button_group:
-        if button.text == button_text:
+        if button.identifier == button_identifier:
             button.state_idle()
             return
 
 
-def set_button_hover(button_group, button_text):
+def set_button_hover(button_group, button_identifier):
     """Function to find a button in a button sprite group and set it to hover
     state."""
     for button in button_group:
-        if button.text == button_text:
+        if button.identifier == button_identifier:
             button.state_hover()
             return
 
 
-def set_button_click(button_group, button_text):
+def set_button_click(button_group, button_identifier):
     """Function to find a button in a button sprite group and set it to click
     state."""
     for button in button_group:
-        if button.text == button_text:
+        if button.identifier == button_identifier:
             button.state_click()
             return
 
@@ -85,11 +85,11 @@ def is_point_within_rect(point, sprite):
     return False
 
 
-def return_button(button_text, button_group):
+def return_button(button_identifier, button_group):
     """Function to return Button instance with matching button text in a
     button sprite group. If a button with the button text is not found, None
     is returned (by default for any function)."""
     for button in button_group:
-        if button.text == button_text:
+        if button.identifier == button_identifier:
             return button
     return None

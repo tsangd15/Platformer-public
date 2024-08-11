@@ -86,7 +86,7 @@ class Screen():
         for button in self.buttons:
             if is_point_within_rect(self.cursor, button):
                 self.set_selected_idle()
-                self.selected = button.text
+                self.selected = button.identifier
                 self.set_selected_hover()
 
     def move_select_up(self):
