@@ -1,4 +1,5 @@
 """Main game file"""
+import sys
 from math import sqrt
 import pygame
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE,
@@ -181,8 +182,11 @@ class Game():
 
         pause_begin = pygame.time.get_ticks()
 
-        text = Text("Game Paused", 60, BLUE, None, 500, 500)
-        self.sprites.add(text)
+        text_paused = Text("Game Paused", 60, "middle_center", BLUE, None,
+                           WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
+        text_resume = Text("Press ESC to resume game.", 28, "middle_center",
+                           BLUE, None, WINDOW_WIDTH/2, WINDOW_HEIGHT/2+40)
+        self.sprites.add(text_paused, text_resume)
 
         while paused:
             # reduce framerate as not needed
@@ -194,9 +198,10 @@ class Game():
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
+                    sys.exit()
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:
+                    if event.key == pygame.K_ESCAPE:
                         paused = False
 
         pause_end = pygame.time.get_ticks()
@@ -204,7 +209,7 @@ class Game():
         # calculate time paused
         pause_duration = pause_end - pause_begin
 
-        self.sprites.remove(text)
+        self.sprites.remove(text_paused, text_resume)
         # resume cooldowns
         self.player.regulate_cooldown(pause_duration)
 
