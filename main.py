@@ -7,6 +7,7 @@ from _level_pause import LevelPause
 from _level_complete import LevelComplete
 from _level_fail import LevelFail
 from _leaderboard import Leaderboard
+from _save_score import SaveScore
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN)
 
 
@@ -81,9 +82,10 @@ class Program():
                 if next_screen == "quit":
                     screen_calls[next_screen]()
                 elif "level_" in next_screen:
-                    screen_calls[next_screen](level.sprites)
-                    # return back to root menu
-                    return
+                    screen_return = screen_calls[next_screen](level.sprites)
+                    # if the user requested to go back to root menu
+                    if screen_return == "gotoroot":
+                        return
                 else:
                     pause_return = screen_calls[next_screen](level.sprites)
 
@@ -156,7 +158,9 @@ class Program():
     def level_fail(self, level_sprites):
         """Display level pause screen"""
         print("ran level_fail()")
-        screen_calls = {"quit": quit_program}
+        screen_calls = {"save_score": self.save_score,
+                        "root_menu": None,
+                        "quit": quit_program}
         fail = LevelFail(tuple(screen_calls))
 
         while True:
@@ -164,6 +168,8 @@ class Program():
 
             next_screen = fail.update()
             if next_screen is not None:
+                if next_screen == "root_menu":
+                    return "gotoroot"
                 screen_calls[next_screen]()
 
             self.screen.fill(GREEN)
@@ -171,6 +177,31 @@ class Program():
             level_sprites.draw(self.screen)
 
             fail.sprites.draw(self.screen)
+
+            pygame.display.flip()
+
+    def save_score(self):
+        """Display save score screen"""
+        print("ran save_score()")
+        screen_calls = {"root_menu": None,
+                        "quit": quit_program}
+        save_score = SaveScore(tuple(screen_calls))
+
+        while True:
+            self.clock.tick(25)
+
+            # check if menu item returned, if so, run corresponding function
+            # in item_calls dict
+            next_screen = save_score.update()
+            if next_screen is not None:
+                if next_screen == "quit":
+                    screen_calls[next_screen]()
+                else:
+                    return
+
+            self.screen.fill(GREEN)
+
+            save_score.sprites.draw(self.screen)
 
             pygame.display.flip()
 
