@@ -1,7 +1,7 @@
 """Options Screen Module"""
-import json
 import pygame
 from _screen import Screen
+from _config_handler import load_config, save_config
 from _text import Text
 from _button import Button
 from _functions import is_point_within_rect, return_button
@@ -15,7 +15,7 @@ class Options(Screen):
                         "sound_effects": True}"""
     def __init__(self, screens):
         super().__init__(screens)
-        self.load_config()
+        self.config = load_config()
 
         # add screen specific event handlers to list of event handlers
         self.event_handlers.extend((self.handle_events_keyboard,
@@ -24,19 +24,6 @@ class Options(Screen):
         # add the text sprites
         self.add_text()
         self.add_buttons()
-
-    def load_config(self):
-        """Load the saved settings from config.json"""
-        with open("config.json", "r") as file:
-            contents = file.read()
-
-        self.config = json.loads(contents)
-
-    def save_config(self):
-        """Save the current settings to config.json"""
-        with open("config.json", "w") as file:
-            file.write(json.dumps(self.config, indent=4, sort_keys=True) + "\n"
-                       )
 
     def add_text(self):
         """Add text to sprite group to be blitted to screen."""
