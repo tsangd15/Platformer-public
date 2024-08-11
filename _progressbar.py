@@ -30,8 +30,6 @@ class ProgressBar():
         if 0 <= new_value <= self.maximum:
             self._value = new_value
             self.update()
-        else:
-            raise Exception("Invalid progress bar 'value'")
 
     def update(self):
         """Update progress bar with new capacity
