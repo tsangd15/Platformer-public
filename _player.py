@@ -74,6 +74,12 @@ class Player(Entity):
         self.health.value = self.defaulthealth
         self.rect.x, self.rect.y = self.startx, self.starty
 
+    def replenish_health(self, now):
+        """Replenish health slowly if player hasn't taken damage for the
+        duration of self.healthcooldown."""
+        if now - self.lasthit >= self.healthcooldown:
+            self.health.value += 0.01
+
     def replenish_stamina(self, now):
         """Replenish stamina if player hasn't sprinted/jumped for respective
         cooldown duration."""
@@ -171,6 +177,8 @@ class Player(Entity):
         self.resetvelocity()
 
         now = pygame.time.get_ticks()
+
+        self.replenish_health(now)
 
         self.replenish_stamina(now)
 
