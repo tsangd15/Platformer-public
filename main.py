@@ -151,6 +151,11 @@ class Program():
                         "quit": quit_program}
         complete = LevelComplete(tuple(screen_calls), score)
 
+        # create transparent background
+        background = pygame.Surface([WINDOW_WIDTH, WINDOW_HEIGHT])
+        background.fill(GREEN)
+        background.set_alpha(200)
+
         while True:
             self.clock.tick(25)
 
@@ -169,6 +174,9 @@ class Program():
 
             level_sprites.draw(self.screen)
 
+            # draw background on top of level sprites
+            self.screen.blit(background.convert_alpha(), (0, 0))
+
             complete.sprites.draw(self.screen)
 
             pygame.display.flip()
@@ -180,6 +188,11 @@ class Program():
                         "root_menu": None,
                         "quit": quit_program}
         fail = LevelFail(tuple(screen_calls), score)
+
+        # create transparent background
+        background = pygame.Surface([WINDOW_WIDTH, WINDOW_HEIGHT])
+        background.fill(GREEN)
+        background.set_alpha(200)
 
         while True:
             self.clock.tick(25)
@@ -198,6 +211,9 @@ class Program():
             self.screen.fill(GREEN)
 
             level_sprites.draw(self.screen)
+
+            # draw background on top of level sprites
+            self.screen.blit(background.convert_alpha(), (0, 0))
 
             fail.sprites.draw(self.screen)
 
