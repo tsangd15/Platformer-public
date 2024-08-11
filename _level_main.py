@@ -1,4 +1,5 @@
 """Game Level - Main Module"""
+from json import loads
 from math import sqrt
 import pygame
 from _screen import Screen
@@ -166,7 +167,7 @@ class LevelMain(Screen):
 
         # instantiate line to calculate collision between enemy projectile's
         # path and platform
-        self.line = Line(self.player.rect.center, self.enemy.rect.center)
+        self.line = Line(self.player.rect.center, (0, 0))
 
     def load_map(self, map_name):
         """Load level map as 2D array"""
@@ -175,6 +176,7 @@ class LevelMain(Screen):
         # 2 = player spawn location
         # 3 map finish location
         self.gamemap = []
+        self.gamemap_conf = []
 
         # read the file with given map name
         with open("maps/" + map_name + ".txt", "r") as file:
@@ -191,15 +193,19 @@ class LevelMain(Screen):
                 row.append(int(char))
             self.gamemap.append(row)
 
+        # load map's enemy configuration
+        # read the file with given map name
+        with open("maps/" + map_name + "_conf.json", "r") as file:
+            contents = file.read()
+
+        # convert json data into python data structures
+        self.gamemap_conf = loads(contents)
+
     def draw_map(self):
         """Iterate through map and draw each sprite (e.g. platforms, player,
         enemies...)"""
+        enemy_count = 0
         # Creating sprites then adding to sprite lists
-        self.enemy = Enemy(YELLOW, 80, 80)
-
-        self.sprites.add(self.enemy, self.enemy.vision)
-        self.entities.add(self.enemy)
-        self.enemies.add(self.enemy)
 
         for row in range(NUMBEROFROWS):
             for col in range(NUMBEROFCOLUMNS):
@@ -224,6 +230,19 @@ class LevelMain(Screen):
                                                 row*PLATFORMLENGTH)
                     self.sprites.add(self.finishpoint)
                     self.finishpoints.add(self.finishpoint)
+
+                elif self.gamemap[row][col] == 4:  # enemies
+                    enemy_width = self.gamemap_conf[enemy_count][0]
+                    enemy_height = self.gamemap_conf[enemy_count][1]
+                    enemy_vision = self.gamemap_conf[enemy_count][2]
+
+                    enemy = Enemy(YELLOW, enemy_width, enemy_height,
+                                  col*PLATFORMLENGTH, row*PLATFORMLENGTH,
+                                  enemy_vision)
+                    self.sprites.add(enemy)
+                    self.entities.add(enemy)
+                    self.enemies.add(enemy)
+                    enemy_count += 1
 
     def move_player(self):
         """Uses the move function to move the player sprite by its current
@@ -457,14 +476,6 @@ class LevelMain(Screen):
             elif event.key == pygame.K_h:
                 self.player.hit(5)
 
-            # enemy movement testing
-            elif event.key == pygame.K_LEFT:  # left arrow
-                self.enemy.movingleft = True
-            elif event.key == pygame.K_RIGHT:  # right arrow
-                self.enemy.movingright = True
-            elif event.key == pygame.K_UP:  # up arrow
-                self.enemy.jumping = True
-
         # return to calling line if the event matched
         else:
             return False  # no match
@@ -482,14 +493,6 @@ class LevelMain(Screen):
                 self.player.movingright = False
             elif event.key == pygame.K_w:  # W: stop jumping
                 self.player.jumping = False
-
-            # enemy movement testing
-            elif event.key == pygame.K_LEFT:  # left arrow
-                self.enemy.movingleft = False
-            elif event.key == pygame.K_RIGHT:  # right arrow
-                self.enemy.movingright = False
-            elif event.key == pygame.K_UP:  # up arrow
-                self.enemy.jumping = False
 
         # return to calling line if the event matched
         else:

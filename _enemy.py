@@ -8,8 +8,7 @@ from _enemy_vision import EnemyVision
 
 class Enemy(Entity):
     """Class for enemy"""
-    def __init__(self, color, width, height, startx=430, starty=400,
-                 vision=150):
+    def __init__(self, color, width, height, startx, starty, vision):
         super().__init__(color, width, height, startx, starty)
         self.health = 50
         self.number = 0
