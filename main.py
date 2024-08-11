@@ -119,6 +119,11 @@ class Program():
 
         pause = LevelPause(tuple(screen_calls))
 
+        # create transparent background
+        background = pygame.Surface([WINDOW_WIDTH, WINDOW_HEIGHT])
+        background.fill(GREEN)
+        background.set_alpha(200)
+
         while True:
             self.clock.tick(25)
 
@@ -138,6 +143,9 @@ class Program():
             self.screen.fill(GREEN)
 
             level_sprites.draw(self.screen)
+
+            # draw background on top of level sprites
+            self.screen.blit(background.convert_alpha(), (0, 0))
 
             pause.sprites.draw(self.screen)
 
