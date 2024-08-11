@@ -179,10 +179,18 @@ class Game():
         """Pause the game, invoked using ESC key"""
         paused = True
 
+        pause_begin = pygame.time.get_ticks()
+
         text = Text("Game Paused", 60, BLUE, None, 500, 500)
         self.sprites.add(text)
 
         while paused:
+            # reduce framerate as not needed
+            self.clock.tick(10)
+
+            self.sprites.draw(self.screen)
+            pygame.display.flip()
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
@@ -190,12 +198,15 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_r:
                         paused = False
-                        self.sprites.remove(text)
 
-            self.sprites.draw(self.screen)
+        pause_end = pygame.time.get_ticks()
 
-            pygame.display.flip()
-            self.clock.tick(10)
+        # calculate time paused
+        pause_duration = pause_end - pause_begin
+
+        self.sprites.remove(text)
+        # resume cooldowns
+        self.player.regulate_cooldown(pause_duration)
 
     def moveplayer(self):
         """Uses the move function to move the player sprite by its current
