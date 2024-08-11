@@ -91,17 +91,30 @@ class Screen():
         The modulo function is used to correct index if it goes out of range.
         If it goes below 0 (before the top item) it's set to the bottom item.
         """
+        # set currently selected item's button to idle state
         self.set_selected_idle()
-        new_selected_index = (self.screens.index(self.next_screen) - 1) % 5
+
+        # find the new selected item's index, correct the index with modulo (%)
+        new_selected_index = ((self.screens.index(self.next_screen) - 1)
+                              % len(self.screens))
+
+        # set the new selected item and change its button to hover state
         self.next_screen = self.screens[new_selected_index]
         self.set_selected_hover()
 
     def move_select_down(self):
         """Change the currently selected button to button below.
         The modulo function is used to correct index if it goes out of range.
-        If it goes above 4 (after the bottom item) it's set to the top item."""
+        If it goes above the length of self.screens (after the bottom item)
+        it's set to the top item."""
+        # set currently selected item's button to idle state
         self.set_selected_idle()
-        new_selected_index = (self.screens.index(self.next_screen) + 1) % 5
+
+        # find the new selected item's index, correct the index with modulo (%)
+        new_selected_index = ((self.screens.index(self.next_screen) + 1)
+                              % len(self.screens))
+
+        # set the new selected item and change its button to hover state
         self.next_screen = self.screens[new_selected_index]
         self.set_selected_hover()
 
