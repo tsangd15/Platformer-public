@@ -82,6 +82,9 @@ class Player(Entity):
         self.stamina.value = self.defaultstamina
         self.rect.x, self.rect.y = self.startx, self.starty
 
+        # cant be sure player is still on a platform so enable gravity
+        self.onplatform = False
+
         if self.sfx:
             sfx_respawn.play()
 
