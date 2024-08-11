@@ -1,6 +1,7 @@
 """Game Level - Main Module"""
 from json import loads
 from math import sqrt
+from random import randint
 import pygame
 from _screen import Screen
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLUE, PINK, YELLOW)
@@ -135,6 +136,17 @@ def distance(point1, point2):
     dist = sqrt((point1_x - point2_x) ** 2 + (point1_y - point2_y) ** 2)
 
     return dist
+
+
+def inaccurate_vector(origin, destination, magnitude, inaccuracy):
+    """Returns a vector from the from the origin to a random point within a
+    radius of x pixels from the given destination, where x is the given
+    inaccuracy."""
+    new_dest_x = destination[0] + randint(-inaccuracy, inaccuracy)
+    new_dest_y = destination[1] + randint(-inaccuracy, inaccuracy)
+    new_dest = (new_dest_x, new_dest_y)
+
+    return vector(origin, new_dest, magnitude)
 
 
 # --------------- Constants --------------- #
@@ -340,8 +352,11 @@ class LevelMain(Screen):
                     if not collisions:
                         # report sighting of player and update enemy with
                         # vector to player
-                        enemy.spotted(True,
-                                      vector(enemy_center, player_point, 10))
+                        # generate vector to player with inaccuracy
+                        proj_vector = inaccurate_vector(enemy_center,
+                                                        player_point, 10,
+                                                        enemy.inaccuracy)
+                        enemy.spotted(True, proj_vector)
                         # end for loop early
                         break
 

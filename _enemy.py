@@ -19,6 +19,8 @@ class Enemy(Entity):
         # control firerate
         self.firecooldown = 320
         self.lastfired = pygame.time.get_ticks()
+        # control fire inaccuracy
+        self.inaccuracy = 15
 
         self.vision = EnemyVision(vision)
 
