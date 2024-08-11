@@ -25,6 +25,11 @@ class Program():
     def __init__(self):
         pygame.init()
 
+        # load and play music
+        pygame.mixer.music.load("assets/MUSIC_Adventure_AlexanderNakarada.mp3")
+        pygame.mixer.music.set_volume(0.3)
+        pygame.mixer.music.play(-1)
+
         # screen surface setup
         self.resolution = (WINDOW_WIDTH, WINDOW_HEIGHT)
         self.screen = pygame.display.set_mode(self.resolution)
