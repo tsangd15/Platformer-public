@@ -112,6 +112,23 @@ class Game():
                     self.sprites.add(plat)
                     self.platforms.add(plat)
 
+    def moveplayer(self):
+        """Uses the move function to move the player sprite by its current
+        velocity vector. Collisions with platforms are detected and reacted to.
+        If player bottom collides with platform, jumping stops, air duration is
+        reset; otherwise air duration is incremented. If player top collides
+        with platform, jump momentum reset so they begin falling back down."""
+        collisions = move(self.player, self.platforms)
+        if collisions["bottom"]:
+            self.player.jumpmomentum = 0
+            self.player.airduration = 0
+        else:
+            self.player.airduration += 1
+
+        # if player top collides, momentum reset
+        if collisions["top"]:
+            self.player.jumpmomentum = 0
+
     def moveprojectiles(self):
         """Iterates through each projectile in each entity's 'projectiles'
         sprite group attribute and moves them using their stored velocity, if
@@ -168,16 +185,7 @@ class Game():
             self.sprites.update()
 
             # move player
-            collisions = move(self.player, self.platforms)
-            if collisions["bottom"]:
-                self.player.jumpmomentum = 0
-                self.player.airduration = 0
-            else:
-                self.player.airduration += 1
-
-            # if player top collides, momentum reset
-            if collisions["top"]:
-                self.player.jumpmomentum = 0
+            self.moveplayer()
 
             # move projectiles
             self.moveprojectiles()
