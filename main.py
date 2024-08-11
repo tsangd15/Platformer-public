@@ -233,15 +233,17 @@ class Game():
                     run = False
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_x:  # Key X: end program
+                    if event.key == pygame.K_x:  # X: end program
                         run = False
-                    if event.key == pygame.K_a:  # Key A: move left
+                    if event.key == pygame.K_LSHIFT:  # L Shift: sprint
+                        self.player.sprinting = True
+                    if event.key == pygame.K_a:  # A: move left
                         self.player.movingleft = True
-                    if event.key == pygame.K_d:  # Key D: move right
+                    if event.key == pygame.K_d:  # D: move right
                         self.player.movingright = True
-                    if event.key == pygame.K_w:  # Key W: jump
+                    if event.key == pygame.K_w:  # W: jump
                         self.player.jumping = True
-                    if event.key == pygame.K_SPACE:  # Key Spacebar: shoot
+                    if event.key == pygame.K_SPACE:  # Spacebar: shoot
                         # generate velocity vector from player to cursor
                         projectile_vector = vector(self.player.rect.center,
                                                    [mouse_x, mouse_y], 10)
@@ -251,11 +253,13 @@ class Game():
                         self.player.hit()
 
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_a:  # Key A: stop moving left
+                    if event.key == pygame.K_LSHIFT:  # L Shift: stop sprint
+                        self.player.sprinting = False
+                    if event.key == pygame.K_a:  # A: stop moving left
                         self.player.movingleft = False
-                    if event.key == pygame.K_d:  # Key D: stop moving right
+                    if event.key == pygame.K_d:  # D: stop moving right
                         self.player.movingright = False
-                    if event.key == pygame.K_w:  # Key W: stop jumping
+                    if event.key == pygame.K_w:  # W: stop jumping
                         self.player.jumping = False
 
                 # if event.type == pygame.

@@ -15,9 +15,10 @@ class Player(Entity):
         self.lives = 3
         self.gameover = False
         self.sprinting = False
-        self.lastfired = pygame.time.get_ticks()
         self.firecooldown = 320
+        self.lastfired = pygame.time.get_ticks()
         self.lastjumped = pygame.time.get_ticks()
+        self.lastsprinted = pygame.time.get_ticks()
         self.number = 0
         self.stats = pygame.sprite.Group()
         self.health = ProgressBar(300, 20, RED, YELLOW, WINDOW_WIDTH/2-150,
@@ -57,14 +58,25 @@ class Player(Entity):
         now = pygame.time.get_ticks()
 
         if (not(self.jumping and self.sprinting) and
-           (now - self.lastjumped >= 1000)):
+           (now - self.lastjumped >= 1000) and
+           (now - self.lastsprinted >= 1000)):
             self.stamina.value += 0.5
 
         # move left/right if key pressed
         if self.movingright:
-            self.velocity_x = 4
+            if self.sprinting and self.stamina.value >= 2:
+                self.velocity_x = 6
+                self.stamina.value -= 2
+                self.lastsprinted = now
+            else:
+                self.velocity_x = 4
         if self.movingleft:
-            self.velocity_x = -4
+            if self.sprinting and self.stamina.value >= 2:
+                self.velocity_x = -6
+                self.stamina.value -= 2
+                self.lastsprinted = now
+            else:
+                self.velocity_x = -4
 
         # make player jump as long as they haven't been in the air for longer
         # than 3 frames
