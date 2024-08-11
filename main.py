@@ -330,8 +330,8 @@ class Program():
             if level_sprites is not None:
                 level_sprites.draw(self.screen)
 
-            # draw background on top of level sprites
-            self.screen.blit(background.convert_alpha(), (0, 0))
+                # draw background on top of level sprites
+                self.screen.blit(background.convert_alpha(), (0, 0))
 
             options.sprites.draw(self.screen)
 
