@@ -60,57 +60,100 @@ class Player(Entity):
         self.health.value = self.defaulthealth
         self.rect.x, self.rect.y = self.startx, self.starty
 
-    def update(self):
-        self.resetvelocity()
-
-        now = pygame.time.get_ticks()
-
+    def replenish_stamina(self, now):
+        """Replenish stamina if player hasn't sprinted/jumped for 1 second."""
         if (not(self.jumping and self.sprinting) and
            (now - self.lastjumped >= 1000) and
            (now - self.lastsprinted >= 1000)):
             self.stamina.value += 0.5
 
-        # move left/right if key pressed
+    def move_horizontally(self, now):
+        """Move the player horizontally if key pressed. If sprinting and
+        sufficient stamina, player will move at sprint velocity; otherwise
+        player will move at default velocity."""
+        # move right
         if self.movingright:
+            # check if sprint key down and sufficient stamina
             if self.sprinting and self.stamina.value >= 2:
                 self.velocity_x = 6
                 self.stamina.value -= 2
                 self.lastsprinted = now
+            # otherwise move at default velocity
             else:
                 self.velocity_x = 4
+                # reset sprint so stamina can regen fully
                 self.sprinting = False
+
+        # move left
         if self.movingleft:
+            # check if sprint key down and sufficient stamina
             if self.sprinting and self.stamina.value >= 2:
                 self.velocity_x = -6
                 self.stamina.value -= 2
                 self.lastsprinted = now
+            # otherwise move at default velocity
             else:
                 self.velocity_x = -4
+                # reset sprint so stamina can regen fully
                 self.sprinting = False
 
+    def move_vertically(self, now):
+        """Move the player vertically (jump/fall).
+
+        This method will make the player jump if jump key is pressed and
+        player sprite is on a platform or just recently (2 frames) left the
+        ground. Sufficient stamina is required to jump.
+
+        Additionally, this method handles vertical acceleration, in turn,
+        handling falling."""
         # make player jump as long as they haven't been in the air for longer
-        # than 3 frames
+        # than 2 frames
         if self.jumping and self.airduration < 2:
+            # additional if statement so that jumping and airduration
+            # conditions above don't invoke the else statement
+
             # check if enough stamina and on platform not long ago
             if self.stamina.value >= 5:
                 self.jumpmomentum = -14
                 self.stamina.value -= 5
                 self.lastjumped = now
             else:
+                # reset jump so stamina can regen fully
                 self.jumping = False
 
+        # gradually reduce momentum (i.e. upward acceleration decreases) so
+        # that when momentum is positive, player begins to fall (pygame y axis
+        # is 0 at top of screen so up is negative and down is negative)
         self.velocity_y += self.jumpmomentum
         self.jumpmomentum += 1
         if self.jumpmomentum > 4:
             self.jumpmomentum = 4
 
+    def is_health_depleted(self):
+        """Check if player health is depleted. If so invokes respawn if
+        sufficient lives, otherwise declare game is over."""
+        # check health depleted
         if self.health.value <= 0:
+            # check for insufficient lives
             if self.lives.value <= 0:
                 self.gameover = True
                 print("GAMEOVER")
             else:
                 self.respawn()
                 print("RESPAWNED")
+
+    def update(self):
+        self.resetvelocity()
+
+        now = pygame.time.get_ticks()
+
+        self.replenish_stamina(now)
+
+        self.move_horizontally(now)
+
+        self.move_vertically(now)
+
+        self.is_health_depleted()
 
     @property
     def score(self):
