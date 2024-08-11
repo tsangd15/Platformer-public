@@ -83,3 +83,13 @@ def is_point_within_rect(point, sprite):
        sprite.rect.top <= point_y <= sprite.rect.bottom):
         return True
     return False
+
+
+def return_button(button_text, button_group):
+    """Function to return Button instance with matching button text in a
+    button sprite group. If a button with the button text is not found, None
+    is returned (by default for any function)."""
+    for button in button_group:
+        if button.text == button_text:
+            return button
+    return None

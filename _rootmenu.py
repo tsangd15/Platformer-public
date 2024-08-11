@@ -3,7 +3,7 @@ import pygame
 from _button import Button
 from _text import Text
 from _functions import (set_button_idle, set_button_hover, set_button_click,
-                        is_point_within_rect)
+                        is_point_within_rect, return_button)
 from _settings import WINDOW_WIDTH, RED, BLACK, CYAN, YELLOW
 
 
@@ -111,9 +111,29 @@ class RootMenu():
             if event.type == pygame.MOUSEMOTION:
                 self.cursor_moved = True
 
-            # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # left click
+                    # get the button instance that is highlighted
+                    highlightedbutton = return_button(self.items
+                                                      [self.highlighted_item],
+                                                      self.buttons)
 
-            # self.update_mouse()
+                    # if button returned, check cursor is on the button
+                    if highlightedbutton is not None:
+                        if is_point_within_rect(event.pos, highlightedbutton):
+                            # let menu know to call associated method
+                            self.item_selected = True
+
+                if event.button == 2:  # middle click
+                    pass
+                if event.button == 3:  # right click
+                    pass
+                if event.button == 4:  # scroll up
+                    pass
+                if event.button == 5:  # scroll down
+                    pass
+
+            # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
 
     def is_button_hover(self):
         """Check if cursor is hovering over a button."""
