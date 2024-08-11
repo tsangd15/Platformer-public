@@ -209,7 +209,7 @@ class LevelMain(Screen):
 
         # load map's enemy configuration
         # read the file with given map name
-        with open("maps/" + map_name + "_conf.json", "r") as file:
+        with open("maps/" + map_name + ".json", "r") as file:
             contents = file.read()
 
         # convert json data into python data structures
