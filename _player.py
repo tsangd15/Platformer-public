@@ -164,8 +164,9 @@ class Player(Entity):
                 print("RESPAWNED")
 
     def regulate_cooldown(self, time_paused):
-        """Adjust the lastfired, lastjumped, lastsprinted attributes to
-        account for the time paused as if the game was never paused."""
+        """Adjust the lastfired, lastjumped, lastsprinted and lasthit
+        attributes to account for the time paused as if the game was never
+        paused."""
         self.lastfired = self.lastfired + time_paused
         self.lastjumped = self.lastjumped + time_paused
         self.lastsprinted = self.lastsprinted + time_paused
