@@ -1,13 +1,14 @@
 """Leaderboard Screen Module"""
 import pygame
-from _screen import Screen
-from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, RED, CYAN, YELLOW
-from _leaderboard_handler import ScoreHandler
-from _text import Text
-from _button import Button
-from _functions import is_point_within_rect, return_button
-from _leaderboard_button import ToggleButton
-from _server_functions import server_getentries
+from ._screen import Screen
+from utils._settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, RED, CYAN,
+                             YELLOW)
+from utils._leaderboard_handler import ScoreHandler
+from utils._text import Text
+from utils._button import Button
+from utils._functions import is_point_within_rect, return_button
+from .helpers._leaderboard_button import ToggleButton
+from utils._server_functions import server_getentries
 
 
 class Leaderboard(Screen):

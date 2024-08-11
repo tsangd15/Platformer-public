@@ -1,6 +1,6 @@
 """Line Sprite Module"""
 import pygame
-from _settings import BLACK, WHITE, WINDOW_WIDTH, WINDOW_HEIGHT
+from ._settings import BLACK, WHITE, WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class Line(pygame.sprite.Sprite):

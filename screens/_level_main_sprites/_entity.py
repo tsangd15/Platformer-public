@@ -1,7 +1,7 @@
 """Entity Class Module"""
 import pygame
-from _settings import BLACK
-from _config_handler import load_config
+from utils._settings import BLACK
+from utils._config_handler import load_config
 
 
 # --------------- Sound Objects --------------- #

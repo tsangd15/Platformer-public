@@ -1,9 +1,9 @@
 """Enemy Class Module"""
 import pygame
-from _entity import Entity, sfx_fire, sfx_hit
-from _projectile import Projectile
-from _settings import PURPLE
-from _enemy_vision import EnemyVision
+from ._entity import Entity, sfx_fire, sfx_hit
+from ._projectile import Projectile
+from utils._settings import PURPLE
+from ._enemy_vision import EnemyVision
 
 
 class Enemy(Entity):

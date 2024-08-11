@@ -1,8 +1,8 @@
 """Button Module"""
 import pygame
-from _text import Text
-from _settings import BLACK
-from _functions import check_alignment, align
+from ._text import Text
+from ._settings import BLACK
+from ._functions import check_alignment, align
 
 
 class Button(pygame.sprite.Sprite):

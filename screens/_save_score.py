@@ -1,14 +1,14 @@
 """Save Score Screen Module"""
 import pygame
-from _screen import Screen
-from _leaderboard_handler import ScoreHandler
-from _text import Text
-from _button import Button
-from _platform import Platform
-from _server_functions import server_addentry
-from _functions import return_button, is_point_within_rect
-from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RED, BLACK, CYAN,
-                       YELLOW, PINK)
+from ._screen import Screen
+from utils._leaderboard_handler import ScoreHandler
+from utils._text import Text
+from utils._button import Button
+from ._level_main_sprites._platform import Platform
+from utils._server_functions import server_addentry
+from utils._functions import return_button, is_point_within_rect
+from utils._settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RED, BLACK,
+                             CYAN, YELLOW, PINK)
 
 
 class SaveScore(Screen):

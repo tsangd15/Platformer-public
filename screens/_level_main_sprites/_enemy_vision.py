@@ -1,6 +1,6 @@
 """Enemy Vision Module"""
 import pygame
-from _settings import BLACK, PINK
+from utils._settings import BLACK, PINK
 
 
 class EnemyVision(pygame.sprite.Sprite):

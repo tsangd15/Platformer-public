@@ -1,12 +1,12 @@
 """Options Screen Module"""
 import pygame
-from _screen import Screen
-from _config_handler import load_config, save_config
-from _text import Text
-from _button import Button
-from _options_button import ToggleButton
-from _functions import is_point_within_rect, return_button
-from _settings import (WINDOW_WIDTH, DARK_RED, BLUE, BLACK, CYAN, YELLOW)
+from ._screen import Screen
+from utils._config_handler import load_config, save_config
+from utils._text import Text
+from utils._button import Button
+from .helpers._options_button import ToggleButton
+from utils._functions import is_point_within_rect, return_button
+from utils._settings import (WINDOW_WIDTH, DARK_RED, BLUE, BLACK, CYAN, YELLOW)
 
 
 class Options(Screen):

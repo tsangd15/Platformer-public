@@ -1,6 +1,6 @@
 """Leaderboard Local/Global Toggle Button Module"""
-from _button import Button
-from _settings import (BLACK, PURPLE, CYAN, WHITE, YELLOW, BLUE, ORANGE)
+from utils._button import Button
+from utils._settings import (BLACK, PURPLE, CYAN, WHITE, YELLOW, BLUE, ORANGE)
 
 
 # local colour states

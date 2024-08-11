@@ -1,7 +1,7 @@
 """Text Class Module"""
 import pygame
 import pygame.freetype
-from _functions import check_alignment, align
+from ._functions import check_alignment, align
 
 
 class Text(pygame.sprite.Sprite):

@@ -1,11 +1,11 @@
 """Player Class Module"""
 import pygame
-from _entity import Entity, sfx_fire, sfx_hit, sfx_respawn
-from _projectile import Projectile
-from _settings import WINDOW_WIDTH, GREEN, RED, YELLOW, PURPLE
-from _progressbar import ProgressBar
-from _text import Text
-from _player_lives import LivesIndicator
+from ._entity import Entity, sfx_fire, sfx_hit, sfx_respawn
+from ._projectile import Projectile
+from utils._settings import WINDOW_WIDTH, GREEN, RED, YELLOW, PURPLE
+from utils._progressbar import ProgressBar
+from utils._text import Text
+from ._player_lives import LivesIndicator
 
 
 class Player(Entity):

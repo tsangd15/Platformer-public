@@ -1,33 +1,40 @@
-"""Root Menu Module"""
+"""Game Level - Pause Module"""
 import pygame
-from _screen import Screen
-from _button import Button
-from _text import Text
-from _functions import is_point_within_rect, return_button
-from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLACK, CYAN, YELLOW
+from ._screen import Screen
+from utils._settings import (WINDOW_WIDTH, BLUE, BLACK, RED, CYAN, YELLOW)
+from utils._text import Text
+from utils._button import Button
+from utils._functions import return_button, is_point_within_rect
 
 
-class RootMenu(Screen):
-    """Class for handling root menu's sprites and logic"""
+class LevelPause(Screen):
+    """Class for level pause screen"""
     def __init__(self, screens):
         super().__init__(screens)
 
         # add screen specific event handlers to list of event handlers
         self.event_handlers.extend((self.handle_events_keyboard,
-                                   self.handle_events_mouse))
+                                    self.handle_events_mouse))
 
         # add the text and button sprites
         self.add_text()
         self.add_buttons()
 
+        # define attributes specific to pause screen
+        self.pause_begin = pygame.time.get_ticks()
+
+        self.pause_end = None
+
+        # calculate time paused
+        self.duration = None
+
+    # ---------- Add Text and Button Sprites ---------- #
+
     def add_text(self):
         """Add text instances to sprite group to be blitted to screen."""
-        text_title = Text("PLATFORMER", (600, 400), "top_center", RED, None,
-                          WINDOW_WIDTH/2, 20)
-        text_credits = Text("Audio credits in options screen.", 15,
-                            "bottom_right", RED, None, WINDOW_WIDTH - 10,
-                            WINDOW_HEIGHT - 10)
-        self.sprites.add(text_title, text_credits)
+        text_title = Text("Game Paused", 60, "middle_center", BLUE, None,
+                          WINDOW_WIDTH/2, 100)
+        self.sprites.add(text_title)
 
     def add_buttons(self):
         """Instantiate and add each button to sprites and buttons
@@ -54,6 +61,8 @@ class RootMenu(Screen):
         # set top button as highlighted
         self.set_selected_hover()
 
+    # ---------- Event Handlers ---------- #
+
     def handle_events_keyboard(self, event):
         """Handle keyboard related events. If the given event matches, the
         corresponding actions for that matched event are carried out."""
@@ -69,6 +78,9 @@ class RootMenu(Screen):
             elif (event.key == pygame.K_SPACE or  # spacebar
                   event.key == pygame.K_KP_ENTER or  # keypad enter
                   event.key == pygame.K_RETURN):  # main enter key
+                self.confirmed = True
+            elif event.key == pygame.K_ESCAPE:  # escape key
+                self.selected = "resume"
                 self.confirmed = True
 
         elif event.type == pygame.KEYUP:
@@ -115,3 +127,21 @@ class RootMenu(Screen):
         else:
             return False  # no match
         return True  # match
+
+    def process_next_screen(self):
+        """Return the next screen to display (returning None will mean the
+        current screen will continue to be displayed."""
+
+        if self.confirmed:
+            self.confirmed = False
+            self.set_selected_click()
+
+            if self.selected == "resume":
+                # additional steps if resuming
+                # calculate total time paused and store in duration attribute
+                self.pause_end = pygame.time.get_ticks()
+                self.duration = self.pause_end - self.pause_begin
+            # return next screen's name
+            return self.selected
+        # return nothing if selected item not confirmed (e.g. no left click)
+        return None

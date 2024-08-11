@@ -1,16 +1,16 @@
 """Main game file"""
 import sys
 import pygame
-from _rootmenu import RootMenu
-from _level_main import LevelMain
-from _level_pause import LevelPause
-from _level_complete import LevelComplete
-from _level_fail import LevelFail
-from _leaderboard import Leaderboard
-from _save_score import SaveScore
-from _options import Options
-from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN, BLACK)
-from _config_handler import load_config
+from screens._rootmenu import RootMenu
+from screens._level_main import LevelMain
+from screens._level_pause import LevelPause
+from screens._level_complete import LevelComplete
+from screens._level_fail import LevelFail
+from screens._leaderboard import Leaderboard
+from screens._save_score import SaveScore
+from screens._options import Options
+from utils._settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN, BLACK)
+from utils._config_handler import load_config
 
 
 def quit_program():

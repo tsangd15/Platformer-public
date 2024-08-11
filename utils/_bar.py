@@ -1,6 +1,6 @@
 """Bar Module"""
 import pygame
-from _settings import BLACK
+from ._settings import BLACK
 
 
 class Bar(pygame.sprite.Sprite):

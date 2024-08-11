@@ -1,6 +1,6 @@
 """Progress Bar Module"""
 import pygame
-from _bar import Bar
+from ._bar import Bar
 
 
 class ProgressBar():

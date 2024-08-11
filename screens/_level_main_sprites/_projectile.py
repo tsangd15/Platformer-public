@@ -1,6 +1,6 @@
 """Projectile Class Module"""
 import pygame
-from _settings import BLACK
+from utils._settings import BLACK
 
 
 class Projectile(pygame.sprite.Sprite):

@@ -3,14 +3,15 @@ from json import loads
 from math import sqrt
 from random import randint
 import pygame
-from _screen import Screen
-from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLUE, PINK, YELLOW)
-from _platform import Platform
-from _player import Player
-from _enemy import Enemy
-from _projectile import Projectile
-from _line import Line
-from _text import Text
+from ._screen import Screen
+from utils._settings import (WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLUE, PINK,
+                             YELLOW)
+from ._level_main_sprites._platform import Platform
+from ._level_main_sprites._player import Player
+from ._level_main_sprites._enemy import Enemy
+from ._level_main_sprites._projectile import Projectile
+from utils._line import Line
+from utils._text import Text
 
 
 def list_collisions(sprite, spritelist):

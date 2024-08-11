@@ -1,7 +1,7 @@
 """Screen Class Module"""
 import pygame
-from _functions import (is_point_within_rect, set_button_idle,
-                        set_button_hover, set_button_click)
+from utils._functions import (is_point_within_rect, set_button_idle,
+                              set_button_hover, set_button_click)
 
 
 class Screen():

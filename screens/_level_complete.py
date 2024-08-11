@@ -1,10 +1,10 @@
 """Game Level - Complete Module"""
 import pygame
-from _screen import Screen
-from _settings import (WINDOW_WIDTH, BLUE, BLACK, RED, CYAN, YELLOW)
-from _text import Text
-from _button import Button
-from _functions import is_point_within_rect, return_button
+from ._screen import Screen
+from utils._settings import (WINDOW_WIDTH, BLUE, BLACK, RED, CYAN, YELLOW)
+from utils._text import Text
+from utils._button import Button
+from utils._functions import is_point_within_rect, return_button
 
 
 class LevelComplete(Screen):

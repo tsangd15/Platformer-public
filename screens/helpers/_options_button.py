@@ -1,7 +1,7 @@
 """Options On/Off Button Module"""
-from _button import Button
-from _settings import (BLACK, DARK_GREEN, DARK_RED, GREEN, RED, PURPLE, CYAN,
-                       WHITE)
+from utils._button import Button
+from utils._settings import (BLACK, DARK_GREEN, DARK_RED, GREEN, RED, PURPLE,
+                             CYAN, WHITE)
 
 
 # on colour states

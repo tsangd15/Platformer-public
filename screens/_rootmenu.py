@@ -1,34 +1,34 @@
-"""Game Level - Fail Module"""
+"""Root Menu Module"""
 import pygame
-from _screen import Screen
-from _settings import (WINDOW_WIDTH, BLUE, BLACK, RED, CYAN, YELLOW)
-from _text import Text
-from _button import Button
-from _functions import is_point_within_rect, return_button
+from ._screen import Screen
+from utils._button import Button
+from utils._text import Text
+from utils._functions import is_point_within_rect, return_button
+from utils._settings import (WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLACK, CYAN,
+                             YELLOW)
 
 
-class LevelFail(Screen):
-    """Class for level fail screen"""
-    def __init__(self, screens, score):
+class RootMenu(Screen):
+    """Class for handling root menu's sprites and logic"""
+    def __init__(self, screens):
         super().__init__(screens)
-        # store the level's final score
-        self.score = score
 
         # add screen specific event handlers to list of event handlers
         self.event_handlers.extend((self.handle_events_keyboard,
                                    self.handle_events_mouse))
 
-        # add the text sprites
+        # add the text and button sprites
         self.add_text()
         self.add_buttons()
 
     def add_text(self):
-        """Add text to sprite group to be blitted to screen."""
-        text_main = Text("Level Failed!", 60, "top_center", BLUE, None,
-                         WINDOW_WIDTH/2, 65)
-        text_score = Text(f"Score: {self.score}", 30, "top_center", BLUE, None,
-                          WINDOW_WIDTH/2, 135)
-        self.sprites.add(text_main, text_score)
+        """Add text instances to sprite group to be blitted to screen."""
+        text_title = Text("PLATFORMER", (600, 400), "top_center", RED, None,
+                          WINDOW_WIDTH/2, 20)
+        text_credits = Text("Audio credits in options screen.", 15,
+                            "bottom_right", RED, None, WINDOW_WIDTH - 10,
+                            WINDOW_HEIGHT - 10)
+        self.sprites.add(text_title, text_credits)
 
     def add_buttons(self):
         """Instantiate and add each button to sprites and buttons
@@ -100,6 +100,17 @@ class LevelFail(Screen):
                     if is_point_within_rect(event.pos, selected_button):
                         # let menu know to call associated method
                         self.confirmed = True
+
+            elif event.button == 2:  # middle click
+                pass
+            elif event.button == 3:  # right click
+                pass
+            elif event.button == 4:  # scroll up
+                pass
+            elif event.button == 5:  # scroll down
+                pass
+
+            # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION
 
         # return to calling line if the event matched
         else:

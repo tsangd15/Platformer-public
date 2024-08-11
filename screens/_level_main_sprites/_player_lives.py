@@ -1,6 +1,6 @@
 """Player Lives Indicator Module"""
 import pygame
-from _settings import WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
+from utils._settings import WHITE, WINDOW_HEIGHT, WINDOW_WIDTH
 
 pygame.init()
 resolution = (WINDOW_WIDTH, WINDOW_HEIGHT)

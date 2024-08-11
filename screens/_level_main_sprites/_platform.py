@@ -1,6 +1,6 @@
 """Platform Class Module"""
 import pygame
-from _settings import BLACK
+from utils._settings import BLACK
 
 
 class Platform(pygame.sprite.Sprite):
