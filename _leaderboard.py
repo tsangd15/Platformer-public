@@ -1,11 +1,13 @@
 """Leaderboard Screen Module"""
 import pygame
 from _screen import Screen
-from _settings import WINDOW_WIDTH, BLACK, RED, CYAN, YELLOW
+from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, BLACK, RED, CYAN, YELLOW
 from _leaderboard_handler import ScoreHandler
 from _text import Text
 from _button import Button
 from _functions import is_point_within_rect, return_button
+from _leaderboard_button import ToggleButton
+from _server_functions import server_getentries
 
 
 class Leaderboard(Screen):
@@ -17,16 +19,19 @@ class Leaderboard(Screen):
         self.event_handlers.extend((self.handle_events_keyboard,
                                    self.handle_events_mouse))
 
+        # sprite group to hold tag and score text sprites
+        self.datasprites = pygame.sprite.Group()
+
         # add the text and button sprites
         self.add_text()
         self.add_buttons()
 
-        # add the scores
-        self.add_scores()
+        # default to the local leaderboard on startup
+        self.render_scores_local()
 
     def add_text(self):
         """Add text instances to sprite group to be blitted to screen."""
-        text_title = Text("LEADERBOARD", (600, 400), "top_center", RED, None,
+        text_title = Text("LEADERBOARD", (500, 400), "top_center", RED, None,
                           WINDOW_WIDTH/2, 20)
         self.sprites.add(text_title)
 
@@ -36,7 +41,7 @@ class Leaderboard(Screen):
         A for loop iterates through all the menu items listed in self.items
         and creates a Button instance for each which is then added to the
         sprites and buttons sprite groups."""
-        # define button colours
+        # ----- add back button ----- #
         button_idlecolor = (BLACK, RED)
         button_hovercolor = (CYAN, RED)
         button_clickcolor = (CYAN, YELLOW)
@@ -44,17 +49,20 @@ class Leaderboard(Screen):
         button_back = Button(50, 50, "<", (40, 40), "top_left",
                              button_idlecolor, button_hovercolor,
                              button_clickcolor, 20, 20, identifier="root_menu")
-        self.sprites.add(button_back)
-        self.buttons.add(button_back)
+
+        # ----- add local/global toggle button ----- #
+        button_toggle = ToggleButton(110, 50, "local", (105, 45), "top_right",
+                                     WINDOW_WIDTH - 20, 20,
+                                     identifier="toggle_leaderboard")
+
+        self.sprites.add(button_back, button_toggle)
+        self.buttons.add(button_back, button_toggle)
 
         # set top button as highlighted
         self.set_selected_hover()
 
-    def add_scores(self):
+    def add_scores(self, top_10):
         """Gets the top 10 stored scores and blits them to the screen."""
-        handler = ScoreHandler()
-        top_10 = handler.get_top_10()
-
         for i, (username, score), height in zip(range(1, 11),
                                                 top_10,
                                                 range(120, 120+45*10, 45)):
@@ -65,6 +73,7 @@ class Leaderboard(Screen):
             text_score = Text(str(score), 36, "middle_left", RED, None,
                               WINDOW_WIDTH / 2 + 180, height)
             self.sprites.add(text_number, text_username, text_score)
+            self.datasprites.add(text_number, text_username, text_score)
 
     def handle_events_keyboard(self, event):
         """Handle keyboard related events. If the given event matches, the
@@ -106,3 +115,41 @@ class Leaderboard(Screen):
         else:
             return False  # no match
         return True  # match
+
+    def toggle_leaderboard(self):
+        """Toggle the leaderboard data between local and global."""
+        button_toggle = return_button("toggle_leaderboard", self.buttons)
+
+        # remove data text sprites from other leaderboard
+        for sprite in self.datasprites:
+            # iterate through each sprite and kill (remove from all groups)
+            sprite.kill()
+
+        # change to global leaderboard
+        if button_toggle.text == "local":
+            self.render_scores_global()
+            button_toggle.toggle_global()
+
+        # change to local leaderboard
+        else:
+            self.render_scores_local()
+            button_toggle.toggle_local()
+
+    def render_scores_local(self):
+        """Render the local leaderboard data onto the screen."""
+        handler = ScoreHandler()
+        top_10 = handler.get_top_10()
+        self.add_scores(top_10)
+
+    def render_scores_global(self):
+        """Render the local leaderboard data onto the screen."""
+        results = server_getentries()
+
+        if results is not None:  # if results has actual data
+            self.add_scores(results)
+        else:
+            text_error = Text("Server error. Toggle back to try again.", 20,
+                              "middle_center", RED, None, WINDOW_WIDTH/2,
+                              WINDOW_HEIGHT/2)
+            self.sprites.add(text_error)
+            self.datasprites.add(text_error)

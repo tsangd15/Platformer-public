@@ -273,6 +273,7 @@ class Program():
     def leaderboard(self):
         """Display game leaderboard screen"""
         screen_calls = {"root_menu": None,
+                        "toggle_leaderboard": None,
                         "quit": quit_program}
         leaderboard = Leaderboard(tuple(screen_calls))
 
@@ -285,6 +286,8 @@ class Program():
             if next_screen is not None:
                 if next_screen == "quit":
                     screen_calls[next_screen]()
+                elif next_screen == "toggle_leaderboard":
+                    leaderboard.toggle_leaderboard()
                 else:
                     return
 
