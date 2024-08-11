@@ -1,9 +1,11 @@
 """Main game file"""
 from math import sqrt
 import pygame
-from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE
+from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE,
+                       YELLOW)
 from _platform import Platform
 from _player import Player
+from _enemy import Enemy
 
 # --------------- Movement and Collision Functions --------------- #
 
@@ -137,8 +139,10 @@ class Game():
 
         # Creating sprites then adding to sprite lists
         self.player = Player(BLUE, 40, 70)
+        self.enemy = Enemy(YELLOW, 80, 80)
         self.sprites.add(self.player)
         self.entities.add(self.player)
+        self.sprites.add(self.enemy)
 
         for row in range(NUMBEROFROWS):
             for col in range(NUMBEROFCOLUMNS):
@@ -174,7 +178,14 @@ class Game():
             for projectile in entity.projectiles:
                 collisions = move(projectile, self.platforms)
                 if True in collisions.values():
+                    # kill projectile if it hits a platform
                     projectile.kill()
+
+                damage = list_collisions(self.enemy, entity.projectiles)
+                for i in damage:
+                    self.enemy.hit()  # inflict damage on enemy
+                    i.kill()  # kill projectile if it hits an enemy
+
             entity.projectiles.draw(self.screen)
 
     def rungame(self):
