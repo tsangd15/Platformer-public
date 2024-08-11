@@ -42,7 +42,7 @@ def move(sprite, platformlist):
         "bottom": False
         }
 
-    # horizontal movement
+    # horizontal movement handling
     sprite.rect.x += sprite.velocity_x
     collisionslist = list_collisions(sprite, platformlist)
     for platform in collisionslist:
@@ -54,7 +54,7 @@ def move(sprite, platformlist):
             sprite.rect.right = platform.rect.left
             detectedcollisions["right"] = True
 
-    # vertical movement
+    # vertical movement handling
     sprite.rect.y += sprite.velocity_y
     collisionslist = list_collisions(sprite, platformlist)
     for platform in collisionslist:
@@ -158,8 +158,9 @@ class Game():
             for col in range(NUMBEROFCOLUMNS):
 
                 if self.gamemap[row][col] == 1:  # platforms
-                    plat = Platform(RED, PLATFORMLENGTH, PLATFORMLENGTH)
-                    plat.setlocation(col*PLATFORMLENGTH, row*PLATFORMLENGTH)
+                    # colour, width, height, xpos, ypos
+                    plat = Platform(RED, PLATFORMLENGTH, PLATFORMLENGTH,
+                                    col*PLATFORMLENGTH, row*PLATFORMLENGTH)
                     self.sprites.add(plat)
                     self.platforms.add(plat)
 
@@ -241,8 +242,10 @@ class Game():
                     if event.key == pygame.K_w:  # Key W: jump
                         self.player.jumping = True
                     if event.key == pygame.K_SPACE:  # Key Spacebar: shoot
+                        # generate velocity vector from player to cursor
                         projectile_vector = vector(self.player.rect.center,
                                                    [mouse_x, mouse_y], 10)
+                        # spawn projectile with generated velocity
                         self.player.fire(projectile_vector)
                     if event.key == pygame.K_h:
                         self.player.hit()
@@ -269,6 +272,7 @@ class Game():
 
             # move projectiles
             self.moveprojectiles()
+            self.player.stats.draw(self.screen)
 
             self.sprites.draw(self.screen)
 
