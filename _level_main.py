@@ -499,14 +499,16 @@ class LevelMain(Screen):
                 self.player.movingright = True
             elif event.key == pygame.K_w:  # W: jump
                 self.player.jumping = True
-            elif event.key == pygame.K_SPACE:  # Spacebar: shoot
+            elif event.key == pygame.K_h:
+                self.player.hit(5)
+
+        elif event.type == pygame.MOUSEBUTTONUP:
+            if event.button == 1:  # left click: shoot
                 # generate velocity vector from player to cursor
                 projectile_vector = vector(self.player.rect.center,
                                            self.cursor, 10)
                 # spawn projectile with generated velocity
                 self.player.fire(projectile_vector)
-            elif event.key == pygame.K_h:
-                self.player.hit(5)
 
         # return to calling line if the event matched
         else:
