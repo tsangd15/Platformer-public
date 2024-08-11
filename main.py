@@ -265,6 +265,36 @@ class Game():
 
             entity.projectiles.draw(self.screen)
 
+    def check_finish(self):
+        """Method to check for player collision with finish points.
+        If so, level is completed, carry out actions on level complete."""
+        if list_collisions(self.player, self.finishpoints) != []:
+            self.level_completed()
+
+    def level_completed(self):
+        """Display Level Completed Screen"""
+        waiting = True
+
+        text_main = Text("Level Completed!", (WINDOW_WIDTH-60,
+                         WINDOW_HEIGHT-60), "middle_center", BLUE, None,
+                         WINDOW_WIDTH/2, WINDOW_HEIGHT/2)
+        self.sprites.add(text_main)
+
+        # waiting for user input
+        while waiting:
+            # reduce framerate as not needed
+            self.clock.tick(10)
+
+            self.sprites.draw(self.screen)
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    sys.exit()
+
+        self.sprites.remove(text_main)
+
     def rungame(self):
         """Run Main Game"""
         # game running flag
@@ -329,6 +359,10 @@ class Game():
 
             # move projectiles
             self.moveprojectiles()
+
+            # check for game finish
+            self.check_finish()
+
             self.player.stats.draw(self.screen)
 
             self.sprites.draw(self.screen)
