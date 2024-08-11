@@ -131,6 +131,69 @@ NUMBEROFCOLUMNS = int(WINDOW_WIDTH/PLATFORMLENGTH)
 NUMBEROFROWS = int(WINDOW_HEIGHT/PLATFORMLENGTH)
 
 
+class Program():
+    """Class to run program's root menu which calls further menus/runs a game
+    level."""
+    def __init__(self):
+        pygame.init()
+        self.resolution = (WINDOW_WIDTH, WINDOW_HEIGHT)
+        self.screen = pygame.display.set_mode(self.resolution)
+        pygame.display.set_caption("2D Platformer")
+
+        # clock setup
+        self.clock = pygame.time.Clock()
+
+        self.sprites = pygame.sprite.Group()
+
+        self.rootmenu()
+
+    def rootmenu(self):
+        """Display the root menu for the player to navigate to different
+        screens"""
+
+        while True:
+
+            self.clock.tick(10)
+
+            # keybind detection
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    quit_program()
+
+                if event.type == pygame.KEYDOWN:
+                    pass
+
+                if event.type == pygame.KEYUP:
+                    pass
+
+                # if event.type == pygame.
+                # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
+
+                # self.update_mouse()
+
+                self.screen.fill(GREEN)
+
+                # call update function for each sprite in sprites list
+                self.sprites.update()
+
+                self.sprites.draw(self.screen)
+
+                # update the screen
+                pygame.display.flip()
+
+    def gamelevel(self):
+        """Load and run a game level"""
+
+    def leaderboard(self):
+        """Display game leaderboard screen"""
+
+    def tutorial(self):
+        """Display game tutorial screen"""
+
+    def options(self):
+        """Display options screen"""
+
+
 class Game():
     """Class to run game instance"""
     def __init__(self):
