@@ -1,0 +1,4 @@
+{
+    "custom": [["text", "Move left with A and right with D.", 20, "middle_center", [255, 0, 0], "//none", 500, 500]],
+    "enemies": [[80, 80, 150]]
+}

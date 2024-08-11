@@ -10,6 +10,7 @@ from _player import Player
 from _enemy import Enemy
 from _projectile import Projectile
 from _line import Line
+from _text import Text
 
 
 def list_collisions(sprite, spritelist):
@@ -186,7 +187,8 @@ class LevelMain(Screen):
         # 0 = nothing
         # 1 = platform
         # 2 = player spawn location
-        # 3 map finish location
+        # 3 = map finish location
+        # 4 = enemy
         self.gamemap = []
         self.gamemap_conf = []
 
@@ -244,9 +246,9 @@ class LevelMain(Screen):
                     self.finishpoints.add(self.finishpoint)
 
                 elif self.gamemap[row][col] == 4:  # enemies
-                    enemy_width = self.gamemap_conf[enemy_count][0]
-                    enemy_height = self.gamemap_conf[enemy_count][1]
-                    enemy_vision = self.gamemap_conf[enemy_count][2]
+                    enemy_width = self.gamemap_conf["enemies"][enemy_count][0]
+                    enemy_height = self.gamemap_conf["enemies"][enemy_count][1]
+                    enemy_vision = self.gamemap_conf["enemies"][enemy_count][2]
 
                     enemy = Enemy(YELLOW, enemy_width, enemy_height,
                                   col*PLATFORMLENGTH, row*PLATFORMLENGTH,
@@ -255,6 +257,21 @@ class LevelMain(Screen):
                     self.entities.add(enemy)
                     self.enemies.add(enemy)
                     enemy_count += 1
+
+        # spawn in custom sprites like text
+        for custom_sprite in self.gamemap_conf["custom"]:
+            # iterate through each argument in custom sprite
+            for i, argument in enumerate(custom_sprite):
+                # replace "//none" with None
+                if argument == "//none":
+                    custom_sprite[i] = None
+
+            if custom_sprite[0] == "text":
+                text_sprite = Text(custom_sprite[1], custom_sprite[2],
+                                   custom_sprite[3], custom_sprite[4],
+                                   custom_sprite[5], custom_sprite[6],
+                                   custom_sprite[7])
+                self.sprites.add(text_sprite)
 
     def move_player(self):
         """Uses the move function to move the player sprite by its current
