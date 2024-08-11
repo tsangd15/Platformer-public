@@ -6,7 +6,8 @@ import pygame.freetype
 class Text(pygame.sprite.Sprite):
     """Class for creating text sprites in pygame significantly more easily and
     more organised. """
-    def __init__(self, text, size, fgcolour, bgcolour, startx, starty):
+    def __init__(self, text, size, fgcolour, bgcolour, startx, starty,
+                 centerx=False, centery=False):
         super().__init__()
 
         # store arguments
@@ -16,15 +17,63 @@ class Text(pygame.sprite.Sprite):
         self._startx = startx
         self._starty = starty
 
-        self.size = size
+        # ----- configure text sprite font size ----- #
+        # specific font size given
+        if isinstance(size, int):
+            self.font_size = size
+        # specific desired rect dimensions given
+        elif isinstance(size, tuple):
+            # find maximum font size that fits these dimensions
+            self.autofit(size)
+
         self.number = 0
 
         # instantiate font object instance
         # parameters: font file/name, font size
-        self.font = pygame.freetype.Font("PressStart2P-Regular.ttf", self.size)
+        self.font = pygame.freetype.Font("PressStart2P-Regular.ttf",
+                                         self.font_size)
 
         # set the sprite's image and rect
         self.update()
+
+    def autofit(self, desired_dimensions):
+        """Procedure that finds and sets the maximum font size that can fit
+        inside the given dimensions.
+
+        A while loop is used to iterate through different font sizes.
+        If font size too big, font size decreased with the upper variable
+        telling the procedure that the font was previously too big;
+        otherwise font size increased.
+
+        If font size not too big and upper variable is true, we know the
+        current font in self.font_size is the maximum integer font size."""
+        dimensions_x, dimensions_y = desired_dimensions
+        fitting = True
+        upper = False
+        self.font_size = 20
+
+        # while loop to find biggest font that fits in dimensions
+        while fitting:
+            # update font sprite with new font size
+            self.update()
+
+            # check if sprite bigger than desired dimensions
+            if ((self.rect.width > dimensions_x) or
+               (self.rect.height > dimensions_y)):
+                # decrease font size
+                self.font_size -= 1
+                # tell function we were too big
+                upper = True
+
+            # sprite is within desired dimensions
+            else:
+                # if previously too big
+                if upper:
+                    # this is the maximum font size that fits, so end loop
+                    fitting = False
+                # otherwise too small, increase font size
+                else:
+                    self.font_size += 1
 
     def rect_info(self):
         """For debugging, outputs generated text sprite's rect details
