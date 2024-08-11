@@ -68,13 +68,18 @@ def move(sprite, platformlist):
             sprite.rect.top = platform.rect.bottom
             detectedcollisions["top"] = True
 
-    # kill sprite if offscreen
-    if (((sprite.rect.left > WINDOW_WIDTH) or
+    # kill sprite if offscreen and not player
+    if ((sprite.rect.left > WINDOW_WIDTH) or
        (sprite.rect.right < 0) or
        (sprite.rect.bottom < 0) or
-       (sprite.rect.top > WINDOW_HEIGHT)) and
-       not isinstance(sprite, Player)):
-        sprite.kill()
+       (sprite.rect.top > WINDOW_HEIGHT)):
+        if not isinstance(sprite, Player):
+            sprite.kill()
+        # if player, check if 200 pixels below screen
+        else:
+            if (sprite.rect.top > WINDOW_HEIGHT+200):
+                # kill player by deducting significant health
+                sprite.hit(200)
 
     return detectedcollisions
 
@@ -357,7 +362,7 @@ class Game():
                         # spawn projectile with generated velocity
                         self.player.fire(projectile_vector)
                     if event.key == pygame.K_h:
-                        self.player.hit()
+                        self.player.hit(5)
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_LSHIFT:  # L Shift: stop sprint
