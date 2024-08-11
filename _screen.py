@@ -6,6 +6,8 @@ from _functions import (is_point_within_rect, set_button_idle,
 
 class Screen():
     """Screen class to inherit from"""
+    # ignore redundant pylint messages
+    # pylint: disable=pointless-string-statement, too-many-instance-attributes
     def __init__(self, screens):
         # store list of valid next screens
         self.screens = screens
@@ -35,6 +37,9 @@ class Screen():
 
         # update the stored cursor location
         self.update_cursor()
+
+        # list of event handler sub-functions
+        self.event_handlers = []
 
     @property
     def next_screen(self):
@@ -81,21 +86,17 @@ class Screen():
                 self.next_screen = button.text
                 self.set_selected_hover()
 
-    def screen_index(self, screen):
-        """Returns the index of given screen in self.screens."""
-        return self.screens.index(screen)
-
     def move_select_up(self):
         """Change the currently selected button to button above."""
         self.set_selected_idle()
-        new_selected_index = (self.screen_index(self.next_screen) - 1) % 5
+        new_selected_index = (self.screens.index(self.next_screen) - 1) % 5
         self.next_screen = self.screens[new_selected_index]
         self.set_selected_hover()
 
     def move_select_down(self):
         """Change the currently selected button to button below."""
         self.set_selected_idle()
-        new_selected_index = (self.screen_index(self.next_screen) + 1) % 5
+        new_selected_index = (self.screens.index(self.next_screen) + 1) % 5
         self.next_screen = self.screens[new_selected_index]
         self.set_selected_hover()
 
@@ -131,5 +132,76 @@ class Screen():
         current screen will continue to be displayed)."""
         if self.confirmed:
             self.confirmed = False
+            self.set_selected_click()
             return self.next_screen
         return None
+
+    def handle_events(self):
+        """Get and handle events from the pygame event queue."""
+        for event in pygame.event.get():
+            # iterate through each event handler method
+            for event_handler in self.event_handlers:
+                # call event handler method with event as argument
+                event_handler(event)
+
+    '''
+    Sample event handlers:
+
+    def handle_events_keyboard(self, event):
+        if event.type == pygame.QUIT:
+            self.terminate()
+
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP:  # up arrow
+                self.select_up = True
+            if event.key == pygame.K_DOWN:  # down arrow
+                self.select_down = True
+            if (event.key == pygame.K_SPACE or  # spacebar
+                event.key == pygame.K_KP_ENTER or  # keypad enter
+               event.key == pygame.K_RETURN):  # main enter key
+                self.confirmed = True
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_UP:
+                self.select_up = False
+            if event.key == pygame.K_DOWN:
+                self.select_down = False
+
+    def handle_events_mouse(self, event):
+        if event.type == pygame.MOUSEMOTION:
+            self.cursor_moved = True
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if event.button == 1:  # left click
+                # get the button instance that is selected
+                selected_button = return_button(self.next_screen,
+                                                self.buttons)
+
+                # if button returned, check cursor is on the button
+                if selected_button is not None:
+                    if is_point_within_rect(event.pos, selected_button):
+                        # let menu know to call associated method
+                        self.confirmed = True
+
+            if event.button == 2:  # middle click
+                pass
+            if event.button == 3:  # right click
+                pass
+            if event.button == 4:  # scroll up
+                pass
+            if event.button == 5:  # scroll down
+                pass
+
+            # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION
+    '''
+
+    def update(self):
+        """Update the menu by checking for any events and updating attributes
+        and button states as needed."""
+        self.update_cursor()
+
+        self.handle_events()
+
+        self.update_selected()
+
+        return self.process_next_screen()
