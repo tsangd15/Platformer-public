@@ -4,8 +4,65 @@ from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE
 from _platform import Platform
 from _player import Player
 
-PLATFORMLENGTH = 50
+# --------------- Movement and Collision Functions --------------- #
 
+
+def list_collisions(sprite, spritelist):
+    """Takes in a singular sprite and spritelist
+    Returns list of sprites in spritelist that collide with the singular
+    sprite."""
+    collisionslist = pygame.sprite.spritecollide(sprite, spritelist, False)
+    return collisionslist
+
+
+def move(sprite, platformlist):
+    """Method to move specific sprite, taking into account collisions with
+    sprites under the provided spritelist.
+
+    Method moves the sprite in the x direction first, then corrects it's
+    location if it has collided, then moves the sprite in the y direction
+    and corrects if it has collided. Returns the sides it has collided
+    with for further conditional actions."""
+    detectedcollisions = {
+        "left": False,
+        "right": False,
+        "top": False,
+        "bottom": False
+        }
+
+    sprite.rect.x += sprite.velocity_x
+    collisionslist = list_collisions(sprite, platformlist)
+    for platform in collisionslist:
+        if sprite.velocity_x < 0:  # sprite left
+            sprite.rect.left = platform.rect.right
+            detectedcollisions["left"] = True
+
+        elif sprite.velocity_x > 0:  # sprite right
+            sprite.rect.right = platform.rect.left
+            detectedcollisions["right"] = True
+
+    sprite.rect.y += sprite.velocity_y
+    collisionslist = list_collisions(sprite, platformlist)
+    for platform in collisionslist:
+        if sprite.velocity_y > 0:  # sprite bottom
+            sprite.rect.bottom = platform.rect.top
+            detectedcollisions["bottom"] = True
+
+        if sprite.velocity_y < 0:  # sprite top
+            sprite.rect.top = platform.rect.bottom
+            detectedcollisions["top"] = True
+
+    if ((sprite.rect.left > WINDOW_WIDTH) or
+       (sprite.rect.right < 0) or
+       (sprite.rect.bottom < 0) or
+       (sprite.rect.top > WINDOW_HEIGHT)):
+        sprite.kill()
+
+    return detectedcollisions
+
+
+# --------------- Constants --------------- #
+PLATFORMLENGTH = 50
 # automatically determine number of rows/columns
 NUMBEROFCOLUMNS = int(WINDOW_WIDTH/PLATFORMLENGTH)
 NUMBEROFROWS = int(WINDOW_HEIGHT/PLATFORMLENGTH)
@@ -38,11 +95,13 @@ class Game():
 
         # Setting up sprite lists
         self.sprites = pygame.sprite.Group()
+        self.entities = pygame.sprite.Group()
         self.platforms = pygame.sprite.Group()
 
         # Creating sprites then adding to sprite lists
         self.player = Player(BLUE, 40, 70)
         self.sprites.add(self.player)
+        self.entities.add(self.player)
 
         for row in range(NUMBEROFROWS):
             for col in range(NUMBEROFCOLUMNS):
@@ -53,53 +112,16 @@ class Game():
                     self.sprites.add(plat)
                     self.platforms.add(plat)
 
-    # collision functions
-
-    def list_collisions(self, sprite, spritelist):
-        """Takes in a singular sprite and spritelist
-        Returns list of sprites in spritelist that collide with the singular
-        sprite."""
-        collisionslist = pygame.sprite.spritecollide(sprite, spritelist, False)
-        return collisionslist
-
-    def move(self, sprite, platformlist):
-        """Method to move specific sprite, taking into account collisions with
-        sprites under the provided spritelist.
-
-        Method moves the sprite in the x direction first, then corrects it's
-        location if it has collided, then moves the sprite in the y direction
-        and corrects if it has collided. Returns the sides it has collided
-        with for further conditional actions."""
-        detectedcollisions = {
-            "left": False,
-            "right": False,
-            "top": False,
-            "bottom": False
-            }
-
-        sprite.rect.x += sprite.velocity_x
-        collisionslist = self.list_collisions(sprite, platformlist)
-        for platform in collisionslist:
-            if sprite.velocity_x < 0:  # sprite left
-                sprite.rect.left = platform.rect.right
-                detectedcollisions["left"] = True
-
-            elif sprite.velocity_x > 0:  # sprite right
-                sprite.rect.right = platform.rect.left
-                detectedcollisions["right"] = True
-
-        sprite.rect.y += sprite.velocity_y
-        collisionslist = self.list_collisions(sprite, platformlist)
-        for platform in collisionslist:
-            if sprite.velocity_y > 0:  # sprite bottom
-                sprite.rect.bottom = platform.rect.top
-                detectedcollisions["bottom"] = True
-
-            if sprite.velocity_y < 0:  # sprite top
-                sprite.rect.top = platform.rect.bottom
-                detectedcollisions["top"] = True
-
-        return detectedcollisions
+    def moveprojectiles(self):
+        """Iterates through each projectile in each entity's 'projectiles'
+        sprite group attribute and moves them using their stored velocity, if
+        they collide with a platform or go off screen, it is despawned."""
+        for entity in self.entities:
+            for projectile in entity.projectiles:
+                collisions = move(projectile, self.platforms)
+                if True in collisions.values():
+                    projectile.kill()
+            entity.projectiles.draw(self.screen)
 
     def rungame(self):
         """Run Main Game"""
@@ -129,7 +151,7 @@ class Game():
                     if event.key == pygame.K_w:
                         self.player.jumping = True
                     if event.key == pygame.K_SPACE:
-                        self.sprites.add(self.player.fire())
+                        self.player.fire()
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:
@@ -140,12 +162,13 @@ class Game():
                         self.player.jumping = False
 
             # --------------- game logic ------------- #
+            self.screen.fill(GREEN)
 
             # call update function for each sprite in sprites list
             self.sprites.update()
 
             # move player
-            collisions = self.move(self.player, self.platforms)
+            collisions = move(self.player, self.platforms)
             if collisions["bottom"]:
                 self.player.jumpmomentum = 0
                 self.player.airduration = 0
@@ -156,7 +179,8 @@ class Game():
             if collisions["top"]:
                 self.player.jumpmomentum = 0
 
-            self.screen.fill(GREEN)
+            # move projectiles
+            self.moveprojectiles()
 
             self.sprites.draw(self.screen)
 
