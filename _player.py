@@ -70,6 +70,7 @@ class Player(Entity):
                 self.lastsprinted = now
             else:
                 self.velocity_x = 4
+                self.sprinting = False
         if self.movingleft:
             if self.sprinting and self.stamina.value >= 2:
                 self.velocity_x = -6
@@ -77,15 +78,18 @@ class Player(Entity):
                 self.lastsprinted = now
             else:
                 self.velocity_x = -4
+                self.sprinting = False
 
         # make player jump as long as they haven't been in the air for longer
         # than 3 frames
-        if self.jumping:  # jump button down
+        if self.jumping and self.airduration < 2:
             # check if enough stamina and on platform not long ago
-            if self.airduration < 2 and self.stamina.value >= 5:
+            if self.stamina.value >= 5:
                 self.jumpmomentum = -14
                 self.stamina.value -= 5
                 self.lastjumped = now
+            else:
+                self.jumping = False
 
         self.velocity_y += self.jumpmomentum
         self.jumpmomentum += 1
