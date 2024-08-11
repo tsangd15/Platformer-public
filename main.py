@@ -3,7 +3,7 @@ import sys
 from math import sqrt
 import pygame
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE,
-                       YELLOW)
+                       YELLOW, PINK)
 from _text import Text
 from _platform import Platform
 from _player import Player
@@ -69,10 +69,11 @@ def move(sprite, platformlist):
             detectedcollisions["top"] = True
 
     # kill sprite if offscreen
-    if ((sprite.rect.left > WINDOW_WIDTH) or
+    if (((sprite.rect.left > WINDOW_WIDTH) or
        (sprite.rect.right < 0) or
        (sprite.rect.bottom < 0) or
-       (sprite.rect.top > WINDOW_HEIGHT)):
+       (sprite.rect.top > WINDOW_HEIGHT)) and
+       not isinstance(sprite, Player)):
         sprite.kill()
 
     return detectedcollisions
@@ -136,22 +137,23 @@ class Game():
         self.gamemap = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0]
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0]
                 ]
 
         # Setting up sprite lists
         self.sprites = pygame.sprite.Group()
         self.entities = pygame.sprite.Group()
         self.platforms = pygame.sprite.Group()
+        self.finishpoints = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
 
         # Creating sprites then adding to sprite lists
@@ -175,6 +177,14 @@ class Game():
                                          row*PLATFORMLENGTH)
                     self.sprites.add(self.player)
                     self.entities.add(self.player)
+
+                elif self.gamemap[row][col] == 3:  # finish point
+                    self.finishpoint = Platform(PINK, PLATFORMLENGTH,
+                                                PLATFORMLENGTH,
+                                                col*PLATFORMLENGTH,
+                                                row*PLATFORMLENGTH)
+                    self.sprites.add(self.finishpoint)
+                    self.finishpoints.add(self.finishpoint)
 
     def pause(self):
         """Pause the game, invoked using ESC key"""
