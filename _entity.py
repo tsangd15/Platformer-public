@@ -57,8 +57,8 @@ class Entity(pygame.sprite.Sprite):
 
     def check_sfx_setting(self):
         """Reads the sound_effects key from config.json and saves it to self.sfx.
-        If self.sfx is True, sound effects are played, otherwise they aren't.
-        """
+        If self.sfx is True, sound effects should be played, otherwise they
+        shouldn't."""
         self.sfx = load_config()["sound_effects"]
 
     def update(self):

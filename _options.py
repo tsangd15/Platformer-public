@@ -21,7 +21,7 @@ class Options(Screen):
         self.event_handlers.extend((self.handle_events_keyboard,
                                    self.handle_events_mouse))
 
-        # add the text sprites
+        # add the text and button sprites
         self.add_text()
         self.add_buttons()
 
