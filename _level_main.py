@@ -406,12 +406,34 @@ class LevelMain(Screen):
         # return list of collisions
         return collisionslist
 
+    def platform_beside_sprite(self, sprite):
+        """Returns if a platform is directly left/right of a sprite."""
+        # move sprite left 1 pixel to test left side
+        sprite.rect.x -= 1
+        # carry out collision check between sprite and platforms
+        collisionsleft = list_collisions(sprite, self.platforms)
+
+        # move sprite right 2 pixel to test right side
+        sprite.rect.x += 2
+        # carry out collision check between sprite and platforms
+        collisionsright = list_collisions(sprite, self.platforms)
+
+        # move sprite left 1 pixel to original position
+        sprite.rect.x -= 1
+
+        if collisionsleft or collisionsright:  # if either list not empty
+            return True
+        return False
+
     def update_enemy_movement(self):
         """Update an enemy sprite's knowledge of platforms it is colliding
         with."""
         for enemy in self.enemies:
             # return list of platforms colliding with enemy
             collided_platforms = self.list_platforms_beneath(enemy)
+
+            # check if enemy hits a platform on its left/right side, bool type
+            side_collision = self.platform_beside_sprite(enemy)
 
             # if list not empty (i.e. there are platforms colliding with enemy)
             if collided_platforms:
@@ -437,13 +459,13 @@ class LevelMain(Screen):
                     if not(enemy.movingleft or enemy.movingright):
                         enemy.movingleft = True  # move in any direction
 
-                    # check if enemy at left edge
-                    if enemy.rect.left < left_edge:
+                    # check if enemy at left edge or hits platform side
+                    if enemy.rect.left < left_edge or side_collision:
                         # move in opposite direction
                         enemy.movingleft = False
                         enemy.movingright = True
-                    # check if enemy at right edge
-                    elif enemy.rect.right > right_edge:
+                    # check if enemy at right edge or hits platform side
+                    elif enemy.rect.right > right_edge or side_collision:
                         # move in opposite direction
                         enemy.movingright = False
                         enemy.movingleft = True
@@ -452,8 +474,8 @@ class LevelMain(Screen):
                 else:
                     # if player to left of enemy
                     if self.player.rect.right < enemy.rect.left:
-                        # if enemy at left edge, jump
-                        if enemy.rect.left < left_edge:
+                        # if enemy at left edge or hits platform side, jump
+                        if enemy.rect.left < left_edge or side_collision:
                             enemy.jumping = True
                         # move left towards player
                         enemy.movingleft = True
@@ -461,8 +483,8 @@ class LevelMain(Screen):
 
                     # if player to right of enemy
                     elif self.player.rect.left > enemy.rect.right:
-                        # if enemy at right edge, jump
-                        if enemy.rect.right > right_edge:
+                        # if enemy at right edge or hits platform side, jump
+                        if enemy.rect.right > right_edge or side_collision:
                             enemy.jumping = True
                         # move right towards player
                         enemy.movingright = True
