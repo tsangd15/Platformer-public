@@ -39,8 +39,8 @@ class ScoreHandler():
         return top
 
     def save_scores(self):
-        """Overwrite the scores.json file with the current scores in the
-        scores attribute."""
+        """Sort the scores in the scores attribute and then overwrite the
+        scores.json file with the sorted scores."""
         sorted_scores = {}
 
         # iterate through the scores attribute in order of descending order of
@@ -65,5 +65,7 @@ class ScoreHandler():
             if self.scores[username] >= new_score:
                 return False
 
-        self.scores[username] = new_score
+        self.scores[username] = new_score  # add/update key with new value
+        self.save_scores()  # sort scores and save to file
+        self.load_scores()  # reload scores to use sorted dict with new score
         return True
