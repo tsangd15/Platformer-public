@@ -74,20 +74,10 @@ class Leaderboard(Screen):
             self.terminate()
 
         elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:  # up arrow
-                self.select_up = True
-            elif event.key == pygame.K_DOWN:  # down arrow
-                self.select_down = True
-            elif (event.key == pygame.K_SPACE or  # spacebar
-                  event.key == pygame.K_KP_ENTER or  # keypad enter
-                  event.key == pygame.K_RETURN):  # main enter key
+            if (event.key == pygame.K_SPACE or  # spacebar
+                event.key == pygame.K_KP_ENTER or  # keypad enter
+               event.key == pygame.K_RETURN):  # main enter key
                 self.confirmed = True
-
-        elif event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                self.select_up = False
-            elif event.key == pygame.K_DOWN:
-                self.select_down = False
 
         # return to calling line if the event matched
         else:
@@ -111,17 +101,6 @@ class Leaderboard(Screen):
                     if is_point_within_rect(event.pos, selected_button):
                         # let menu know to call associated method
                         self.confirmed = True
-
-            elif event.button == 2:  # middle click
-                pass
-            elif event.button == 3:  # right click
-                pass
-            elif event.button == 4:  # scroll up
-                pass
-            elif event.button == 5:  # scroll down
-                pass
-
-            # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION
 
         # return to calling line if the event matched
         else:
