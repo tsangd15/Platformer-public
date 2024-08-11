@@ -250,7 +250,7 @@ class Screen():
         if event.type == pygame.MOUSEMOTION:
             self.cursor_moved = True
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:  # left click
                 # get the button instance that is selected
                 selected_button = return_button(self.selected,
