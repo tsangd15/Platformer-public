@@ -43,7 +43,15 @@ class SaveScore(Screen):
         print("old:", self.text)
         print("newtext:", new_text)
         if len(new_text) <= 3:
-            self._text = new_text
+            # check if characters are valid letters
+            valid_chars = 0
+            for letter in new_text:
+                if letter in "ABCDEFGHIJKLMNOPQRSTUVWXYZ":
+                    valid_chars += 1
+
+            # if all characters were valid, set text attribute
+            if valid_chars == len(new_text):
+                self._text = new_text
 
     def add_text(self):
         """Add text to sprite group to be blitted to screen."""
@@ -101,7 +109,7 @@ class SaveScore(Screen):
             self.terminate()
 
         elif event.type == pygame.TEXTINPUT:
-            self.text += event.text
+            self.text += event.text.upper()
 
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:  # up arrow
