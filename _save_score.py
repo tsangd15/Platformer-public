@@ -33,6 +33,8 @@ class SaveScore(Screen):
 
         # create and add text and textbox sprites
         self.add_textbox()
+        # create and add text alert sprite
+        self.add_text_alert()
 
     @property
     def text(self):
@@ -62,6 +64,13 @@ class SaveScore(Screen):
         text_instruction = Text("Enter Player Tag:", 25, "top_center", BLUE,
                                 None, WINDOW_WIDTH/2, 150)
         self.sprites.add(text_main, text_instruction)
+
+    def add_text_alert(self):
+        """Add a text alert sprite. This will be used to display notifications
+        where needed."""
+        self.alert_text = Text("", 20, "top_center", RED, None,
+                               WINDOW_WIDTH / 2, 350)
+        self.sprites.add(self.alert_text)
 
     def add_buttons(self):
         """Instantiate and add each button to sprites and buttons
@@ -188,6 +197,10 @@ class SaveScore(Screen):
             handler.add_score(self.text, self.score)
             self.selected = "root_menu"
             self.confirmed = True
+        else:
+            # display alert on screen to remind user
+            self.alert_text.text = "Tags must consist of 3 characters."
+            self.alert_text.update()
 
     def update(self):
         """Update the menu by checking for any events and updating attributes
