@@ -55,6 +55,7 @@ class Text(pygame.sprite.Sprite):
     def text(self, new_text):
         if isinstance(new_text, str):
             self._text = new_text
+            self.update()
         else:
             raise Exception("new_text not string type")
 
@@ -67,6 +68,7 @@ class Text(pygame.sprite.Sprite):
     def startx(self, new_startx):
         if isinstance(int(new_startx), int):
             self._startx = int(new_startx)
+            self.update()
         else:
             raise Exception("new_startx not int type")
 
@@ -79,5 +81,6 @@ class Text(pygame.sprite.Sprite):
     def starty(self, new_starty):
         if isinstance(int(new_starty), int):
             self._starty = int(new_starty)
+            self.update()
         else:
             raise Exception("new_starty not int type")
