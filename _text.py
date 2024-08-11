@@ -16,6 +16,11 @@ class Text(pygame.sprite.Sprite):
         self.bgcolour = bgcolour
         self._startx = startx
         self._starty = starty
+        self.font_size = 20
+
+        # ----- instantiate font object instance ----- #
+        self.update_font()
+
         # ----- configure text sprite alignment ----- #
 
         # +-------------+---------------+--------------+
@@ -45,11 +50,6 @@ class Text(pygame.sprite.Sprite):
 
         self.number = 0
 
-        # instantiate font object instance
-        # parameters: font file/name, font size
-        self.font = pygame.freetype.Font("PressStart2P-Regular.ttf",
-                                         self.font_size)
-
         # set the sprite's image and rect
         self.update()
 
@@ -67,7 +67,6 @@ class Text(pygame.sprite.Sprite):
         dimensions_x, dimensions_y = desired_dimensions
         fitting = True
         upper = False
-        self.font_size = 20
 
         # while loop to find biggest font that fits in dimensions
         while fitting:
@@ -114,6 +113,12 @@ class Text(pygame.sprite.Sprite):
         else:
             self.rect.bottomright = self.startx, self.starty
 
+    def update_font(self):
+        """Update the Font object with new font size."""
+        # parameters: font file/name, font size
+        self.font = pygame.freetype.Font("PressStart2P-Regular.ttf",
+                                         self.font_size)
+
     def rect_info(self):
         """For debugging, outputs generated text sprite's rect details
         for help adjusting on text placement"""
@@ -127,9 +132,10 @@ class Text(pygame.sprite.Sprite):
         self.text = "Score: " + str(self.number)
 
     def update(self):
-        """Update the sprite's image and rect"""
+        """Update the sprite's font, image and rect"""
         # function returns text as rendered syrface and rect object instance
         # parameters: text, fgcolour, bgcolour
+        self.update_font()
         self.image, self.rect = self.font.render(self.text, self.fgcolour,
                                                  self.bgcolour)
         self.align()
