@@ -140,3 +140,14 @@ class Options(Screen):
         else:
             return False  # no match
         return True  # match
+
+    def config_music(self):
+        """Toggle music key in config."""
+        if self.config["music"] is True:
+            self.config["music"] = False
+            pygame.mixer.music.stop()
+        else:
+            self.config["music"] = True
+            pygame.mixer.music.play(-1)
+
+        save_config(self.config)

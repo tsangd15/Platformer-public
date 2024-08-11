@@ -10,6 +10,7 @@ from _leaderboard import Leaderboard
 from _save_score import SaveScore
 from _options import Options
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN, BLACK)
+from _config_handler import load_config
 
 
 def quit_program():
@@ -29,7 +30,8 @@ class Program():
         # load and play music
         pygame.mixer.music.load("assets/MUSIC_Adventure_AlexanderNakarada.mp3")
         pygame.mixer.music.set_volume(0.3)
-        pygame.mixer.music.play(-1)
+        if load_config()["music"]:
+            pygame.mixer.music.play(-1)
 
         # screen surface setup
         self.resolution = (WINDOW_WIDTH, WINDOW_HEIGHT)
@@ -264,6 +266,7 @@ class Program():
                         "config_music": None,
                         "config_sound_effects": None}
         options = Options(tuple(screen_calls))
+        screen_calls["config_music"] = options.config_music
 
         while True:
             self.clock.tick(25)
@@ -276,10 +279,8 @@ class Program():
                     screen_calls[next_screen]()
                 elif next_screen == "back":
                     return
-                elif next_screen == "config_music":
-                    pass
-                elif next_screen == "config_sfx":
-                    pass
+                elif "config_" in next_screen:
+                    screen_calls[next_screen]()
 
             self.screen.fill(BLACK)
 
