@@ -1,0 +1,8 @@
+{
+    "custom": [["text", "Press W to jump, left shift to sprint!", 20, "middle_center", [255, 0, 0], "//none", 400, 175],
+               ["text", "Both use up stamina, shown as the green", 20, "middle_center", [255, 0, 0], "//none", 400, 225],
+               ["text", "progress bar above.", 20, "middle_center", [255, 0, 0], "//none", 400, 250],
+               ["text", "It replenishes when you don't jump or", 20, "middle_center", [255, 0, 0], "//none", 400, 300],
+               ["text", "sprint for a small amount of time.", 20, "middle_center", [255, 0, 0], "//none", 400, 325]],
+    "enemies": [[80, 80, 150]]
+}
