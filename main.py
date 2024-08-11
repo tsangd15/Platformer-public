@@ -224,12 +224,11 @@ class Program():
             if next_screen is not None:
                 if next_screen == "save_score":
                     return "save"
-                elif next_screen == "root_menu":
+                if next_screen == "root_menu":
                     return "gotoroot"
-                elif next_screen == "continue":
+                if next_screen == "continue":
                     return "continue"
-                else:
-                    screen_calls[next_screen]()
+                screen_calls[next_screen]()
 
             self.screen.fill(GREEN)
 
@@ -268,12 +267,11 @@ class Program():
             if next_screen is not None:
                 if next_screen == "save_score":
                     return "save"
-                elif next_screen == "root_menu":
+                if next_screen == "root_menu":
                     return "gotoroot"
-                elif next_screen == "retry":
+                if next_screen == "retry":
                     return "retry"
-                else:
-                    screen_calls[next_screen]()
+                screen_calls[next_screen]()
 
             self.screen.fill(GREEN)
 
@@ -371,8 +369,7 @@ class Program():
                     continue
                 if result[1] == "gotoroot":  # gotoroot returned
                     return  # (score, "gotoroot")
-                else:
-                    raise Exception("Invalid result returned.")
+                raise Exception("Invalid result returned.")
 
     def options(self, level_sprites=None):
         """Display options screen"""
