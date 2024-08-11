@@ -78,24 +78,23 @@ def vector(origin, destination, magnitude):
 
     Outputs:
     vector_final - component vector with desired direction and magnitude"""
-    print(origin, destination, magnitude)
     changein_x = destination[0] - origin[0]
     changein_y = destination[1] - origin[1]
-    print(changein_x, changein_y)
+
     vector_initial = [changein_x, changein_y]
 
     # find initial magnitude using pythagoras (a^2 + b^2 = c^2)
     magnitude_initial = sqrt((changein_x) ** 2 +
                              (changein_y) ** 2)
-    print(magnitude_initial)
+
     # unit vector = vector / magnitude
     unit_vector = [vector_initial[0] / magnitude_initial,
                    vector_initial[1] / magnitude_initial]
-    print(unit_vector)
+
     # calculate vector with requested magnitude
     vector_final = [unit_vector[0] * magnitude,
                     unit_vector[1] * magnitude]
-    print(vector_final)
+
     return vector_final
 
 
@@ -210,7 +209,7 @@ class Game():
                         self.player.jumping = True
                     if event.key == pygame.K_SPACE:  # Key Spacebar: shoot
                         projectile_vector = vector(self.player.rect.center,
-                                                   [mouse_x, mouse_y], 5)
+                                                   [mouse_x, mouse_y], 10)
                         self.player.fire(projectile_vector)
 
                 if event.type == pygame.KEYUP:
