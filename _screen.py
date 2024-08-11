@@ -87,42 +87,45 @@ class Screen():
                 self.set_selected_hover()
 
     def move_select_up(self):
-        """Change the currently selected button to button above."""
+        """Change the currently selected button to button above.
+        The modulo function is used to correct index if it goes out of range.
+        If it goes below 0 (before the top item) it's set to the bottom item.
+        """
         self.set_selected_idle()
         new_selected_index = (self.screens.index(self.next_screen) - 1) % 5
         self.next_screen = self.screens[new_selected_index]
         self.set_selected_hover()
 
     def move_select_down(self):
-        """Change the currently selected button to button below."""
+        """Change the currently selected button to button below.
+        The modulo function is used to correct index if it goes out of range.
+        If it goes above 4 (after the bottom item) it's set to the top item."""
         self.set_selected_idle()
         new_selected_index = (self.screens.index(self.next_screen) + 1) % 5
         self.next_screen = self.screens[new_selected_index]
         self.set_selected_hover()
 
     def update_selected(self):
-        """Check if the arrow keys are being pressed. If so, update the menu
-        accordingly by changing self.next_screen and updating the button
-        state.
-
-        The modulo function is used to correct the index point attribute
-        self.highlighted_item if it goes out of range.
-        If it goes below 0 (before the top item) the pointer is set to the
-        bottom item.
-        If it goes above 4 (after the bottom item) the pointer is set to the
-        top item."""
+        """Check if the arrow keys are being pressed or mouse has moved. If so,
+        update the menu accordingly by changing self.next_screen and updating
+        the button state."""
         now = pygame.time.get_ticks()
 
+        # if last keyboard navigation event occurred at least the cooldown
+        # time, allow another keyboard navigation up/down event
         if now - self.last_selected >= self.select_cooldown:
 
+            # change selected button to button above
             if self.select_up:
                 self.move_select_up()
                 self.last_selected = now
 
+            # change selected button to button below
             if self.select_down:
                 self.move_select_down()
                 self.last_selected = now
 
+        # update selected button on mouse movement event
         if self.cursor_moved:
             self.cursor_moved = False
             self.is_button_hover()
@@ -137,7 +140,9 @@ class Screen():
         return None
 
     def handle_events(self):
-        """Get and handle events from the pygame event queue."""
+        """Get and handle events from the pygame event queue.
+        Each event gets iterated through each event handler to carry out tasks
+        if it matches a specific event."""
         for event in pygame.event.get():
             # iterate through each event handler method
             for event_handler in self.event_handlers:
