@@ -1,4 +1,5 @@
 """Main game file"""
+from math import sqrt
 import pygame
 from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE
 from _platform import Platform
@@ -62,6 +63,40 @@ def move(sprite, platformlist):
         sprite.kill()
 
     return detectedcollisions
+
+
+def vector(origin, destination, magnitude):
+    """Function to create velocity vectors from 2 points and magnitude.
+
+    Initial vector and magnitude is calculated. Unit vector (vector with
+    magnitude 1) is generated and then desired magnitude applied and returned.
+
+    Inputs:
+    origin - originating location
+    destination - final location
+    magnitude - preferred magnitude of output vector (to regulate speed)
+
+    Outputs:
+    vector_final - component vector with desired direction and magnitude"""
+    print(origin, destination, magnitude)
+    changein_x = destination[0] - origin[0]
+    changein_y = destination[1] - origin[1]
+    print(changein_x, changein_y)
+    vector_initial = [changein_x, changein_y]
+
+    # find initial magnitude using pythagoras (a^2 + b^2 = c^2)
+    magnitude_initial = sqrt((changein_x) ** 2 +
+                             (changein_y) ** 2)
+    print(magnitude_initial)
+    # unit vector = vector / magnitude
+    unit_vector = [vector_initial[0] / magnitude_initial,
+                   vector_initial[1] / magnitude_initial]
+    print(unit_vector)
+    # calculate vector with requested magnitude
+    vector_final = [unit_vector[0] * magnitude,
+                    unit_vector[1] * magnitude]
+    print(vector_final)
+    return vector_final
 
 
 # --------------- Constants --------------- #
@@ -156,6 +191,9 @@ class Game():
 
             clock.tick(FPS)
 
+            # store current cursor location
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
             # keybind detection
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -171,7 +209,9 @@ class Game():
                     if event.key == pygame.K_w:  # Key W: jump
                         self.player.jumping = True
                     if event.key == pygame.K_SPACE:  # Key Spacebar: shoot
-                        self.player.fire()
+                        projectile_vector = vector(self.player.rect.center,
+                                                   [mouse_x, mouse_y], 5)
+                        self.player.fire(projectile_vector)
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:  # Key A: stop moving left
@@ -180,6 +220,9 @@ class Game():
                         self.player.movingright = False
                     if event.key == pygame.K_w:  # Key W: stop jumping
                         self.player.jumping = False
+
+                # if event.type == pygame.
+                # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
 
             # --------------- game logic ------------- #
             self.screen.fill(GREEN)
