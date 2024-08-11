@@ -162,12 +162,11 @@ class Program():
         menu = RootMenu(tuple(item_calls))
 
         while True:
-            self.clock.tick(10)
+            self.clock.tick(25)
 
             # check if menu item returned, if so, run corresponding function
             # in item_calls dict
             next_screen = menu.update()
-            print(next_screen)
             if next_screen is not None:
                 item_calls[next_screen]()
 
