@@ -30,6 +30,7 @@ def move(sprite, platformlist):
         "bottom": False
         }
 
+    # horizontal movement
     sprite.rect.x += sprite.velocity_x
     collisionslist = list_collisions(sprite, platformlist)
     for platform in collisionslist:
@@ -41,6 +42,7 @@ def move(sprite, platformlist):
             sprite.rect.right = platform.rect.left
             detectedcollisions["right"] = True
 
+    # vertical movement
     sprite.rect.y += sprite.velocity_y
     collisionslist = list_collisions(sprite, platformlist)
     for platform in collisionslist:
@@ -52,6 +54,7 @@ def move(sprite, platformlist):
             sprite.rect.top = platform.rect.bottom
             detectedcollisions["top"] = True
 
+    # kill sprite if offscreen
     if ((sprite.rect.left > WINDOW_WIDTH) or
        (sprite.rect.right < 0) or
        (sprite.rect.bottom < 0) or
@@ -159,23 +162,23 @@ class Game():
                     run = False
 
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_x:
+                    if event.key == pygame.K_x:  # Key X: end program
                         run = False
-                    if event.key == pygame.K_a:
+                    if event.key == pygame.K_a:  # Key A: move left
                         self.player.movingleft = True
-                    if event.key == pygame.K_d:
+                    if event.key == pygame.K_d:  # Key D: move right
                         self.player.movingright = True
-                    if event.key == pygame.K_w:
+                    if event.key == pygame.K_w:  # Key W: jump
                         self.player.jumping = True
-                    if event.key == pygame.K_SPACE:
+                    if event.key == pygame.K_SPACE:  # Key Spacebar: shoot
                         self.player.fire()
 
                 if event.type == pygame.KEYUP:
-                    if event.key == pygame.K_a:
+                    if event.key == pygame.K_a:  # Key A: stop moving left
                         self.player.movingleft = False
-                    if event.key == pygame.K_d:
+                    if event.key == pygame.K_d:  # Key D: stop moving right
                         self.player.movingright = False
-                    if event.key == pygame.K_w:
+                    if event.key == pygame.K_w:  # Key W: stop jumping
                         self.player.jumping = False
 
             # --------------- game logic ------------- #
@@ -198,5 +201,6 @@ class Game():
         pygame.quit()
 
 
+# instantiate game
 game = Game()
 game.rungame()
