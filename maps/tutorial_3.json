@@ -1,0 +1,8 @@
+{
+    "custom": [["text", "Enemies are yellow!", 20, "middle_center", [255, 0, 0], "//none", 400, 175],
+               ["text", "If you are in their vision, they will", 20, "middle_center", [255, 0, 0], "//none", 400, 200],
+               ["text", "chase and attack you.", 20, "middle_center", [255, 0, 0], "//none", 400, 225],
+               ["text", "To attack, aim with cursor and", 20, "middle_center", [255, 0, 0], "//none", 400, 275],
+               ["text", "left click to fire.", 20, "middle_center", [255, 0, 0], "//none", 400, 300]],
+    "enemies": [[80, 80, 150], [80, 80, 150]]
+}
