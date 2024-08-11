@@ -14,5 +14,10 @@ class Player(Entity):
     def fire(self):
         """Spawns a projectile and adds it to the projectiles sprite group
         attribute."""
-        projectile = Projectile(BLUE, self.rect.x, self.rect.y, 10, 0)
+        if self.movingleft:
+            projectile_velocity_x = -10
+        else:
+            projectile_velocity_x = 10
+        projectile = Projectile(BLUE, self.rect.x, self.rect.y,
+                                projectile_velocity_x, 0)
         self.projectiles.add(projectile)
