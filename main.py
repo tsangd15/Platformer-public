@@ -98,6 +98,9 @@ class Program():
                     # if the user requested to go back to root menu
                     if screen_return == "gotoroot":
                         return "gotoroot"
+                    # if the user requested to continue to next level
+                    if screen_return == "continue":
+                        return "continue"
                     # reset level for retry if selected
                     if screen_return == "retry":
                         level.reset_level()
@@ -157,16 +160,19 @@ class Program():
 
             pygame.display.flip()
 
-    def level_complete(self, level_sprites, score, allow_save=True):
+    def level_complete(self, level_sprites, score, allow_save=True,
+                       allow_continue=False):
         """Display level pause screen"""
         print("ran level_complete()")
+        # build screen_calls dict in correct order
+        screen_calls = {}
+        if allow_continue:
+            screen_calls["continue"] = None
         if allow_save:
-            screen_calls = {"save_score": self.save_score,
-                            "root_menu": None,
-                            "quit": quit_program}
-        else:
-            screen_calls = {"root_menu": None,
-                            "quit": quit_program}
+            screen_calls["save_score"] = self.save_score
+        # append rest of screen calls
+        screen_calls.update({"root_menu": None,
+                             "quit": quit_program})
 
         complete = LevelComplete(tuple(screen_calls), score)
 
@@ -187,6 +193,8 @@ class Program():
                         return "gotoroot"
                 elif next_screen == "root_menu":
                     return "gotoroot"
+                elif next_screen == "continue":
+                    return "continue"
                 else:
                     screen_calls[next_screen]()
 
