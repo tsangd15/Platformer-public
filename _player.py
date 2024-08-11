@@ -99,10 +99,26 @@ class Player(Entity):
            (now - self.lastsprinted >= self.staminacooldown_sprint)):
             self.stamina.value += 0.5
 
-    def move_horizontally(self, now):
-        """Move the player horizontally if key pressed. If sprinting and
-        sufficient stamina, player will move at sprint velocity; otherwise
-        player will move at default velocity."""
+    def move_2d(self, now):
+        """Move the sprite horizontally (left/right) and vertically (jump/fall).
+
+        This method will make the entity jump if its on a platform (i.e.
+        onplatform attribute is True) at the time it wants to jump.
+
+        Additionally, this method handles vertical acceleration, in turn,
+        handling falling."""
+        # jump if on platform
+        if self.jumping and self.onplatform:
+            # check if enough stamina
+            if self.stamina.value >= 5:
+                self.jumpmomentum = -16
+                self.onplatform = False
+                self.stamina.value -= 5
+                self.lastjumped = now
+            else:
+                # reset jump so stamina can regen fully
+                self.jumping = False
+
         # move right
         if self.movingright:
             # check if sprint key down and sufficient stamina
@@ -115,6 +131,9 @@ class Player(Entity):
                 self.velocity_x = 4
                 # reset sprint so stamina can regen fully
                 self.sprinting = False
+
+            # cant be sure player is still on a platform so enable gravity
+            self.onplatform = False
 
         # move left
         if self.movingleft:
@@ -129,35 +148,19 @@ class Player(Entity):
                 # reset sprint so stamina can regen fully
                 self.sprinting = False
 
-    def move_vertically(self, now):
-        """Move the player vertically (jump/fall).
+            # cant be sure player is still on a platform so enable gravity
+            self.onplatform = False
 
-        This method will make the player jump if jump key is pressed and
-        player sprite is on a platform or just recently (2 frames) left the
-        ground. Sufficient stamina is required to jump.
-
-        Additionally, this method handles vertical acceleration, in turn,
-        handling falling."""
-        # make player jump as long as they haven't been in the air for longer
-        # than 2 frames
-        if self.jumping and self.airduration < 2:
-            # additional if statement so that jumping and airduration
-            # conditions above don't invoke the else statement
-
-            # check if enough stamina and on platform not long ago
-            if self.stamina.value >= 5:
-                self.jumpmomentum = -14
-                self.stamina.value -= 5
-                self.lastjumped = now
-            else:
-                # reset jump so stamina can regen fully
-                self.jumping = False
+        if not self.onplatform:
+            # apply gravity velocity
+            self.jumpmomentum += 1
 
         # gradually reduce momentum (i.e. upward acceleration decreases) so
         # that when momentum is positive, player begins to fall (pygame y axis
-        # is 0 at top of screen so up is negative and down is negative)
+        # is 0 at top of screen so up is negative and down is positive)
         self.velocity_y += self.jumpmomentum
-        self.jumpmomentum += 1
+
+        # cap max velocity due to gravity to 4
         if self.jumpmomentum > 4:
             self.jumpmomentum = 4
 
@@ -194,9 +197,7 @@ class Player(Entity):
 
         self.replenish_stamina(now)
 
-        self.move_horizontally(now)
-
-        self.move_vertically(now)
+        self.move_2d(now)
 
         self.is_health_depleted()
 

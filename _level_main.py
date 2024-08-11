@@ -289,30 +289,26 @@ class LevelMain(Screen):
 
     def move_player(self):
         """Uses the move function to move the player sprite by its current
-        velocity vector. Collisions with platforms are detected and reacted to.
-        If player bottom collides with platform, jumping stops, air duration is
-        reset; otherwise air duration is incremented. If player top collides
-        with platform, jump momentum reset so they begin falling back down."""
+        velocity vector."""
         collisions = move(self.player, self.platforms)
+        # if player bottom or top collides, momentum reset
+        # onplatform attribute set accordingly
         if collisions["bottom"]:
             self.player.jumpmomentum = 0
-            self.player.airduration = 0
-        else:
-            self.player.airduration += 1
-
-        # if player top collides, momentum reset
+            self.player.onplatform = True
         if collisions["top"]:
             self.player.jumpmomentum = 0
+            self.player.onplatform = False
 
     def move_enemies(self):
         """Uses the move function to move each enemy sprite."""
         for enemy in self.enemies:
             collisions = move(enemy, self.platforms)
+            # if enemy bottom or top collides, momentum reset
+            # onplatform attribute set accordingly
             if collisions["bottom"]:
                 enemy.jumpmomentum = 0
                 enemy.onplatform = True
-
-            # if player top collides, momentum reset
             if collisions["top"]:
                 enemy.jumpmomentum = 0
                 enemy.onplatform = False

@@ -33,8 +33,6 @@ class Enemy(Entity):
         # store vector from enemy to player
         self.vectortoplayer = ()
 
-        self.onplatform = False
-
         # sprite default velocities
         self.defaultvelocity_x = vel_x
         self.defaultvelocity_y = vel_y

@@ -45,7 +45,7 @@ class Entity(pygame.sprite.Sprite):
         self.movingright = False
         self.jumping = False
         self.jumpmomentum = 0
-        self.airduration = 0
+        self.onplatform = False
 
         # turn on/off sound effects (sfx)
         self.check_sfx_setting()
