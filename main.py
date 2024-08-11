@@ -156,6 +156,10 @@ class Program():
         while True:
             self.clock.tick(10)
 
+            # quit program if requested in RootMenu instance
+            if menu.terminate:
+                quit_program()
+
             menu.update()
 
             self.screen.fill(GREEN)
@@ -163,9 +167,6 @@ class Program():
             menu.sprites.draw(self.screen)
 
             pygame.display.flip()
-
-            if menu.terminate:
-                quit_program()
 
     def gamelevel(self):
         """Load and run a game level"""
