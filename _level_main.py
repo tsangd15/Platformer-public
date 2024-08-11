@@ -521,8 +521,6 @@ class LevelMain(Screen):
             if event.key == pygame.K_ESCAPE:  # ESC: pause
                 self.selected = "pause"
                 self.confirmed = True
-            elif event.key == pygame.K_x:  # X: end program
-                self.terminate()
             elif event.key == pygame.K_LSHIFT:  # L Shift: sprint
                 self.player.sprinting = True
             elif event.key == pygame.K_a:  # A: move left
@@ -531,8 +529,6 @@ class LevelMain(Screen):
                 self.player.movingright = True
             elif event.key == pygame.K_w:  # W: jump
                 self.player.jumping = True
-            elif event.key == pygame.K_h:
-                self.player.hit(5)
 
         elif event.type == pygame.MOUSEBUTTONUP:
             if event.button == 1:  # left click: shoot
