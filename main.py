@@ -6,6 +6,7 @@ from _level_main import LevelMain
 from _level_pause import LevelPause
 from _level_complete import LevelComplete
 from _level_fail import LevelFail
+from _leaderboard import Leaderboard
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN)
 
 
@@ -173,7 +174,27 @@ class Program():
 
     def leaderboard(self):
         """Display game leaderboard screen"""
-        print("ran leaderboard()")
+        screen_calls = {"root_menu": None,
+                        "quit": quit_program}
+        leaderboard = Leaderboard(tuple(screen_calls))
+
+        while True:
+            self.clock.tick(25)
+
+            # check if menu item returned, if so, run corresponding function
+            # in item_calls dict
+            next_screen = leaderboard.update()
+            if next_screen is not None:
+                if next_screen == "quit":
+                    screen_calls[next_screen]()
+                else:
+                    return
+
+            self.screen.fill(GREEN)
+
+            leaderboard.sprites.draw(self.screen)
+
+            pygame.display.flip()
 
     def tutorial(self):
         """Display game tutorial screen"""
