@@ -7,12 +7,13 @@ from _platform import Platform
 from _player import Player
 from _enemy import Enemy
 from _projectile import Projectile
+from _line import Line
 
 
 def list_collisions(sprite, spritelist):
     """Input singular sprite and spritelist
     Returns list of sprites in spritelist that collide with the singular
-    sprite."""
+    sprite using their rects."""
     collisionslist = pygame.sprite.spritecollide(sprite, spritelist, False)
     return collisionslist
 
@@ -23,6 +24,16 @@ def list_groupcollisions(group1, group2):
     each sprite in group2 that collided as a value for the respective sprite
     it collided with in group1. key:value"""
     collisionslist = pygame.sprite.groupcollide(group1, group2, False, False)
+    return collisionslist
+
+
+def list_collisions_mask(sprite, spritelist):
+    """Input singular sprite and spritelist
+    Returns list of sprites in spritelist that collide with the singular
+    sprite using their masks."""
+    collisionslist = pygame.sprite.spritecollide(sprite, spritelist, False,
+                                                 pygame.sprite.collide_mask)
+
     return collisionslist
 
 
@@ -153,6 +164,10 @@ class LevelMain(Screen):
 
         self.update_cursor()
 
+        # instantiate line to calculate collision between enemy projectile's
+        # path and platform
+        self.line = Line(self.player.rect.center, self.enemy.rect.center)
+
     def load_map(self, map_name):
         """Load level map as 2D array"""
         # 0 = nothing
@@ -279,21 +294,39 @@ class LevelMain(Screen):
     def update_enemy_vision(self):
         """Check if the player is inside an enemy's vision, if so, let the
         Enemy object know."""
+        # iterate through each enemy
         for enemy in self.enemies:
-            radius = enemy.vision.radius
-            center = enemy.rect.center
+            enemy_radius = enemy.vision.radius
+            enemy_center = enemy.rect.center
 
-            # check if player within enemy vision by using its vision radius
-            # and comparing with the distance between the enemy centre and the
-            # player sprite's corners
-            if ((radius >= distance(center, self.player.rect.topleft)) or
-                (radius >= distance(center, self.player.rect.topright)) or
-                (radius >= distance(center, self.player.rect.bottomleft)) or
-               (radius >= distance(center, self.player.rect.bottomright))):
-                # report sighting of player
-                # update enemy with location of player
-                enemy.spotted(True,
-                              vector(center, self.player.rect.center, 10))
+            # list of player points to check
+            player_points = [self.player.rect.topleft,
+                             self.player.rect.topright,
+                             self.player.rect.bottomleft,
+                             self.player.rect.bottomright]
+
+            # iterate through each player point
+            for player_point in player_points:
+                # check if point within enemy radius
+                if enemy_radius >= distance(enemy_center, player_point):
+                    # line is used to model projectile's path
+                    # method updates line's endpoints
+                    self.line.update_location(enemy_center, player_point)
+
+                    # check for collisions between line and platforms
+                    # function returns list of collisions
+                    collisions = list_collisions_mask(self.line,
+                                                      self.platforms)
+
+                    # if no collisions (i.e. collisions list is empty)
+                    if not collisions:
+                        # report sighting of player and update enemy with
+                        # vector to player
+                        enemy.spotted(True,
+                                      vector(enemy_center, player_point, 10))
+                        # end for loop early
+                        break
+
             else:
                 # report no sighting of player
                 enemy.spotted(False)

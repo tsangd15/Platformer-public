@@ -17,3 +17,7 @@ class Platform(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
 
         self.rect.x, self.rect.y = startx, starty
+
+        # define sprite's mask for collision calculation between line and
+        # platform for enemy vision
+        self.mask = pygame.mask.from_surface(self.image)
