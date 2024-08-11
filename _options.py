@@ -131,21 +131,34 @@ class Options(Screen):
         return True  # match
 
     def config_music(self):
-        """Toggle music key in config."""
-        if self.config["music"] is True:
-            self.config["music"] = False
-            pygame.mixer.music.stop()
-        else:
-            self.config["music"] = True
-            pygame.mixer.music.play(-1)
+        """Toggle music key in config and update button."""
+        # get music togglebutton instance
+        button_music = return_button("config_music", self.buttons)
 
-        save_config(self.config)
+        if self.config["music"] is True:
+            self.config["music"] = False  # change value in file
+            pygame.mixer.music.stop()  # stop music
+            button_music.toggle_off()  # toggle button to off
+
+        else:
+            self.config["music"] = True  # change value in file
+            pygame.mixer.music.play(-1)  # start music
+            button_music.toggle_on()  # toggle button to on
+
+        save_config(self.config)  # save changes to file
 
     def config_sound_effects(self):
-        """Toggle sound effect key in config."""
-        if self.config["sound_effects"] is True:
-            self.config["sound_effects"] = False
-        else:
-            self.config["sound_effects"] = True
+        """Toggle sound effect key in config and update button."""
+        # get sound_effects togglebutton instance
+        button_sound_effects = return_button("config_sound_effects",
+                                             self.buttons)
 
-        save_config(self.config)
+        if self.config["sound_effects"] is True:
+            self.config["sound_effects"] = False  # change value in file
+            button_sound_effects.toggle_off()  # toggle button to off
+
+        else:
+            self.config["sound_effects"] = True  # change value in file
+            button_sound_effects.toggle_on()  # toggle button to on
+
+        save_config(self.config)  # save changes to file
