@@ -1,6 +1,7 @@
 """Text Class Module"""
 import pygame
 import pygame.freetype
+from _functions import check_alignment, align
 
 
 class Text(pygame.sprite.Sprite):
@@ -22,22 +23,7 @@ class Text(pygame.sprite.Sprite):
         self.update_font()
 
         # ----- configure text sprite alignment ----- #
-
-        # +-------------+---------------+--------------+
-        # | top_left    | top_center    | top_right    |
-        # +-------------+---------------+--------------+
-        # | middle_left | middle_center | middle_right |
-        # +-------------+---------------+--------------+
-        # | bottom_left | bottom_center | bottom_right |
-        # +-------------+---------------+--------------+
-
-        valid_alignments = ["top_left", "top_center", "top_right",
-                            "middle_left", "middle_center", "middle_right",
-                            "bottom_left", "bottom_center", "bottom_right"]
-        if alignment in valid_alignments:
-            self.alignment = alignment
-        else:
-            raise Exception("Invalid alignment argument given.")
+        self.alignment = check_alignment(alignment)
 
         # ----- configure text sprite font size ----- #
         # specific font size given
@@ -91,28 +77,6 @@ class Text(pygame.sprite.Sprite):
                 else:
                     self.font_size += 1
 
-    def align(self):
-        """Align the text sprite using the alignment set in self.alignment
-        relative to the startx, starty point."""
-        if self.alignment == "top_left":
-            self.rect.topleft = self.startx, self.starty
-        elif self.alignment == "top_center":
-            self.rect.centerx, self.rect.y = self.startx, self.starty
-        elif self.alignment == "top_right":
-            self.rect.topright = self.startx, self.starty
-        elif self.alignment == "middle_left":
-            self.rect.midleft = self.startx, self.starty
-        elif self.alignment == "middle_center":
-            self.rect.center = self.startx, self.starty
-        elif self.alignment == "middle_right":
-            self.rect.midright = self.startx, self.starty
-        elif self.alignment == "bottom_left":
-            self.rect.bottomleft = self.startx, self.starty
-        elif self.alignment == "bottom_center":
-            self.rect.centerx, self.rect.bottom = self.startx, self.starty
-        else:
-            self.rect.bottomright = self.startx, self.starty
-
     def update_font(self):
         """Update the Font object with new font size."""
         # parameters: font file/name, font size
@@ -138,7 +102,7 @@ class Text(pygame.sprite.Sprite):
         self.update_font()
         self.image, self.rect = self.font.render(self.text, self.fgcolour,
                                                  self.bgcolour)
-        self.align()
+        align(self.alignment, self.rect, self.startx, self.starty)
 
     @property
     def text(self):
