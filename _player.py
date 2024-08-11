@@ -16,11 +16,19 @@ class Player(Entity):
         self.defaulthealth = 25
         self.gameover = False
         self.sprinting = False
+
+        # ------ COOLDOWNS AND LAST EVENTS ------ #
         self.firecooldown = 320
+        self.staminacooldown_jump = 2500
+        self.staminacooldown_sprint = 1500
         self.lastfired = pygame.time.get_ticks()
         self.lastjumped = pygame.time.get_ticks()
         self.lastsprinted = pygame.time.get_ticks()
+
+        # for hit debugging
         self.number = 0
+
+        # ------ STATS PANEL ------ #
         self.stats = pygame.sprite.Group()
         self._score = 0
         self.score_text = Text("Score: 0", 25, RED, None, 10, 5)
@@ -61,10 +69,11 @@ class Player(Entity):
         self.rect.x, self.rect.y = self.startx, self.starty
 
     def replenish_stamina(self, now):
-        """Replenish stamina if player hasn't sprinted/jumped for 1 second."""
+        """Replenish stamina if player hasn't sprinted/jumped for respective
+        cooldown duration."""
         if (not(self.jumping and self.sprinting) and
-           (now - self.lastjumped >= 1000) and
-           (now - self.lastsprinted >= 1000)):
+           (now - self.lastjumped >= self.staminacooldown_jump) and
+           (now - self.lastsprinted >= self.staminacooldown_sprint)):
             self.stamina.value += 0.5
 
     def move_horizontally(self, now):
@@ -163,4 +172,5 @@ class Player(Entity):
     @score.setter
     def score(self, new_score):
         self._score = new_score
+        # update score text sprite
         self.score_text.text = "Score: " + str(self.score)
