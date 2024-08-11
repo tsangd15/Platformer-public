@@ -21,9 +21,11 @@ class Player(Entity):
         self.firecooldown = 320
         self.staminacooldown_jump = 2500
         self.staminacooldown_sprint = 1500
+        self.healthcooldown = 7000
         self.lastfired = pygame.time.get_ticks()
         self.lastjumped = pygame.time.get_ticks()
         self.lastsprinted = pygame.time.get_ticks()
+        self.lasthit = pygame.time.get_ticks()
 
         # for hit debugging
         self.number = 0
@@ -58,7 +60,11 @@ class Player(Entity):
 
     def hit(self):
         """Method to reduce health when hit by projectile."""
+        now = pygame.time.get_ticks()
+        self.lasthit = now
+
         self.health.value -= 5
+
         print("hit", self.number)
         self.number += 1
 
@@ -157,6 +163,7 @@ class Player(Entity):
         self.lastfired = self.lastfired + time_paused
         self.lastjumped = self.lastjumped + time_paused
         self.lastsprinted = self.lastsprinted + time_paused
+        self.lasthit = self.lasthit + time_paused
 
     def update(self):
         """Carry out operations to update player's location and attributes
