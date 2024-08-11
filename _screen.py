@@ -160,7 +160,10 @@ class Screen():
             # iterate through each event handler method
             for event_handler in self.event_handlers:
                 # call event handler method with event as argument
-                event_handler(event)
+                # if event matched, match = True, otherwise match = False
+                match = event_handler(event)
+                if match:  # if match == True
+                    break  # end for loop
 
     def update(self):
         """Update the menu by checking for any events and updating attributes
@@ -211,30 +214,36 @@ class Screen():
     # ---------- Example event handlers: ---------- #
 
     def handle_events_keyboard(self, event):
+        # altf4 or window close button invokes pygame.QUIT
         if event.type == pygame.QUIT:
             self.terminate()
 
-        if event.type == pygame.KEYDOWN:
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:  # up arrow
                 self.select_up = True
-            if event.key == pygame.K_DOWN:  # down arrow
+            elif event.key == pygame.K_DOWN:  # down arrow
                 self.select_down = True
-            if (event.key == pygame.K_SPACE or  # spacebar
+            elif (event.key == pygame.K_SPACE or  # spacebar
                 event.key == pygame.K_KP_ENTER or  # keypad enter
                event.key == pygame.K_RETURN):  # main enter key
                 self.confirmed = True
 
-        if event.type == pygame.KEYUP:
+        elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
                 self.select_up = False
-            if event.key == pygame.K_DOWN:
+            elif event.key == pygame.K_DOWN:
                 self.select_down = False
+
+        # return to calling line if the event matched
+        else:
+            return False
+        return True
 
     def handle_events_mouse(self, event):
         if event.type == pygame.MOUSEMOTION:
             self.cursor_moved = True
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN:
             if event.button == 1:  # left click
                 # get the button instance that is selected
                 selected_button = return_button(self.selected,
@@ -246,14 +255,19 @@ class Screen():
                         # let menu know to call associated method
                         self.confirmed = True
 
-            if event.button == 2:  # middle click
+            elif event.button == 2:  # middle click
                 pass
-            if event.button == 3:  # right click
+            elif event.button == 3:  # right click
                 pass
-            if event.button == 4:  # scroll up
+            elif event.button == 4:  # scroll up
                 pass
-            if event.button == 5:  # scroll down
+            elif event.button == 5:  # scroll down
                 pass
 
             # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION
+
+        # return to calling line if the event matched
+        else:
+            return False
+        return True
     '''
