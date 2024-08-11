@@ -1,4 +1,6 @@
 {
-    "custom": [["text", "Move left with A and right with D.", 20, "middle_center", [255, 0, 0], "//none", 500, 500]],
+    "custom": [["text", "You play as the blue rectangle!", 20, "middle_center", [255, 0, 0], "//none", 400, 200],
+               ["text", "Move left with A and right with D.", 20, "middle_center", [255, 0, 0], "//none", 400, 225],
+               ["text", "The goal is to reach the pink square!", 20, "middle_center", [255, 0, 0], "//none", 400, 250]],
     "enemies": [[80, 80, 150]]
 }
