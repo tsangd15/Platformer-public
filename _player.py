@@ -6,10 +6,13 @@ from _settings import BLUE
 
 
 class Player(Entity):
+    """Class for player"""
     def __init__(self, color, width, height, startx=430, starty=400):
         super().__init__(color, width, height, startx, starty)
-        self.projectileslist = pygame.sprite.Group
+        self.projectiles = pygame.sprite.Group()
 
     def fire(self):
+        """Spawns a projectile and adds it to the projectiles sprite group
+        attribute."""
         projectile = Projectile(BLUE, self.rect.x, self.rect.y, 10, 0)
-        return projectile
+        self.projectiles.add(projectile)
