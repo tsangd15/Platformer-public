@@ -54,7 +54,7 @@ class ScoreHandler():
 
         # overwrite file with new scores in json format
         with open("scores.json", "w") as file:
-            file.write(json.dumps(sorted_scores))
+            file.write(json.dumps(sorted_scores) + "\n")
 
     def add_score(self, username, new_score):
         """Add a score to the scores attribute. If a player scored lower than
