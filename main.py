@@ -105,10 +105,13 @@ class Program():
 
                     # if the user requested to go back to root menu
                     if screen_return == "gotoroot":
-                        return "gotoroot"
+                        return level.player.score, "gotoroot"
                     # if the user requested to continue to next level
                     if screen_return == "continue":
-                        return "continue", level.player.score
+                        return level.player.score, "continue"
+                    # if the user requested to save score
+                    if screen_return == "save":
+                        return level.player.score, "save", level.sprites
                     # reset level for retry if selected
                     if screen_return == "retry":
                         level.reset_level()
@@ -117,7 +120,7 @@ class Program():
 
                     # if user requested to go back to root menu
                     if pause_return == "gotoroot":
-                        return "gotoroot"
+                        return level.player.score, "gotoroot"
                     # otherwise correct cooldowns and resume level
                     level.resume(pause_return)
 
@@ -195,10 +198,7 @@ class Program():
             next_screen = complete.update()
             if next_screen is not None:
                 if next_screen == "save_score":
-                    screen_return = screen_calls[next_screen](level_sprites,
-                                                              score)
-                    if screen_return == "gotoroot":
-                        return "gotoroot"
+                    return "save"
                 elif next_screen == "root_menu":
                     return "gotoroot"
                 elif next_screen == "continue":
@@ -243,10 +243,7 @@ class Program():
             next_screen = fail.update()
             if next_screen is not None:
                 if next_screen == "save_score":
-                    screen_return = screen_calls[next_screen](level_sprites,
-                                                              score)
-                    if screen_return == "gotoroot":
-                        return "gotoroot"
+                    return "save"
                 elif next_screen == "root_menu":
                     return "gotoroot"
                 elif next_screen == "retry":
@@ -334,8 +331,25 @@ class Program():
             pygame.display.flip()
 
     def tutorial(self):
-        """Display game tutorial screen"""
-        print("ran tutorial()")
+        """Start game tutorial series"""
+        tutorial_maps = ["tutorial_1", "tutorial_2", "tutorial_3",
+                         "tutorial_4"]
+
+        for i, mapname in enumerate(tutorial_maps):
+            # run map, show continue button if not last map
+            if i == len(tutorial_maps) - 1:
+                result = self.level_main(mapname, allow_continue=False)
+            else:
+                result = self.level_main(mapname, allow_continue=True)
+
+            if isinstance(result, tuple):
+                # continue returned
+                if result[1] == "continue":  # (score, "continue")
+                    continue
+                if result[1] == "gotoroot":  # gotoroot returned
+                    return  # (score, "gotoroot")
+                else:
+                    raise Exception("Invalid result returned.")
 
     def options(self, level_sprites=None):
         """Display options screen"""
