@@ -114,6 +114,17 @@ def vector(origin, destination, magnitude):
     return vector_final
 
 
+def distance(point1, point2):
+    """Function that returns the distance between 2 points."""
+    point1_x, point1_y = point1
+    point2_x, point2_y = point2
+
+    # use pythagoras to get distance between points
+    dist = sqrt((point1_x - point2_x) ** 2 + (point1_y - point2_y) ** 2)
+
+    return dist
+
+
 # --------------- Constants --------------- #
 PLATFORMLENGTH = 50
 # automatically determine number of rows/columns
@@ -244,18 +255,48 @@ class LevelMain(Screen):
                     projectile.kill()
 
             # --- kill projectile on enemy collision and inflict damage --- #
-            collisions = list_groupcollisions(entity.projectiles, self.enemies)
+            collisions = list_groupcollisions(entity.projectiles,
+                                              self.entities)
             # iterate through each item (key, value) in dictionary
             # key is projectile
-            # value is list of enemies collided that collided with projectile
-            for projectile, enemies in collisions.items():
-                projectile.kill()  # for each projectile (key), despawn it
+            # value is list of entities that collided with projectile
+            for projectile, entities_hit in collisions.items():
+                # iterate through each entity hit by projectile
+                for hit_entity in entities_hit:
+                    # if hit entity is entity that fired the projectile, skip
+                    if hit_entity == entity:
+                        continue
 
-                for enemy in enemies:  # iterate through each enemy
-                    enemy.hit(projectile.damage)  # inflict projectile damage
-                    self.player.score += 5
+                    projectile.kill()  # for each projectile (key), despawn it
+
+                    # inflict projectile damage
+                    hit_entity.hit(projectile.damage)
+                    if entity == self.player:
+                        self.player.score += 5
 
             self.sprites.add(entity.projectiles)
+
+    def update_enemy_vision(self):
+        """Check if the player is inside an enemy's vision, if so, let the
+        Enemy object know."""
+        for enemy in self.enemies:
+            radius = enemy.vision.radius
+            center = enemy.rect.center
+
+            # check if player within enemy vision by using its vision radius
+            # and comparing with the distance between the enemy centre and the
+            # player sprite's corners
+            if ((radius >= distance(center, self.player.rect.topleft)) or
+                (radius >= distance(center, self.player.rect.topright)) or
+                (radius >= distance(center, self.player.rect.bottomleft)) or
+               (radius >= distance(center, self.player.rect.bottomright))):
+                # report sighting of player
+                # update enemy with location of player
+                enemy.spotted(True,
+                              vector(center, self.player.rect.center, 10))
+            else:
+                # report no sighting of player
+                enemy.spotted(False)
 
     def check_finish(self):
         """Method to check if the level is finished (completed/failed).
@@ -310,6 +351,8 @@ class LevelMain(Screen):
                 self.enemy.movingleft = True
             elif event.key == pygame.K_RIGHT:  # right arrow
                 self.enemy.movingright = True
+            elif event.key == pygame.K_UP:  # up arrow
+                self.enemy.jumping = True
 
         # return to calling line if the event matched
         else:
@@ -334,6 +377,8 @@ class LevelMain(Screen):
                 self.enemy.movingleft = False
             elif event.key == pygame.K_RIGHT:  # right arrow
                 self.enemy.movingright = False
+            elif event.key == pygame.K_UP:  # up arrow
+                self.enemy.jumping = False
 
         # return to calling line if the event matched
         else:
@@ -353,6 +398,9 @@ class LevelMain(Screen):
         self.move_player()
         self.move_enemies()
         self.move_projectiles()
+
+        # update enemies sight
+        self.update_enemy_vision()
 
         # check for game finish
         self.check_finish()

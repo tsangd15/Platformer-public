@@ -1,4 +1,5 @@
 """Enemy Class Module"""
+import pygame
 from _entity import Entity, sfx_fire, sfx_hit
 from _projectile import Projectile
 from _settings import PURPLE
@@ -8,12 +9,26 @@ from _enemy_vision import EnemyVision
 class Enemy(Entity):
     """Class for enemy"""
     def __init__(self, color, width, height, startx=430, starty=400,
-                 vision=100):
+                 vision=150):
         super().__init__(color, width, height, startx, starty)
         self.health = 50
         self.number = 0
 
+        # time to respond to player detection in milliseconds
+        self.responsetime = 1000
+
+        # control firerate
+        self.firecooldown = 320
+        self.lastfired = pygame.time.get_ticks()
+
         self.vision = EnemyVision(vision)
+
+        # store if enemy is maintaining view of the player
+        self.watching = False
+        # store time player was first spotted
+        self.first_spotted = pygame.time.get_ticks()
+        # store vector from enemy to player
+        self.vectortoplayer = ()
 
     def fire(self, projectile_velocity):
         """Spawns a projectile and adds it to the projectiles sprite group
@@ -70,6 +85,39 @@ class Enemy(Entity):
         """Update vision sprite's centre with enemy sprite's centre."""
         self.vision.update_location(self.rect.centerx, self.rect.centery)
 
+    def spotted(self, status, vectortoplayer=None):
+        """Update the enemy on if the player has been spotted or not.
+        If spotted (status=True) for first time (watching=False), watching is
+        set to True, time is recorded to first_spotted and the vector to the
+        player updated.
+
+        If spotted (status=True) but already previously spotted (previous
+        spotted call was status=True so watching=True) then only the vector to
+        the player is updated, first_spotted is unchanged and still holds time
+        it first spotted the player.
+
+        If no longer spotted/not spotted (status=False), watching is set to
+        False."""
+        if status is True:
+            if not self.watching:
+                self.watching = True
+                self.first_spotted = pygame.time.get_ticks()
+            # update vector from enemy to player
+            self.vectortoplayer = vectortoplayer
+        else:
+            self.watching = False
+
+    def attack(self):
+        """If the enemy has maintained view of the player for at least its
+        responsetime's duration and hasn't fired in the last firecooldown's
+        duration, fire at player."""
+        now = pygame.time.get_ticks()
+        if ((now - self.first_spotted > self.responsetime) and
+           (now - self.lastfired > self.firecooldown)):
+            self.lastfired = now
+            self.fire(self.vectortoplayer)
+            print("firing!!!")
+
     def update(self):
         """Method to check if health is below 0, if so, despawn enemy.
         Update sfx attribute to turn on/off sound effects."""
@@ -83,3 +131,7 @@ class Enemy(Entity):
             self.kill()
 
         self.update_vision()
+
+        # attempt to attack if player in enemy sight
+        if self.watching:
+            self.attack()
