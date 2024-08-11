@@ -16,7 +16,7 @@ class Text(pygame.sprite.Sprite):
         self.number = 0
 
         # font file/name, font size
-        self.font = pygame.freetype.Font(None, self.size)
+        self.font = pygame.freetype.Font("PressStart2P-Regular.ttf", self.size)
 
         # function returns text as rendered syrface and rect object instance
         # parameters: text, fgcolour, bgcolour
@@ -36,7 +36,9 @@ class Text(pygame.sprite.Sprite):
               "\ntopleft:", self.rect.topleft)
 
     def changeimage(self):
+        """For debugging, increments and updates the text sprite"""
         self.number += 1
         self.text = "Score: " + str(self.number)
-        self.image, self.rect = self.font.render(self.text, self.fgcolour, self.bgcolour)
+        self.image, self.rect = self.font.render(self.text, self.fgcolour,
+                                                 self.bgcolour)
         self.rect.x, self.rect.y = self.startx, self.starty
