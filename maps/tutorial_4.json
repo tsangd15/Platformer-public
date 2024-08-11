@@ -1,0 +1,10 @@
+{
+    "custom": [["text", "Well done, you completed the tutorial!", 20, "middle_center", [255, 0, 0], "//none", 400, 75],
+               ["text", "Here's a final challenge.", 20, "middle_center", [255, 0, 0], "//none", 400, 100],
+               ["text", "Note: the bigger the enemy, the slower", 20, "middle_center", [0, 0, 0], "//none", 400, 150],
+               ["text", "it is but more damage it inflicts.", 20, "middle_center", [0, 0, 0], "//none", 400, 175]],
+    "enemies": [[40, 40, 250, 1000, 3000, 25, 3, -20],
+                [40, 40, 250, 1000, 3000, 25, 3, -20],
+                [40, 40, 250, 1000, 3000, 25, 3, -20],
+                [80, 80, 300, 4000, 100, 10, 1, -10]]
+}
