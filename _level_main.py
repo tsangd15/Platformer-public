@@ -246,13 +246,27 @@ class LevelMain(Screen):
                     self.finishpoints.add(self.finishpoint)
 
                 elif self.gamemap[row][col] == 4:  # enemies
-                    enemy_width = self.gamemap_conf["enemies"][enemy_count][0]
-                    enemy_height = self.gamemap_conf["enemies"][enemy_count][1]
-                    enemy_vision = self.gamemap_conf["enemies"][enemy_count][2]
+                    # enemy instance args:
+                    # color, width, height, startx, starty, vision,
+                    # responsetime=1000, firecooldown=320, fireinaccuracy=15,
+                    # vel_x=2, vel_y=-16)
 
-                    enemy = Enemy(YELLOW, enemy_width, enemy_height,
-                                  col*PLATFORMLENGTH, row*PLATFORMLENGTH,
-                                  enemy_vision)
+                    enemy_args = self.gamemap_conf["enemies"][enemy_count]
+                    if len(enemy_args) == 3:  # essential enemy custominsation
+                        enemy = Enemy(YELLOW, enemy_args[0], enemy_args[1],
+                                      col*PLATFORMLENGTH, row*PLATFORMLENGTH,
+                                      enemy_args[2])
+                    elif len(enemy_args) == 8:  # full enemy customisation
+                        enemy = Enemy(YELLOW, enemy_args[0], enemy_args[1],
+                                      col*PLATFORMLENGTH, row*PLATFORMLENGTH,
+                                      enemy_args[2], enemy_args[3],
+                                      enemy_args[4], enemy_args[5],
+                                      enemy_args[6], enemy_args[7])
+                    else:
+                        raise Exception("Invalid number of enemy args, " +
+                                        "expected 3 or 8, received " +
+                                        f"{len(enemy_args)}")
+
                     self.sprites.add(enemy)
                     self.entities.add(enemy)
                     self.enemies.add(enemy)
