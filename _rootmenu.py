@@ -26,6 +26,10 @@ class RootMenu():
         self.arrow_up_pressed = False
         self.arrow_down_pressed = False
 
+        # store when the highlighted item was last updated
+        self.last_highlighted = pygame.time.get_ticks()
+        self.highlightcooldown = 150
+
         # store each menu item
         self.items = ("PLAY",              # 0
                       "LEADERBOARD",     # 1
@@ -117,17 +121,24 @@ class RootMenu():
         bottom item.
         If it goes above 4 (after the bottom item) the pointer is set to the
         top item."""
-        if self.arrow_up_pressed:
-            # decrement highlighted item index
-            self.set_highlighted_idle()
-            self.highlighted_item = (self.highlighted_item - 1) % 5
-            self.set_highlighted_hover()
 
-        if self.arrow_down_pressed:
-            # increment highlighted item index
-            self.set_highlighted_idle()
-            self.highlighted_item = (self.highlighted_item + 1) % 5
-            self.set_highlighted_hover()
+        now = pygame.time.get_ticks()
+
+        if now - self.last_highlighted >= self.highlightcooldown:
+
+            if self.arrow_up_pressed:
+                # decrement highlighted item index
+                self.set_highlighted_idle()
+                self.highlighted_item = (self.highlighted_item - 1) % 5
+                self.set_highlighted_hover()
+                self.last_highlighted = now
+
+            if self.arrow_down_pressed:
+                # increment highlighted item index
+                self.set_highlighted_idle()
+                self.highlighted_item = (self.highlighted_item + 1) % 5
+                self.set_highlighted_hover()
+                self.last_highlighted = now
 
     def update(self):
         """Update the menu by checking for any events and updating attributes
