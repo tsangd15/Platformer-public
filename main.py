@@ -3,11 +3,12 @@ import sys
 from math import sqrt
 import pygame
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE,
-                       YELLOW, PINK)
+                       YELLOW, PINK, BLACK, CYAN)
 from _text import Text
 from _platform import Platform
 from _player import Player
 from _enemy import Enemy
+from _button import Button
 
 # --------------- Movement and Collision Functions --------------- #
 
@@ -150,6 +151,34 @@ class Program():
     def rootmenu(self):
         """Display the root menu for the player to navigate to different
         screens"""
+
+        # dict to store what each menu item should call when clicked on
+        item_calls = {"PLAY": self.gamelevel,
+                      "LEADERBOARD": self.leaderboard,
+                      "TUTORIAL": self.tutorial,
+                      "OPTIONS": self.options,
+                      "QUIT": quit_program}
+
+        text_title = Text("PLATFORMER", (600, 400), "top_center", RED, None,
+                          WINDOW_WIDTH/2, 20)
+        self.sprites.add(text_title)
+
+        # highlighted_item = None
+
+        button_idlecolor = (BLACK, RED)
+        button_hovercolor = (CYAN, RED)
+        button_clickcolor = (CYAN, YELLOW)
+
+        # create each button and add to spritegroup
+        # each iteration, item_name changes to the next key in item_call dict
+        # and height increments 55
+        # zip function to handle parallel iterator variables: item_name, height
+        for item_name, height in zip(item_calls.keys(),
+                                     range(190, 190+55*len(item_calls)+1, 55)):
+            button = Button(350, 50, item_name, 30, "top_center",
+                            button_idlecolor, button_hovercolor,
+                            button_clickcolor, WINDOW_WIDTH/2, height)
+            self.sprites.add(button)
 
         while True:
 
@@ -486,5 +515,5 @@ class Game():
 
 
 # instantiate game
-game = Game()
-game.rungame()
+game = Program()
+# game.rungame()
