@@ -6,7 +6,7 @@ from _text import Text
 from _button import Button
 from _functions import is_point_within_rect, return_button
 from _settings import (WINDOW_WIDTH, RED, GREEN, DARK_RED, DARK_GREEN, BLUE,
-                       BLACK, CYAN, YELLOW)
+                       BLACK, CYAN, YELLOW, PURPLE)
 
 
 class Options(Screen):
@@ -66,10 +66,15 @@ class Options(Screen):
         self.sprites.add(button_back)
         self.buttons.add(button_back)
 
-        # define button colours
-        button_idlecolor = (BLACK, RED)
-        button_hovercolor = (DARK_RED, RED)
+        # off button
+        button_idlecolor = (BLACK, DARK_RED)
+        button_hovercolor = (CYAN, RED)
         button_clickcolor = (RED, DARK_GREEN)
+
+        # on button
+        # button_idlecolor = (BLACK, DARK_GREEN)
+        # button_hovercolor = (PURPLE, GREEN)
+        # button_clickcolor = (RED, DARK_GREEN)
 
         # each iteration height increments 55
         # zip function to handle parallel iterator variables

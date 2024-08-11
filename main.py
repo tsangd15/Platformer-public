@@ -9,7 +9,7 @@ from _level_fail import LevelFail
 from _leaderboard import Leaderboard
 from _save_score import SaveScore
 from _options import Options
-from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN)
+from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN, BLACK)
 
 
 def quit_program():
@@ -281,7 +281,7 @@ class Program():
                 elif next_screen == "config_sfx":
                     pass
 
-            self.screen.fill(GREEN)
+            self.screen.fill(BLACK)
 
             options.sprites.draw(self.screen)
 
