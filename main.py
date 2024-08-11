@@ -3,6 +3,7 @@ from math import sqrt
 import pygame
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, FPS, GREEN, RED, BLUE,
                        YELLOW)
+from _text import Text
 from _platform import Platform
 from _player import Player
 from _enemy import Enemy
@@ -124,12 +125,16 @@ class Game():
         self.screen = pygame.display.set_mode(self.resolution)
         pygame.display.set_caption("2D Platformer")
 
+        # clock setup
+        self.clock = pygame.time.Clock()
+
         # 0 = nothing
         # 1 = platform
         # 2 = player spawn location
+        # 3 map finish location
         self.gamemap = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -169,6 +174,28 @@ class Game():
                                          row*PLATFORMLENGTH)
                     self.sprites.add(self.player)
                     self.entities.add(self.player)
+
+    def pause(self):
+        """Pause the game, invoked using ESC key"""
+        paused = True
+
+        text = Text("Game Paused", 60, BLUE, None, 500, 500)
+        self.sprites.add(text)
+
+        while paused:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_r:
+                        paused = False
+                        self.sprites.remove(text)
+
+            self.sprites.draw(self.screen)
+
+            pygame.display.flip()
+            self.clock.tick(10)
 
     def moveplayer(self):
         """Uses the move function to move the player sprite by its current
@@ -217,13 +244,10 @@ class Game():
         # game running flag
         run = True
 
-        # clock setup
-        clock = pygame.time.Clock()
-
         # game loop
         while run:
 
-            clock.tick(FPS)
+            self.clock.tick(FPS)
 
             # store current cursor location
             mouse_x, mouse_y = pygame.mouse.get_pos()
@@ -234,6 +258,8 @@ class Game():
                     run = False
 
                 if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        self.pause()
                     if event.key == pygame.K_x:  # X: end program
                         run = False
                     if event.key == pygame.K_LSHIFT:  # L Shift: sprint
