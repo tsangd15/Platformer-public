@@ -79,9 +79,16 @@ class Program():
                     screen_calls[next_screen]()
                 elif "level_" in next_screen:
                     screen_calls[next_screen](level.sprites)
+                    # return back to root menu
+                    return
                 else:
-                    pause_duration = screen_calls[next_screen](level.sprites)
-                    level.resume(pause_duration)
+                    pause_return = screen_calls[next_screen](level.sprites)
+
+                    # if user requested to go back to root menu
+                    if pause_return == "gotoroot":
+                        return
+                    # otherwise correct cooldowns and resume level
+                    level.resume(pause_return)
 
             self.screen.fill(GREEN)
 
@@ -93,6 +100,7 @@ class Program():
         """Display level pause screen"""
         screen_calls = {"resume": None,
                         "options": self.options,
+                        "root_menu": None,
                         "quit": quit_program}
 
         pause = LevelPause(tuple(screen_calls))
@@ -107,6 +115,8 @@ class Program():
                 elif next_screen == "options":
                     # pass game level's sprites again to retain background
                     screen_calls[next_screen](level_sprites)
+                elif next_screen == "root_menu":
+                    return "gotoroot"
                 # resume the level by terminating the method
                 else:
                     return pause.duration

@@ -70,8 +70,8 @@ class Button(pygame.sprite.Sprite):
 
         # ---------- ADD TEXT ---------- #
         # create text instance
-        button_text = Text(self.text.upper(), self.textsize, "middle_center",
-                           textcolor, None, self.rect.centerx,
+        button_text = Text(self.text.upper().replace("_", " "), self.textsize,
+                           "middle_center", textcolor, None, self.rect.centerx,
                            self.rect.centery)
         # render text instance surface onto button surface
         self.image.blit(button_text.image, button_text.rect)
