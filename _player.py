@@ -4,6 +4,8 @@ from _entity import Entity
 from _projectile import Projectile
 from _settings import WINDOW_WIDTH, GREEN, RED, YELLOW, PURPLE
 from _progressbar import ProgressBar
+from _text import Text
+from _player_lives import LivesIndicator
 
 
 class Player(Entity):
@@ -12,7 +14,6 @@ class Player(Entity):
         super().__init__(color, width, height, startx, starty)
         self.projectiles = pygame.sprite.Group()
         self.defaulthealth = 25
-        self.lives = 3
         self.gameover = False
         self.sprinting = False
         self.firecooldown = 320
@@ -21,7 +22,8 @@ class Player(Entity):
         self.lastsprinted = pygame.time.get_ticks()
         self.number = 0
         self.stats = pygame.sprite.Group()
-        self.score = 0
+        self._score = 0
+        self.score_text = Text("Score: 0", 25, RED, None, 10, 5)
         self.health = ProgressBar(300, 20, RED, YELLOW, WINDOW_WIDTH/2-150,
                                   5, self.defaulthealth)
         # to make the outline between the two bars consistent:
@@ -29,7 +31,9 @@ class Player(Entity):
         # = 5+20-2 = 23
         self.stamina = ProgressBar(300, 20, GREEN, YELLOW, WINDOW_WIDTH/2-150,
                                    23, 100)
-        self.stats.add(self.health.bars, self.stamina.bars)
+        self.lives = LivesIndicator(560, 24)
+        self.stats.add(self.score_text, self.health.bars, self.stamina.bars,
+                       self.lives)
 
     def fire(self, projectile_velocity):
         """Spawns a projectile and adds it to the projectiles sprite group
@@ -52,7 +56,7 @@ class Player(Entity):
 
     def respawn(self):
         """Decrease lives and reset health for respawn."""
-        self.lives -= 1
+        self.lives.value -= 1
         self.health.value = self.defaulthealth
         self.rect.x, self.rect.y = self.startx, self.starty
 
@@ -100,10 +104,20 @@ class Player(Entity):
         if self.jumpmomentum > 4:
             self.jumpmomentum = 4
 
-        if self.lives < 0:
-            self.gameover = True
-            print("GAMEOVER")
-        else:
-            if self.health.value <= 0:
+        if self.health.value <= 0:
+            if self.lives.value <= 0:
+                self.gameover = True
+                print("GAMEOVER")
+            else:
                 self.respawn()
                 print("RESPAWNED")
+
+    @property
+    def score(self):
+        """Property decorator for score attribute"""
+        return self._score
+
+    @score.setter
+    def score(self, new_score):
+        self._score = new_score
+        self.score_text.text = "Score: " + str(self.score)

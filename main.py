@@ -208,6 +208,7 @@ class Game():
 
                 for key in item[1]:  # iterate through each value
                     key.hit()  # for each enemy in the value, inflict hit
+                    self.player.score += 5
 
             entity.projectiles.draw(self.screen)
 
