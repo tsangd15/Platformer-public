@@ -239,6 +239,8 @@ class Game():
                         projectile_vector = vector(self.player.rect.center,
                                                    [mouse_x, mouse_y], 10)
                         self.player.fire(projectile_vector)
+                    if event.key == pygame.K_h:
+                        self.player.hit()
 
                 if event.type == pygame.KEYUP:
                     if event.key == pygame.K_a:  # Key A: stop moving left
