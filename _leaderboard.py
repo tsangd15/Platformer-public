@@ -2,6 +2,7 @@
 import pygame
 from _screen import Screen
 from _settings import WINDOW_WIDTH, BLACK, RED, CYAN, YELLOW
+from _leaderboard_handler import ScoreHandler
 from _text import Text
 from _button import Button
 from _functions import is_point_within_rect, return_button
@@ -19,6 +20,9 @@ class Leaderboard(Screen):
         # add the text and button sprites
         self.add_text()
         self.add_buttons()
+
+        # add the scores
+        self.add_scores()
 
     def add_text(self):
         """Add text instances to sprite group to be blitted to screen."""
@@ -45,6 +49,22 @@ class Leaderboard(Screen):
 
         # set top button as highlighted
         self.set_selected_hover()
+
+    def add_scores(self):
+        """Gets the top 10 stored scores and blits them to the screen."""
+        handler = ScoreHandler()
+        top_10 = handler.get_top_10()
+
+        for i, (username, score), height in zip(range(1, 11),
+                                                top_10,
+                                                range(120, 120+45*10, 45)):
+            text_number = Text(str(i), 36, "middle_right", RED, None,
+                               WINDOW_WIDTH / 2 - 180, height)
+            text_username = Text(username, 36, "middle_center", RED, None,
+                                 WINDOW_WIDTH / 2, height)
+            text_score = Text(str(score), 36, "middle_left", RED, None,
+                              WINDOW_WIDTH / 2 + 180, height)
+            self.sprites.add(text_number, text_username, text_score)
 
     def handle_events_keyboard(self, event):
         """Handle keyboard related events. If the given event matches, the
