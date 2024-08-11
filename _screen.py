@@ -214,6 +214,8 @@ class Screen():
     # ---------- Example event handlers: ---------- #
 
     def handle_events_keyboard(self, event):
+        """Handle keyboard related events. If the given event matches, the
+        corresponding actions for that matched event are carried out."""
         # altf4 or window close button invokes pygame.QUIT
         if event.type == pygame.QUIT:
             self.terminate()
@@ -224,8 +226,8 @@ class Screen():
             elif event.key == pygame.K_DOWN:  # down arrow
                 self.select_down = True
             elif (event.key == pygame.K_SPACE or  # spacebar
-                event.key == pygame.K_KP_ENTER or  # keypad enter
-               event.key == pygame.K_RETURN):  # main enter key
+                  event.key == pygame.K_KP_ENTER or  # keypad enter
+                  event.key == pygame.K_RETURN):  # main enter key
                 self.confirmed = True
 
         elif event.type == pygame.KEYUP:
@@ -240,6 +242,8 @@ class Screen():
         return True  # match
 
     def handle_events_mouse(self, event):
+        """Handle mouse related events. If the given event matches, the
+        corresponding actions for that matched event are carried out."""
         if event.type == pygame.MOUSEMOTION:
             self.cursor_moved = True
 
