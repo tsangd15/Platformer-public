@@ -50,3 +50,5 @@ class ToggleButton(Button):
         self.color_click = off_click
 
         self.text = "OFF"
+
+        self.state_hover()
