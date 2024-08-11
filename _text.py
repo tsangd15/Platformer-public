@@ -24,11 +24,11 @@ class Text(pygame.sprite.Sprite):
         # ----- configure text sprite alignment ----- #
 
         # +-------------+---------------+--------------+
-        # | top left    | top center    | top right    |
+        # | top_left    | top_center    | top_right    |
         # +-------------+---------------+--------------+
-        # | middle left | middle center | middle right |
+        # | middle_left | middle_center | middle_right |
         # +-------------+---------------+--------------+
-        # | bottom left | bottom center | bottom right |
+        # | bottom_left | bottom_center | bottom_right |
         # +-------------+---------------+--------------+
 
         valid_alignments = ["top_left", "top_center", "top_right",
