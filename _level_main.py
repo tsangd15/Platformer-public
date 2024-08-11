@@ -149,20 +149,22 @@ class LevelMain():
         # 1 = platform
         # 2 = player spawn location
         # 3 map finish location
-        self.gamemap = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-            [0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [2, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 0, 0, 0]
-                ]
+        self.gamemap = []
+
+        # read the map
+        with open("maps/test_map.txt", "r") as file:
+            # store each line as an element in a list
+            lines = file.readlines()
+            for i, line in enumerate(lines):
+                # remove newline character
+                lines[i] = line.replace("\n", "")
+
+        # generate each inner list (row) of 2d list and add to outer list
+        for line in lines:
+            row = []
+            for char in line:
+                row.append(int(char))
+            self.gamemap.append(row)
 
     def draw_map(self):
         """Iterate through map and draw each sprite (e.g. platforms, player,
