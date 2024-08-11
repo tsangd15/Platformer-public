@@ -122,9 +122,9 @@ NUMBEROFROWS = int(WINDOW_HEIGHT/PLATFORMLENGTH)
 class LevelMain():
     """Class for running an individual game level"""
     # pylint: disable=too-many-instance-attributes
-    def __init__(self, screens):
+    def __init__(self, screens, map_name):
         # import map as 2d array
-        self.load_map()
+        self.load_map(map_name)
 
         # Setting up sprite lists
         self.allsprites = pygame.sprite.Group()  # TEMPORARY SPRITE GROUP
@@ -143,7 +143,7 @@ class LevelMain():
 
         self.update_cursor()
 
-    def load_map(self):
+    def load_map(self, map_name):
         """Load level map as 2D array"""
         # 0 = nothing
         # 1 = platform
@@ -151,8 +151,8 @@ class LevelMain():
         # 3 map finish location
         self.gamemap = []
 
-        # read the map
-        with open("maps/test_map.txt", "r") as file:
+        # read the file with given map name
+        with open("maps/" + map_name + ".txt", "r") as file:
             # store each line as an element in a list
             lines = file.readlines()
             for i, line in enumerate(lines):

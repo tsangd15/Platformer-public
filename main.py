@@ -66,7 +66,7 @@ class Program():
                         "level_complete": self.level_complete,  # 1
                         "level_fail": self.level_fail,          # 2
                         "quit": quit_program}                   # 3
-        level = LevelMain(tuple(screen_calls))
+        level = LevelMain(tuple(screen_calls), "test_map")
 
         while True:
             self.clock.tick(60)
