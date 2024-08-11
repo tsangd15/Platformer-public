@@ -362,6 +362,9 @@ class LevelMain(Screen):
                        (platform.rect.right > right_edge)):
                         right_edge = platform.rect.right
 
+                # reset jumping from previous call
+                enemy.jumping = False
+
                 # player not sighted, resume patrol
                 if not enemy.watching:
                     # restart movement after stopping for player
@@ -379,20 +382,27 @@ class LevelMain(Screen):
                         # move in opposite direction
                         enemy.movingright = False
                         enemy.movingleft = True
+
                 # player sighted, chase player
                 else:
-                    # if player to left of enemy and not at left edge
-                    if ((self.player.rect.right < enemy.rect.left) and
-                       (enemy.rect.left >= left_edge)):
+                    # if player to left of enemy
+                    if self.player.rect.right < enemy.rect.left:
+                        # if enemy at left edge, jump
+                        if enemy.rect.left < left_edge:
+                            enemy.jumping = True
                         # move left towards player
                         enemy.movingleft = True
                         enemy.movingright = False
-                    # if player to right of enemy and not at right edge
-                    elif ((self.player.rect.left > enemy.rect.right) and
-                          (enemy.rect.right <= right_edge)):
+
+                    # if player to right of enemy
+                    elif self.player.rect.left > enemy.rect.right:
+                        # if enemy at right edge, jump
+                        if enemy.rect.right > right_edge:
+                            enemy.jumping = True
                         # move right towards player
                         enemy.movingright = True
                         enemy.movingleft = False
+
                     # player is on enemy
                     else:
                         # stop moving
