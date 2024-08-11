@@ -30,6 +30,9 @@ class RootMenu():
         self.last_highlighted = pygame.time.get_ticks()
         self.highlightcooldown = 150
 
+        # keep track if user has selected item in menu
+        self.item_selected = False
+
         # store each menu item
         self.items = items
 
@@ -80,6 +83,8 @@ class RootMenu():
 
     def handle_events(self):
         """Get and handle events from pygame event queue."""
+        self.reset_item_selected()
+
         # keybind detection
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -93,7 +98,7 @@ class RootMenu():
                 if (event.key == pygame.K_SPACE or  # spacebar
                     event.key == pygame.K_KP_ENTER or  # keypad enter
                    event.key == pygame.K_RETURN):  # main enter key
-                    pass
+                    self.item_selected = True
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_UP:
@@ -105,6 +110,25 @@ class RootMenu():
             # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
 
             # self.update_mouse()
+
+    def is_item_selected(self):
+        """Check if a menu item has been selected by the user. If so, tell
+        upper scope to suspend root menu iterations."""
+        if self.item_selected:
+            self.set_highlighted_click()
+            return self.items[self.highlighted_item]
+
+        # if no return function called, None is returned anyway but this line
+        # makes it easier to comprehend
+        return None
+
+    def reset_item_selected(self):
+        """Resets the item_selected attribute if it was previously True (i.e.
+        different menu was just run because of last iteration, root menu is
+        active again)."""
+        if self.item_selected:
+            self.item_selected = False
+            self.set_highlighted_hover()
 
     def update_highlighted(self):
         """Check if the arrow keys are being pressed. If so, update the menu
@@ -143,3 +167,5 @@ class RootMenu():
         self.handle_events()
 
         self.update_highlighted()
+
+        return self.is_item_selected()

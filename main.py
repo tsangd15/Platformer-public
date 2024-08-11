@@ -164,11 +164,12 @@ class Program():
         while True:
             self.clock.tick(10)
 
-            # quit program if requested in RootMenu instance
-            if menu.terminate:
-                quit_program()
-
-            menu.update()
+            # check if menu item returned, if so, run corresponding function
+            # in item_calls dict
+            next_screen = menu.update()
+            print(next_screen)
+            if next_screen is not None:
+                item_calls[next_screen]()
 
             self.screen.fill(GREEN)
 
