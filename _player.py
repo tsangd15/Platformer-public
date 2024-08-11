@@ -186,9 +186,7 @@ class Player(Entity):
     def update(self):
         """Carry out operations to update player's location and attributes
         like health and stamina."""
-        self.check_sfx_setting()
-
-        self.resetvelocity()
+        super().update()
 
         now = pygame.time.get_ticks()
 
