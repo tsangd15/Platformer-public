@@ -163,8 +163,8 @@ class Player(Entity):
         self.velocity_y += self.jumpmomentum
 
         # cap max velocity due to gravity to 4
-        if self.jumpmomentum > 4:
-            self.jumpmomentum = 4
+        # min function returns smallest of arguments passed
+        self.jumpmomentum = min(self.jumpmomentum, 4)
 
     def is_health_depleted(self):
         """Check if player health is depleted. If so invokes respawn if

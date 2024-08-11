@@ -95,8 +95,8 @@ class Enemy(Entity):
         self.velocity_y += self.jumpmomentum
 
         # cap max velocity due to gravity to 4
-        if self.jumpmomentum > 4:
-            self.jumpmomentum = 4
+        # min function returns smallest of arguments passed
+        self.jumpmomentum = min(self.jumpmomentum, 4)
 
     def update_vision(self):
         """Update vision sprite's centre with enemy sprite's centre."""
