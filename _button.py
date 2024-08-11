@@ -2,17 +2,20 @@
 import pygame
 from _text import Text
 from _settings import BLACK
+from _functions import check_alignment, align
 
 
 class Button(pygame.sprite.Sprite):
-    """Class for instantiating individual button sprites"""
-    def __init__(self, width, height, text, textsize, idlecolor, hovercolor,
-                 clickcolor, startx, starty, alpha=None):
+    """Class for instantiating individual button sprites. State colours in
+    form: textcolor, bgcolor"""
+    def __init__(self, width, height, text, textsize, alignment, idlecolor,
+                 hovercolor, clickcolor, startx, starty, alpha=None):
         super().__init__()
         self.width = width
         self.height = height
         self.text = text
         self.textsize = textsize
+        self.alignment = check_alignment(alignment)
         self.color_idle = idlecolor
         self.color_hover = hovercolor
         self.color_click = clickcolor
@@ -23,7 +26,7 @@ class Button(pygame.sprite.Sprite):
         self.startx = startx
         self.starty = starty
 
-        self.state_idle()
+        self.update_sprite(self.color_idle)
 
     def update_sprite(self, colors):
         """Method to update the button sprite's colours. 2 surfaces are
@@ -74,9 +77,8 @@ class Button(pygame.sprite.Sprite):
         self.image.blit(button_text.image, button_text.rect)
 
         # ---------- SET LOCATION ---------- #
-        # set location on screen
-        self.rect.x = self.startx
-        self.rect.y = self.starty
+        # set location on screen using set alignment
+        align(self.alignment, self.rect, self.startx, self.starty)
 
     def state_idle(self):
         """Method to change the sprite image when idle (not hovered over)."""
