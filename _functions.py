@@ -43,3 +43,30 @@ def align(alignment, rect, startx, starty):
         rect.centerx, rect.bottom = startx, starty
     else:
         rect.bottomright = startx, starty
+
+
+def set_button_idle(button_group, button_text):
+    """Function to find a button in a button sprite group and set it to idle
+    state."""
+    for button in button_group:
+        if button.text == button_text:
+            button.state_idle()
+            return
+
+
+def set_button_hover(button_group, button_text):
+    """Function to find a button in a button sprite group and set it to hover
+    state."""
+    for button in button_group:
+        if button.text == button_text:
+            button.state_hover()
+            return
+
+
+def set_button_click(button_group, button_text):
+    """Function to find a button in a button sprite group and set it to click
+    state."""
+    for button in button_group:
+        if button.text == button_text:
+            button.state_click()
+            return

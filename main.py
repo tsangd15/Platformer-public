@@ -9,6 +9,7 @@ from _platform import Platform
 from _player import Player
 from _enemy import Enemy
 from _button import Button
+from _functions import set_button_idle, set_button_hover, set_button_click
 
 # --------------- Movement and Collision Functions --------------- #
 
@@ -151,19 +152,22 @@ class Program():
     def rootmenu(self):
         """Display the root menu for the player to navigate to different
         screens"""
+        buttons = pygame.sprite.Group()
 
         # dict to store what each menu item should call when clicked on
-        item_calls = {"PLAY": self.gamelevel,
-                      "LEADERBOARD": self.leaderboard,
-                      "TUTORIAL": self.tutorial,
-                      "OPTIONS": self.options,
-                      "QUIT": quit_program}
+        item_calls = (("PLAY", self.gamelevel),              # 0
+                      ("LEADERBOARD", self.leaderboard),     # 1
+                      ("TUTORIAL", self.tutorial),           # 2
+                      ("OPTIONS", self.options),             # 3
+                      ("QUIT", quit_program))                # 4
 
+        # generate title text
         text_title = Text("PLATFORMER", (600, 400), "top_center", RED, None,
                           WINDOW_WIDTH/2, 20)
         self.sprites.add(text_title)
 
-        # highlighted_item = None
+        # store currently highlighted item using its index in the dict
+        highlighted_item = 0
 
         button_idlecolor = (BLACK, RED)
         button_hovercolor = (CYAN, RED)
@@ -173,12 +177,17 @@ class Program():
         # each iteration, item_name changes to the next key in item_call dict
         # and height increments 55
         # zip function to handle parallel iterator variables: item_name, height
-        for item_name, height in zip(item_calls.keys(),
+        for item_name, height in zip(item_calls,
                                      range(190, 190+55*len(item_calls)+1, 55)):
-            button = Button(350, 50, item_name, 30, "top_center",
+            button = Button(350, 50, item_name[0], 30, "top_center",
                             button_idlecolor, button_hovercolor,
                             button_clickcolor, WINDOW_WIDTH/2, height)
             self.sprites.add(button)
+            buttons.add(button)
+
+        set_button_hover(buttons, item_calls[highlighted_item][0])
+
+        key_up, key_down = False, False
 
         while True:
 
@@ -190,25 +199,48 @@ class Program():
                     quit_program()
 
                 if event.type == pygame.KEYDOWN:
-                    pass
+                    if event.key == pygame.K_UP:  # up arrow
+                        key_up = True
+                    if event.key == pygame.K_DOWN:  # down arrow
+                        key_down = True
+                    if (event.key == pygame.K_SPACE or  # spacebar
+                        event.key == pygame.K_KP_ENTER or  # keypad enter
+                       event.key == pygame.K_RETURN):  # main enter key
+                        pass
 
                 if event.type == pygame.KEYUP:
-                    pass
+                    if event.key == pygame.K_UP:
+                        key_up = False
+                    if event.key == pygame.K_DOWN:
+                        key_down = False
 
                 # if event.type == pygame.
                 # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
 
                 # self.update_mouse()
 
-                self.screen.fill(GREEN)
+            # modulo function for index pointer go to bottom item if before
+            # top item or go to top item if after bottom item
+            if key_up:
+                # decrement highlighted item index
+                set_button_idle(buttons, item_calls[highlighted_item][0])
+                highlighted_item = (highlighted_item - 1) % 5
+                set_button_hover(buttons, item_calls[highlighted_item][0])
+            if key_down:
+                # increment highlighted item index
+                set_button_idle(buttons, item_calls[highlighted_item][0])
+                highlighted_item = (highlighted_item + 1) % 5
+                set_button_hover(buttons, item_calls[highlighted_item][0])
 
-                # call update function for each sprite in sprites list
-                self.sprites.update()
+            self.screen.fill(GREEN)
 
-                self.sprites.draw(self.screen)
+            # call update function for each sprite in sprites list
+            self.sprites.update()
 
-                # update the screen
-                pygame.display.flip()
+            self.sprites.draw(self.screen)
+
+            # update the screen
+            pygame.display.flip()
 
     def gamelevel(self):
         """Load and run a game level"""
