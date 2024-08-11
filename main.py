@@ -189,7 +189,8 @@ class Program():
     def save_score(self, score):
         """Display save score screen"""
         print("ran save_score()")
-        screen_calls = {"root_menu": None,
+        screen_calls = {"save": None,
+                        "root_menu": None,
                         "quit": quit_program}
         save_score = SaveScore(tuple(screen_calls), score)
 
@@ -204,6 +205,8 @@ class Program():
                     return "gotoroot"
                 if next_screen == "quit":
                     screen_calls[next_screen]()
+                elif next_screen == "save":
+                    save_score.save()
 
             self.screen.fill(GREEN)
 

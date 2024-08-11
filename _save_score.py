@@ -181,6 +181,14 @@ class SaveScore(Screen):
             # remove last chracter from text string
             self.text = self.text[:-1]
 
+    def save(self):
+        """Attempt to save the score to scores.json."""
+        if len(self.text) == 3:
+            handler = ScoreHandler()
+            handler.add_score(self.text, self.score)
+            self.selected = "root_menu"
+            self.confirmed = True
+
     def update(self):
         """Update the menu by checking for any events and updating attributes
         and button states as needed."""
