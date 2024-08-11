@@ -1,7 +1,9 @@
 """Game Level - Pause Module"""
 import pygame
-from _settings import WINDOW_WIDTH, WINDOW_HEIGHT, BLUE
+from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, BLACK, RED, CYAN,
+                       YELLOW)
 from _text import Text
+from _button import Button
 
 
 class LevelPause():
@@ -11,8 +13,11 @@ class LevelPause():
         self._next_screen = None
 
         self.sprites = pygame.sprite.Group()
+        self.buttons = pygame.sprite.Group()
 
         self.add_text()
+
+        self.add_buttons()
 
         self.pause_begin = pygame.time.get_ticks()
 
@@ -30,6 +35,22 @@ class LevelPause():
         text_resume = Text("Press ESC to resume game.", 28, "middle_center",
                            BLUE, None, WINDOW_WIDTH/2, WINDOW_HEIGHT/2+40)
         self.sprites.add(text_paused, text_resume)
+
+    def add_buttons(self):
+        """Add menu buttons to sprite group to be blitted to screen."""
+        # define button colours
+        button_idlecolor = (BLACK, RED)
+        button_hovercolor = (CYAN, RED)
+        button_clickcolor = (CYAN, YELLOW)
+
+        for item_name, height in zip(self.screens,
+                                     range(190, 190+55*len(self.screens)+1, 55)
+                                     ):
+            button = Button(350, 50, item_name.upper(), 30, "top_center",
+                            button_idlecolor, button_hovercolor,
+                            button_clickcolor, WINDOW_WIDTH/2, height)
+            self.sprites.add(button)
+            self.buttons.add(button)
 
     def handle_events(self):
         """Get and handle events in the pygame event queue."""
