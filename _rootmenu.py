@@ -2,7 +2,8 @@
 import pygame
 from _button import Button
 from _text import Text
-from _functions import set_button_idle, set_button_hover, set_button_click
+from _functions import (set_button_idle, set_button_hover, set_button_click,
+                        is_point_within_rect)
 from _settings import WINDOW_WIDTH, RED, BLACK, CYAN, YELLOW
 
 
@@ -23,6 +24,9 @@ class RootMenu():
         self.arrow_up_pressed = False
         self.arrow_down_pressed = False
 
+        # store if cursor moved since last iteration
+        self.cursor_moved = False
+
         # store when the highlighted item was last updated
         self.last_highlighted = pygame.time.get_ticks()
         self.highlightcooldown = 150
@@ -31,6 +35,7 @@ class RootMenu():
         self.item_selected = False
 
         # store each menu item
+        # in form ("PLAY", "LEADERBOARD")...
         self.items = items
 
         # store currently highlighted item using its index
@@ -39,6 +44,8 @@ class RootMenu():
         self.add_title()
 
         self.add_buttons()
+
+        self.update_cursor()
 
     def add_title(self):
         """Instantiate and add title text to sprites sprite group."""
@@ -80,8 +87,6 @@ class RootMenu():
 
     def handle_events(self):
         """Get and handle events from pygame event queue."""
-        self.reset_item_selected()
-
         # keybind detection
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -103,10 +108,20 @@ class RootMenu():
                 if event.key == pygame.K_DOWN:
                     self.arrow_down_pressed = False
 
-            # if event.type == pygame.
+            if event.type == pygame.MOUSEMOTION:
+                self.cursor_moved = True
+
             # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
 
             # self.update_mouse()
+
+    def is_button_hover(self):
+        """Check if cursor is hovering over a button."""
+        for button in self.buttons:
+            if is_point_within_rect(self.cursor, button):
+                self.set_highlighted_idle()
+                self.highlighted_item = self.items.index(button.text)
+                self.set_highlighted_hover()
 
     def terminate(self):
         """Simulate a quit item selection to tell the wider scope to terminate
@@ -135,6 +150,11 @@ class RootMenu():
         if self.item_selected:
             self.item_selected = False
             self.set_highlighted_hover()
+
+    def update_cursor(self):
+        """Updates the cursor's stored location"""
+        # store current cursor location
+        self.cursor = pygame.mouse.get_pos()
 
     def update_highlighted(self):
         """Check if the arrow keys are being pressed. If so, update the menu
@@ -166,9 +186,16 @@ class RootMenu():
                 self.set_highlighted_hover()
                 self.last_highlighted = now
 
+        if self.cursor_moved:
+            self.cursor_moved = False
+            self.is_button_hover()
+
     def update(self):
         """Update the menu by checking for any events and updating attributes
         and button states as needed."""
+        self.reset_item_selected()
+
+        self.update_cursor()
 
         self.handle_events()
 
