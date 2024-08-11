@@ -1,5 +1,6 @@
 """Button Module"""
 import pygame
+from _text import Text
 
 
 class Button(pygame.sprite.Sprite):
@@ -35,6 +36,13 @@ class Button(pygame.sprite.Sprite):
         # draw the square
         pygame.draw.rect(self.image, bgcolor, [0, 0, self.width, self.height])
         self.rect = self.image.get_rect()
+
+        # create text instance
+        button_text = Text(self.text, self.textsize, "middle_center",
+                           textcolor, None, self.rect.centerx,
+                           self.rect.centery)
+        # render text instance surface onto button surface
+        self.image.blit((button_text.image), button_text.rect)
 
         self.rect.x = self.startx
         self.rect.y = self.starty
