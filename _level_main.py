@@ -199,7 +199,7 @@ class LevelMain(Screen):
                     self.sprites.add(self.finishpoint)
                     self.finishpoints.add(self.finishpoint)
 
-    def moveplayer(self):
+    def move_player(self):
         """Uses the move function to move the player sprite by its current
         velocity vector. Collisions with platforms are detected and reacted to.
         If player bottom collides with platform, jumping stops, air duration is
@@ -216,7 +216,21 @@ class LevelMain(Screen):
         if collisions["top"]:
             self.player.jumpmomentum = 0
 
-    def moveprojectiles(self):
+    def move_enemies(self):
+        """Uses the move function to move each enemy sprite."""
+        for enemy in self.enemies:
+            collisions = move(enemy, self.platforms)
+            if collisions["bottom"]:
+                enemy.jumpmomentum = 0
+                enemy.airduration = 0
+            else:
+                enemy.airduration += 1
+
+            # if player top collides, momentum reset
+            if collisions["top"]:
+                enemy.jumpmomentum = 0
+
+    def move_projectiles(self):
         """Iterates through each projectile in each entity's 'projectiles'
         sprite group attribute and moves them using their stored velocity. If
         the projectile moves off screen, collides with a platform or enemy, it
@@ -291,6 +305,12 @@ class LevelMain(Screen):
             elif event.key == pygame.K_h:
                 self.player.hit(5)
 
+            # enemy movement testing
+            elif event.key == pygame.K_LEFT:  # left arrow
+                self.enemy.movingleft = True
+            elif event.key == pygame.K_RIGHT:  # right arrow
+                self.enemy.movingright = True
+
         # return to calling line if the event matched
         else:
             return False  # no match
@@ -309,6 +329,12 @@ class LevelMain(Screen):
             elif event.key == pygame.K_w:  # W: stop jumping
                 self.player.jumping = False
 
+            # enemy movement testing
+            elif event.key == pygame.K_LEFT:  # left arrow
+                self.enemy.movingleft = False
+            elif event.key == pygame.K_RIGHT:  # right arrow
+                self.enemy.movingright = False
+
         # return to calling line if the event matched
         else:
             return False  # no match
@@ -323,9 +349,10 @@ class LevelMain(Screen):
         # call update method for each entity sprite
         self.entities.update()
 
-        # move player and projectiles
-        self.moveplayer()
-        self.moveprojectiles()
+        # move player, enemies and projectiles
+        self.move_player()
+        self.move_enemies()
+        self.move_projectiles()
 
         # check for game finish
         self.check_finish()
