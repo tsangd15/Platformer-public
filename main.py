@@ -126,6 +126,7 @@ class Game():
 
         # 0 = nothing
         # 1 = platform
+        # 2 = player spawn location
         self.gamemap = [
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -134,7 +135,7 @@ class Game():
             [0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -148,10 +149,8 @@ class Game():
         self.enemies = pygame.sprite.Group()
 
         # Creating sprites then adding to sprite lists
-        self.player = Player(BLUE, 40, 70)
         self.enemy = Enemy(YELLOW, 80, 80)
-        self.sprites.add(self.player)
-        self.entities.add(self.player)
+
         self.sprites.add(self.enemy)
         self.enemies.add(self.enemy)
 
@@ -163,6 +162,12 @@ class Game():
                     plat.setlocation(col*PLATFORMLENGTH, row*PLATFORMLENGTH)
                     self.sprites.add(plat)
                     self.platforms.add(plat)
+
+                elif self.gamemap[row][col] == 2:  # player
+                    self.player = Player(BLUE, 40, 70, col*PLATFORMLENGTH,
+                                         row*PLATFORMLENGTH)
+                    self.sprites.add(self.player)
+                    self.entities.add(self.player)
 
     def moveplayer(self):
         """Uses the move function to move the player sprite by its current

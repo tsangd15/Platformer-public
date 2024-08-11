@@ -7,7 +7,7 @@ from _settings import PURPLE
 
 class Player(Entity):
     """Class for player"""
-    def __init__(self, color, width, height, startx=430, starty=400):
+    def __init__(self, color, width, height, startx, starty):
         super().__init__(color, width, height, startx, starty)
         self.projectiles = pygame.sprite.Group()
         self.defaulthealth = 25
@@ -41,6 +41,7 @@ class Player(Entity):
         """Decrease lives and reset health for respawn."""
         self.lives -= 1
         self.health = self.defaulthealth
+        self.rect.x, self.rect.y = self.startx, self.starty
 
     def update(self):
         super().update()
