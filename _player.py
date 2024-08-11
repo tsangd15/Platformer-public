@@ -21,10 +21,14 @@ class Player(Entity):
         self.lastsprinted = pygame.time.get_ticks()
         self.number = 0
         self.stats = pygame.sprite.Group()
+        self.score = 0
         self.health = ProgressBar(300, 20, RED, YELLOW, WINDOW_WIDTH/2-150,
-                                  20, self.defaulthealth)
+                                  5, self.defaulthealth)
+        # to make the outline between the two bars consistent:
+        # stamina starty = health startx + health height - health outline
+        # = 5+20-2 = 23
         self.stamina = ProgressBar(300, 20, GREEN, YELLOW, WINDOW_WIDTH/2-150,
-                                   40, 100)
+                                   23, 100)
         self.stats.add(self.health.bars, self.stamina.bars)
 
     def fire(self, projectile_velocity):
