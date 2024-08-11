@@ -8,7 +8,7 @@ from _settings import WINDOW_WIDTH, RED, BLACK, CYAN, YELLOW
 
 class RootMenu():
     """Class for handling root (or main) menu's sprites and logic."""
-    def __init__(self):
+    def __init__(self, items):
         # tell wider scope to terminate program
         self.terminate = False
 
@@ -31,11 +31,7 @@ class RootMenu():
         self.highlightcooldown = 150
 
         # store each menu item
-        self.items = ("PLAY",              # 0
-                      "LEADERBOARD",     # 1
-                      "TUTORIAL",           # 2
-                      "OPTIONS",             # 3
-                      "QUIT")                # 4
+        self.items = items
 
         # store currently highlighted item using its index
         self.highlighted_item = 0

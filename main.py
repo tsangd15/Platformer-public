@@ -151,7 +151,15 @@ class Program():
     def rootmenu(self):
         """Display the root menu for the player to navigate to different
         screens"""
-        menu = RootMenu()
+        item_calls = {"PLAY": self.gamelevel,              # 0
+                      "LEADERBOARD": self.leaderboard,     # 1
+                      "TUTORIAL": self.tutorial,           # 2
+                      "OPTIONS": self.options,             # 3
+                      "QUIT": quit_program}                # 4
+
+        # tuple(item_calls) returns only the dictionary keys in a tuple
+        # e.g. ("PLAY", "LEADERBOARD")
+        menu = RootMenu(tuple(item_calls))
 
         while True:
             self.clock.tick(10)
@@ -170,15 +178,19 @@ class Program():
 
     def gamelevel(self):
         """Load and run a game level"""
+        print("ran gamelevel()")
 
     def leaderboard(self):
         """Display game leaderboard screen"""
+        print("ran leaderboard()")
 
     def tutorial(self):
         """Display game tutorial screen"""
+        print("ran tutorial()")
 
     def options(self):
         """Display options screen"""
+        print("ran options()")
 
 
 class Game():
