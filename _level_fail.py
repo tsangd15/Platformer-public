@@ -6,6 +6,7 @@ from _text import Text
 
 
 class LevelFail(Screen):
+    """Class for level fail screen"""
     def __init__(self, screens):
         super().__init__(screens)
 
