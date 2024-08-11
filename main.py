@@ -75,10 +75,12 @@ class Program():
             # in item_calls dict
             next_screen = level.update()
             if next_screen is not None:
-                if next_screen != "pause":
+                if next_screen == "quit":
                     screen_calls[next_screen]()
+                elif "level_" in next_screen:
+                    screen_calls[next_screen](level.sprites)
                 else:
-                    pause_duration = screen_calls[next_screen]()
+                    pause_duration = screen_calls[next_screen](level.sprites)
                     level.resume(pause_duration)
 
             self.screen.fill(GREEN)
@@ -87,7 +89,7 @@ class Program():
 
             pygame.display.flip()
 
-    def level_pause(self):
+    def level_pause(self, level_sprites):
         """Display level pause screen"""
         screen_calls = {"resume": None,
                         "quit": quit_program}
@@ -107,11 +109,13 @@ class Program():
 
             self.screen.fill(GREEN)
 
+            level_sprites.draw(self.screen)
+
             pause.sprites.draw(self.screen)
 
             pygame.display.flip()
 
-    def level_complete(self):
+    def level_complete(self, level_sprites):
         """Display level pause screen"""
         print("ran level_complete()")
         screen_calls = {"quit": quit_program}
@@ -126,11 +130,13 @@ class Program():
 
             self.screen.fill(GREEN)
 
+            level_sprites.draw(self.screen)
+
             complete.sprites.draw(self.screen)
 
             pygame.display.flip()
 
-    def level_fail(self):
+    def level_fail(self, level_sprites):
         """Display level pause screen"""
         print("ran level_fail()")
         screen_calls = {"quit": quit_program}
@@ -144,6 +150,8 @@ class Program():
                 screen_calls[next_screen]()
 
             self.screen.fill(GREEN)
+
+            level_sprites.draw(self.screen)
 
             fail.sprites.draw(self.screen)
 
