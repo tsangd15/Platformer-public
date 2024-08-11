@@ -362,16 +362,42 @@ class LevelMain(Screen):
                        (platform.rect.right > right_edge)):
                         right_edge = platform.rect.right
 
-                # check if enemy at left edge
-                if enemy.rect.left < left_edge:
-                    # move in opposite direction
-                    enemy.movingleft = False
-                    enemy.movingright = True
-                # check if enemy at right edge
-                elif enemy.rect.right > right_edge:
-                    # move in opposite direction
-                    enemy.movingright = False
-                    enemy.movingleft = True
+                # player not sighted, resume patrol
+                if not enemy.watching:
+                    # restart movement after stopping for player
+                    # if both false
+                    if not(enemy.movingleft or enemy.movingright):
+                        enemy.movingleft = True  # move in any direction
+
+                    # check if enemy at left edge
+                    if enemy.rect.left < left_edge:
+                        # move in opposite direction
+                        enemy.movingleft = False
+                        enemy.movingright = True
+                    # check if enemy at right edge
+                    elif enemy.rect.right > right_edge:
+                        # move in opposite direction
+                        enemy.movingright = False
+                        enemy.movingleft = True
+                # player sighted, chase player
+                else:
+                    # if player to left of enemy and not at left edge
+                    if ((self.player.rect.right < enemy.rect.left) and
+                       (enemy.rect.left >= left_edge)):
+                        # move left towards player
+                        enemy.movingleft = True
+                        enemy.movingright = False
+                    # if player to right of enemy and not at right edge
+                    elif ((self.player.rect.left > enemy.rect.right) and
+                          (enemy.rect.right <= right_edge)):
+                        # move right towards player
+                        enemy.movingright = True
+                        enemy.movingleft = False
+                    # player is on enemy
+                    else:
+                        # stop moving
+                        enemy.movingleft = False
+                        enemy.movingright = False
 
     def check_finish(self):
         """Method to check if the level is finished (completed/failed).
