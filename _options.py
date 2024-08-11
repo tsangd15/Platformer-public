@@ -151,3 +151,12 @@ class Options(Screen):
             pygame.mixer.music.play(-1)
 
         save_config(self.config)
+
+    def config_sound_effects(self):
+        """Toggle sound effect key in config."""
+        if self.config["sound_effects"] is True:
+            self.config["sound_effects"] = False
+        else:
+            self.config["sound_effects"] = True
+
+        save_config(self.config)

@@ -267,6 +267,7 @@ class Program():
                         "config_sound_effects": None}
         options = Options(tuple(screen_calls))
         screen_calls["config_music"] = options.config_music
+        screen_calls["config_sound_effects"] = options.config_sound_effects
 
         while True:
             self.clock.tick(25)

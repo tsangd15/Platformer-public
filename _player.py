@@ -57,7 +57,9 @@ class Player(Entity):
                                     projectile_velocity[1])
 
             self.projectiles.add(projectile)
-            sfx_fire.play()
+
+            if self.sfx:
+                sfx_fire.play()
 
     def hit(self, amount):
         """Method to reduce health when hit by projectile."""
@@ -68,7 +70,9 @@ class Player(Entity):
 
         print("hit", self.number)
         self.number += 1
-        sfx_hit.play()
+
+        if self.sfx:
+            sfx_hit.play()
 
     def respawn(self):
         """Decrease lives, reset health & stamina and teleport to spawn
@@ -77,7 +81,9 @@ class Player(Entity):
         self.health.value = self.defaulthealth
         self.stamina.value = self.defaultstamina
         self.rect.x, self.rect.y = self.startx, self.starty
-        sfx_respawn.play()
+
+        if self.sfx:
+            sfx_respawn.play()
 
     def replenish_health(self, now):
         """Replenish health slowly if player hasn't taken damage for the
@@ -180,6 +186,8 @@ class Player(Entity):
     def update(self):
         """Carry out operations to update player's location and attributes
         like health and stamina."""
+        self.check_sfx_setting()
+
         self.resetvelocity()
 
         now = pygame.time.get_ticks()

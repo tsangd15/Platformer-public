@@ -1,6 +1,7 @@
 """Entity Class Module"""
 import pygame
 from _settings import BLACK
+from _config_handler import load_config
 
 
 # --------------- Sound Objects --------------- #
@@ -46,10 +47,19 @@ class Entity(pygame.sprite.Sprite):
         self.jumpmomentum = 0
         self.airduration = 0
 
+        # turn on/off sound effects (sfx)
+        self.check_sfx_setting()
+
     def resetvelocity(self):
         """Resets player velocity"""
         self.velocity_x = 0
         self.velocity_y = 0
+
+    def check_sfx_setting(self):
+        """Reads the sound_effects key from config.json and saves it to self.sfx.
+        If self.sfx is True, sound effects are played, otherwise they aren't.
+        """
+        self.sfx = load_config()["sound_effects"]
 
     def update(self):
         """Update method to carry out actions for entity each game loop.

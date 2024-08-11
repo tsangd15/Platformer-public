@@ -14,9 +14,14 @@ class Enemy(Entity):
         self.health -= 5
         print("hit", self.number)
         self.number += 1
-        sfx_hit.play()
+
+        if self.sfx:
+            sfx_hit.play()
 
     def update(self):
-        """Method to check if health is below 0, if so, despawn enemy."""
+        """Method to check if health is below 0, if so, despawn enemy.
+        Update sfx attribute to turn on/off sound effects."""
+        self.check_sfx_setting()
+
         if self.health <= 0:
             self.kill()
