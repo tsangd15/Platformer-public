@@ -1,6 +1,7 @@
 """Game Level - Main Module"""
 from math import sqrt
 import pygame
+from _screen import Screen
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, RED, BLUE, PINK, YELLOW)
 from _platform import Platform
 from _player import Player
@@ -119,25 +120,23 @@ NUMBEROFCOLUMNS = int(WINDOW_WIDTH/PLATFORMLENGTH)
 NUMBEROFROWS = int(WINDOW_HEIGHT/PLATFORMLENGTH)
 
 
-class LevelMain():
-    """Class for running an individual game level"""
-    # pylint: disable=too-many-instance-attributes
+class LevelMain(Screen):
+    """Class for handling an individual game level's sprites and logic"""
     def __init__(self, screens, map_name):
-        # import map as 2d array
-        self.load_map(map_name)
+        super().__init__(screens)
 
-        # Setting up sprite lists
-        self.sprites = pygame.sprite.Group()
-        self.entities = pygame.sprite.Group()  # any sprite that moves
+        # add screen specific event handlers to list of event handlers
+        self.event_handlers.extend((self.handle_events_keyboard_down,
+                                    self.handle_events_keyboard_up))
+
+        # instantiate sprite groupd
+        self.entities = pygame.sprite.Group()
         self.platforms = pygame.sprite.Group()
         self.finishpoints = pygame.sprite.Group()
         self.enemies = pygame.sprite.Group()
 
-        self.screens = screens
-        self.next_screen_index = -1
-
-        self.paused = False
-
+        # load and render map sprites
+        self.load_map(map_name)
         self.draw_map()
 
         self.update_cursor()
@@ -246,89 +245,86 @@ class LevelMain():
         If player collides with finish points, level completed.
         If player dead attribute true, level failed."""
         if list_collisions(self.player, self.finishpoints) != []:
-            self.next_screen_index = 1  # self.screens[1] = "level_complete"
+            self.selected = "level_complete"
         elif self.player.dead:
-            self.next_screen_index = 2  # self.screens[2] = "level_fail"
+            self.selected = "level_fail"
+        else:
+            # level not finished, end function early
+            return
+        # level did finish, so confirm screen change
+        self.confirmed = True
 
     def resume(self, pause_duration):
         """Method to properly resume the game after a game pause."""
-        self.paused = False
         self.player.regulate_cooldown(pause_duration)
-        # reset next screen to null
-        self.next_screen_index = -1
 
-    def update_cursor(self):
-        """Updates the cursor's stored location"""
-        # store current cursor location
-        self.cursor = pygame.mouse.get_pos()
+    def handle_events_keyboard_down(self, event):
+        """Handle keyboard related events. If the given event matches, the
+        corresponding actions for that matched event are carried out."""
+        # altf4 or window close button invokes pygame.QUIT
+        if event.type == pygame.QUIT:
+            self.terminate()
 
-    def handle_events(self):
-        """Get and handle events in the pygame event queue."""
-        # keybind detection
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.next_screen_index = 3
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:  # ESC: pause
+                self.selected = "pause"
+                self.confirmed = True
+            elif event.key == pygame.K_x:  # X: end program
+                self.terminate()
+            elif event.key == pygame.K_LSHIFT:  # L Shift: sprint
+                self.player.sprinting = True
+            elif event.key == pygame.K_a:  # A: move left
+                self.player.movingleft = True
+            elif event.key == pygame.K_d:  # D: move right
+                self.player.movingright = True
+            elif event.key == pygame.K_w:  # W: jump
+                self.player.jumping = True
+            elif event.key == pygame.K_SPACE:  # Spacebar: shoot
+                # generate velocity vector from player to cursor
+                projectile_vector = vector(self.player.rect.center,
+                                           self.cursor, 10)
+                # spawn projectile with generated velocity
+                self.player.fire(projectile_vector)
+            elif event.key == pygame.K_h:
+                self.player.hit(5)
 
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_ESCAPE:
-                    self.paused = True
-                    self.next_screen_index = 0
-                if event.key == pygame.K_x:  # X: end program
-                    self.next_screen_index = 3
-                if event.key == pygame.K_LSHIFT:  # L Shift: sprint
-                    self.player.sprinting = True
-                if event.key == pygame.K_a:  # A: move left
-                    self.player.movingleft = True
-                if event.key == pygame.K_d:  # D: move right
-                    self.player.movingright = True
-                if event.key == pygame.K_w:  # W: jump
-                    self.player.jumping = True
-                if event.key == pygame.K_SPACE:  # Spacebar: shoot
-                    # generate velocity vector from player to cursor
-                    projectile_vector = vector(self.player.rect.center,
-                                               self.cursor, 10)
-                    # spawn projectile with generated velocity
-                    self.player.fire(projectile_vector)
-                if event.key == pygame.K_h:
-                    self.player.hit(5)
+        # return to calling line if the event matched
+        else:
+            return False  # no match
+        return True  # match
 
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_LSHIFT:  # L Shift: stop sprint
-                    self.player.sprinting = False
-                if event.key == pygame.K_a:  # A: stop moving left
-                    self.player.movingleft = False
-                if event.key == pygame.K_d:  # D: stop moving right
-                    self.player.movingright = False
-                if event.key == pygame.K_w:  # W: stop jumping
-                    self.player.jumping = False
+    def handle_events_keyboard_up(self, event):
+        """Handle keyboard related events. If the given event matches, the
+        corresponding actions for that matched event are carried out."""
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LSHIFT:  # L Shift: stop sprint
+                self.player.sprinting = False
+            elif event.key == pygame.K_a:  # A: stop moving left
+                self.player.movingleft = False
+            elif event.key == pygame.K_d:  # D: stop moving right
+                self.player.movingright = False
+            elif event.key == pygame.K_w:  # W: stop jumping
+                self.player.jumping = False
 
-            # if event.type == pygame.
-            # MOUSEBUTTONDOWN, MOUSEBUTTONUP, or MOUSEMOTION.
-
-    def next_screen(self):
-        """Return the next screen to display (returning None will mean the
-        current screen will continue to be displayed."""
-        if self.next_screen_index != -1:
-            return self.screens[self.next_screen_index]
-        return None
+        # return to calling line if the event matched
+        else:
+            return False  # no match
+        return True  # match
 
     def update(self):
         """Update the cursor and sprites and check if the game is finished."""
-
         self.update_cursor()
 
         self.handle_events()
 
-        # call update function for each entity sprite
+        # call update method for each entity sprite
         self.entities.update()
 
-        # move player
+        # move player and projectiles
         self.moveplayer()
-
-        # move projectiles
         self.moveprojectiles()
 
         # check for game finish
         self.check_finish()
 
-        return self.next_screen()
+        return self.process_next_screen()
