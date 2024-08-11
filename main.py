@@ -18,10 +18,13 @@ def quit_program():
 
 
 class Program():
-    """Class to run program's root menu which calls further menus/runs a game
-    level."""
+    """Class to run game program. This class handles the pygame screen surface,
+    clock and what screen is running currently and blits its sprites on its
+    behalf."""
     def __init__(self):
         pygame.init()
+
+        # screen surface setup
         self.resolution = (WINDOW_WIDTH, WINDOW_HEIGHT)
         self.screen = pygame.display.set_mode(self.resolution)
         pygame.display.set_caption("2D Platformer")
@@ -29,8 +32,7 @@ class Program():
         # clock setup
         self.clock = pygame.time.Clock()
 
-        self.sprites = pygame.sprite.Group()
-
+        # display root menu screen
         self.rootmenu()
 
     def rootmenu(self):
