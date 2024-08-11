@@ -2,7 +2,7 @@
 import pygame
 from _entity import Entity
 from _projectile import Projectile
-from _settings import BLUE
+from _settings import PURPLE
 
 
 class Player(Entity):
@@ -20,7 +20,7 @@ class Player(Entity):
         if now - self.lastfired >= self.firecooldown:
             self.lastfired = now
 
-            projectile = Projectile(BLUE, self.rect.centerx,
+            projectile = Projectile(PURPLE, self.rect.centerx,
                                     self.rect.centery, projectile_velocity[0],
                                     projectile_velocity[1])
 
