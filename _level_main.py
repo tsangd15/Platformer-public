@@ -287,6 +287,9 @@ class LevelMain(Screen):
                                    custom_sprite[7])
                 self.sprites.add(text_sprite)
 
+        # update sfx status for all entites
+        self.check_sfx()
+
     def move_player(self):
         """Uses the move function to move the player sprite by its current
         velocity vector."""
@@ -507,8 +510,10 @@ class LevelMain(Screen):
         self.confirmed = True
 
     def resume(self, pause_duration):
-        """Method to properly resume the game after a game pause."""
+        """Method to properly resume the game after a game pause.
+        Cooldowns are corrected and SFX status is updated for entites."""
         self.player.regulate_cooldown(pause_duration)
+        self.check_sfx()
 
     def handle_events_keyboard_down(self, event):
         """Handle keyboard related events. If the given event matches, the
@@ -570,6 +575,12 @@ class LevelMain(Screen):
 
         # redraw map, instantiating new sprites
         self.draw_map()
+
+    def check_sfx(self):
+        """Iterates through each entity, enabling/disabling sound effects
+        depending on the config file values."""
+        for entity in self.entities:
+            entity.check_sfx_setting()
 
     def update(self):
         """Update the cursor and sprites and check if the game is finished."""

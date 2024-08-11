@@ -64,7 +64,5 @@ class Entity(pygame.sprite.Sprite):
     def update(self):
         """Update method to carry out actions for entity each game loop.
         Method called via sprites.update()
-        Resets velocity and checks sound effects setting status."""
-        self.check_sfx_setting()
-
+        Resets velocity."""
         self.resetvelocity()
