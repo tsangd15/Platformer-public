@@ -135,18 +135,27 @@ class Program():
 
             pygame.display.flip()
 
-    def level_complete(self, level_sprites):
+    def level_complete(self, level_sprites, score):
         """Display level pause screen"""
         print("ran level_complete()")
-        screen_calls = {"quit": quit_program}
-        complete = LevelComplete(tuple(screen_calls))
+        screen_calls = {"save_score": self.save_score,
+                        "root_menu": None,
+                        "quit": quit_program}
+        complete = LevelComplete(tuple(screen_calls), score)
 
         while True:
             self.clock.tick(25)
 
             next_screen = complete.update()
             if next_screen is not None:
-                screen_calls[next_screen]()
+                if next_screen == "save_score":
+                    screen_return = screen_calls[next_screen](score)
+                    if screen_return == "gotoroot":
+                        return "gotoroot"
+                elif next_screen == "root_menu":
+                    return "gotoroot"
+                else:
+                    screen_calls[next_screen]()
 
             self.screen.fill(GREEN)
 
