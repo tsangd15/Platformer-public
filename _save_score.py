@@ -5,6 +5,7 @@ from _leaderboard_handler import ScoreHandler
 from _text import Text
 from _button import Button
 from _platform import Platform
+from _server_functions import server_addentry
 from _functions import return_button, is_point_within_rect
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, BLUE, RED, BLACK, CYAN,
                        YELLOW, PINK)
@@ -195,7 +196,12 @@ class SaveScore(Screen):
             # remove last chracter from text string
             self.text = self.text[:-1]
 
-    def save(self):
+    def update_alert(self, text):
+        """Update the alert sprite with the given text."""
+        self.alert_text.text = text
+        self.alert_text.update()
+
+    def save_local(self):
         """Attempt to save the score to scores.json."""
         if len(self.text) == 3:
             handler = ScoreHandler()
@@ -204,8 +210,32 @@ class SaveScore(Screen):
             self.confirmed = True
         else:
             # display alert on screen to remind user
-            self.alert_text.text = "Tags must consist of 3 characters."
-            self.alert_text.update()
+            self.update_alert("Tags must consist of 3 characters.")
+
+    def save_global(self):
+        """Attempt to save the score to both the game server and scores.json.
+        """
+        if len(self.text) == 3:
+            # ----- save to server ----- #
+            # display status using alert sprite
+            self.update_alert("Saving to server...")
+            success = server_addentry(self.text, self.score)
+            if success:
+                self.update_alert("Saved!")
+            else:
+                self.update_alert("Server save failed. Try local save?")
+                return  # end function run early
+
+            # ----- save to local game ----- #
+            self.update_alert("Saving to local game...")
+            handler = ScoreHandler()
+            handler.add_score(self.text, self.score)
+            self.selected = "root_menu"
+            self.confirmed = True
+
+        else:
+            # display alert on screen to remind user
+            self.update_alert("Tags must consist of 3 characters.")
 
     def update(self):
         """Update the menu by checking for any events and updating attributes

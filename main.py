@@ -254,8 +254,10 @@ class Program():
                     return "gotoroot"
                 if next_screen == "quit":
                     screen_calls[next_screen]()
+                elif next_screen == "global_save":
+                    save_score.save_global()
                 elif next_screen == "local_save":
-                    save_score.save()
+                    save_score.save_local()
 
             self.screen.fill(GREEN)
 
