@@ -72,7 +72,7 @@ class Program():
 
             pygame.display.flip()
 
-    def level_main(self, mapname=None):
+    def level_main(self, mapname=None, allow_save=False, allow_continue=False):
         """Load and run a game level"""
         screen_calls = {"pause": self.level_pause,              # 0
                         "level_complete": self.level_complete,  # 1
@@ -93,14 +93,22 @@ class Program():
                 if next_screen == "quit":
                     screen_calls[next_screen]()
                 elif "level_" in next_screen:
-                    screen_return = (screen_calls[next_screen]
-                                     (level.sprites, level.player.score))
+                    if next_screen == "level_complete":
+                        screen_return = (screen_calls[next_screen]
+                                         (level.sprites, level.player.score,
+                                          allow_save=allow_save,
+                                          allow_continue=allow_continue))
+                    else:  # next_screen == "level_fail"
+                        screen_return = (screen_calls[next_screen]
+                                         (level.sprites, level.player.score,
+                                          allow_save=allow_save))
+
                     # if the user requested to go back to root menu
                     if screen_return == "gotoroot":
                         return "gotoroot"
                     # if the user requested to continue to next level
                     if screen_return == "continue":
-                        return "continue"
+                        return "continue", level.player.score
                     # reset level for retry if selected
                     if screen_return == "retry":
                         level.reset_level()
