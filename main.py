@@ -72,13 +72,16 @@ class Program():
 
             pygame.display.flip()
 
-    def level_main(self):
+    def level_main(self, mapname=None):
         """Load and run a game level"""
         screen_calls = {"pause": self.level_pause,              # 0
                         "level_complete": self.level_complete,  # 1
                         "level_fail": self.level_fail,          # 2
                         "quit": quit_program}                   # 3
-        level = LevelMain(tuple(screen_calls), "test_map")
+
+        if mapname is None:
+            mapname = "tutorial_1"
+        level = LevelMain(tuple(screen_calls), mapname)
 
         while True:
             self.clock.tick(60)
@@ -94,13 +97,16 @@ class Program():
                                      (level.sprites, level.player.score))
                     # if the user requested to go back to root menu
                     if screen_return == "gotoroot":
-                        return
+                        return "gotoroot"
+                    # reset level for retry if selected
+                    if screen_return == "retry":
+                        level.reset_level()
                 else:
                     pause_return = screen_calls[next_screen](level.sprites)
 
                     # if user requested to go back to root menu
                     if pause_return == "gotoroot":
-                        return
+                        return "gotoroot"
                     # otherwise correct cooldowns and resume level
                     level.resume(pause_return)
 
@@ -215,6 +221,8 @@ class Program():
                         return "gotoroot"
                 elif next_screen == "root_menu":
                     return "gotoroot"
+                elif next_screen == "retry":
+                    return "retry"
                 else:
                     screen_calls[next_screen]()
 

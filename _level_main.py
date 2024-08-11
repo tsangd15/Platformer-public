@@ -531,6 +531,16 @@ class LevelMain(Screen):
             return False  # no match
         return True  # match
 
+    def reset_level(self):
+        """Reset the game level, clearing all current sprites and reloading
+        the map."""
+        # reset sprite groups by killing all sprites
+        for sprite in self.sprites:
+            sprite.kill()
+
+        # redraw map, instantiating new sprites
+        self.draw_map()
+
     def update(self):
         """Update the cursor and sprites and check if the game is finished."""
         self.update_cursor()
