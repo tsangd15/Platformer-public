@@ -229,13 +229,15 @@ class LevelMain(Screen):
                     projectile.kill()
 
             # --- kill projectile on enemy collision and inflict damage --- #
-            damage = list_groupcollisions(entity.projectiles, self.enemies)
+            collisions = list_groupcollisions(entity.projectiles, self.enemies)
             # iterate through each item (key, value) in dictionary
-            for item in damage.items():
-                item[0].kill()  # for each projectile (key), kill/despawn
+            # key is projectile
+            # value is list of enemies collided that collided with projectile
+            for projectile, enemies in collisions.items():
+                projectile.kill()  # for each projectile (key), despawn it
 
-                for key in item[1]:  # iterate through each value
-                    key.hit()  # for each enemy in the value, inflict hit
+                for enemy in enemies:  # iterate through each enemy
+                    enemy.hit(projectile.damage)  # inflict projectile damage
                     self.player.score += 5
 
             self.sprites.add(entity.projectiles)

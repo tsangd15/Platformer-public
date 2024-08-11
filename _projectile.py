@@ -5,7 +5,7 @@ from _settings import BLACK
 
 class Projectile(pygame.sprite.Sprite):
     """Class for projectiles"""
-    def __init__(self, color, startx, starty, velocity_x, velocity_y,
+    def __init__(self, color, startx, starty, velocity_x, velocity_y, damage,
                  width=9, height=9):
         super().__init__()
         self.image = pygame.Surface([width, height])
@@ -21,3 +21,6 @@ class Projectile(pygame.sprite.Sprite):
         self.rect.centery = starty
         self.velocity_x = velocity_x
         self.velocity_y = velocity_y
+
+        # specify how much damage it inflicts on entities
+        self.damage = damage

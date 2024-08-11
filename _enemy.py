@@ -23,9 +23,9 @@ class Enemy(Entity):
         if self.sfx:
             sfx_fire.play()
 
-    def hit(self):
+    def hit(self, amount):
         """Method to reduce health when hit by projectile."""
-        self.health -= 5
+        self.health -= amount
         print("hit", self.number)
         self.number += 1
 

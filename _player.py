@@ -54,7 +54,7 @@ class Player(Entity):
 
             projectile = Projectile(PURPLE, self.rect.centerx,
                                     self.rect.centery, projectile_velocity[0],
-                                    projectile_velocity[1])
+                                    projectile_velocity[1], 5)
 
             self.projectiles.add(projectile)
 
