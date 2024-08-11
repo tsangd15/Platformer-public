@@ -171,7 +171,7 @@ class LevelMain(Screen):
         # Creating sprites then adding to sprite lists
         self.enemy = Enemy(YELLOW, 80, 80)
 
-        self.sprites.add(self.enemy)
+        self.sprites.add(self.enemy, self.enemy.vision)
         self.entities.add(self.enemy)
         self.enemies.add(self.enemy)
 
