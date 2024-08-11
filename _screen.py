@@ -236,8 +236,8 @@ class Screen():
 
         # return to calling line if the event matched
         else:
-            return False
-        return True
+            return False  # no match
+        return True  # match
 
     def handle_events_mouse(self, event):
         if event.type == pygame.MOUSEMOTION:
@@ -268,6 +268,6 @@ class Screen():
 
         # return to calling line if the event matched
         else:
-            return False
-        return True
+            return False  # no match
+        return True  # match
     '''
