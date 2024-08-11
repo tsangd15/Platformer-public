@@ -35,11 +35,11 @@ class Program():
     def rootmenu(self):
         """Display the root menu for the player to navigate to different
         screens"""
-        item_calls = {"PLAY": self.level_main,              # 0
-                      "LEADERBOARD": self.leaderboard,     # 1
-                      "TUTORIAL": self.tutorial,           # 2
-                      "OPTIONS": self.options,             # 3
-                      "QUIT": quit_program}                # 4
+        item_calls = {"play": self.level_main,              # 0
+                      "leaderboard": self.leaderboard,     # 1
+                      "tutorial": self.tutorial,           # 2
+                      "options": self.options,             # 3
+                      "quit": quit_program}                # 4
 
         # tuple(item_calls) returns only the dictionary keys in a tuple
         # e.g. ("PLAY", "LEADERBOARD")
