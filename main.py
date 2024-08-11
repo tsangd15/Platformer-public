@@ -8,6 +8,7 @@ from _level_complete import LevelComplete
 from _level_fail import LevelFail
 from _leaderboard import Leaderboard
 from _save_score import SaveScore
+from _options import Options
 from _settings import (WINDOW_WIDTH, WINDOW_HEIGHT, GREEN)
 
 
@@ -258,7 +259,33 @@ class Program():
 
     def options(self):
         """Display options screen"""
-        print("ran options()")
+        screen_calls = {"quit": quit_program,
+                        "back": None,
+                        "config_music": None,
+                        "config_sound_effects": None}
+        options = Options(tuple(screen_calls))
+
+        while True:
+            self.clock.tick(25)
+
+            # check if menu item returned, if so, run corresponding function
+            # in item_calls dict
+            next_screen = options.update()
+            if next_screen is not None:
+                if next_screen == "quit":
+                    screen_calls[next_screen]()
+                elif next_screen == "back":
+                    return
+                elif next_screen == "config_music":
+                    pass
+                elif next_screen == "config_sfx":
+                    pass
+
+            self.screen.fill(GREEN)
+
+            options.sprites.draw(self.screen)
+
+            pygame.display.flip()
 
 
 # instantiate and run program
