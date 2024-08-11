@@ -41,7 +41,7 @@ class Options(Screen):
         A for loop iterates through all the menu items listed in self.items
         and creates a Button instance for each which is then added to the
         sprites and buttons sprite groups."""
-        # back button
+        # ----- ADD BACK BUTTON ----- #
         # define button colours
         button_idlecolor = (BLACK, DARK_RED)
         button_hovercolor = (CYAN, DARK_RED)
@@ -53,6 +53,7 @@ class Options(Screen):
         self.sprites.add(button_back)
         self.buttons.add(button_back)
 
+        # ----- ADD SETTING TOGGLE BUTTONS ----- #
         # each iteration height increments 55
         # zip function to handle parallel iterator variables
         config_states = self.config.values()
