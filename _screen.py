@@ -50,7 +50,10 @@ class Screen():
     def selected(self, screen_name):
         """Property decorator setter for selected attribute"""
         if screen_name in self.screens:
-            self._selected = screen_name
+            if not self.confirmed:
+                self._selected = screen_name
+            else:
+                print("Item already confirmed, selected is locked.")
         else:
             raise Exception(f"Invalid screen name passed: {screen_name}")
 

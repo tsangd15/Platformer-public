@@ -79,6 +79,9 @@ class LevelPause(Screen):
                   event.key == pygame.K_KP_ENTER or  # keypad enter
                   event.key == pygame.K_RETURN):  # main enter key
                 self.confirmed = True
+            elif event.key == pygame.K_ESCAPE:  # escape key
+                self.selected = "resume"
+                self.confirmed = True
 
         elif event.type == pygame.KEYUP:
             if event.key == pygame.K_UP:
