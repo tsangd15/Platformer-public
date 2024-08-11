@@ -152,6 +152,8 @@ class Player(Entity):
                 print("RESPAWNED")
 
     def update(self):
+        """Carry out operations to update player's location and attributes
+        like health and stamina."""
         self.resetvelocity()
 
         now = pygame.time.get_ticks()
@@ -171,6 +173,7 @@ class Player(Entity):
 
     @score.setter
     def score(self, new_score):
+        """Setter for score attribute to auto update text on score change"""
         self._score = new_score
         # update score text sprite
         self.score_text.text = "Score: " + str(self.score)
