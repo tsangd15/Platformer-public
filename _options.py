@@ -4,9 +4,9 @@ from _screen import Screen
 from _config_handler import load_config, save_config
 from _text import Text
 from _button import Button
+from _options_button import ToggleButton
 from _functions import is_point_within_rect, return_button
-from _settings import (WINDOW_WIDTH, RED, GREEN, DARK_RED, DARK_GREEN, BLUE,
-                       BLACK, CYAN, YELLOW, PURPLE)
+from _settings import (WINDOW_WIDTH, DARK_RED, BLUE, BLACK, CYAN, YELLOW)
 
 
 class Options(Screen):
@@ -43,8 +43,8 @@ class Options(Screen):
         sprites and buttons sprite groups."""
         # back button
         # define button colours
-        button_idlecolor = (BLACK, RED)
-        button_hovercolor = (CYAN, RED)
+        button_idlecolor = (BLACK, DARK_RED)
+        button_hovercolor = (CYAN, DARK_RED)
         button_clickcolor = (CYAN, YELLOW)
 
         button_back = Button(50, 50, "<", (40, 40), "top_left",
@@ -53,37 +53,26 @@ class Options(Screen):
         self.sprites.add(button_back)
         self.buttons.add(button_back)
 
-        # off button
-        button_idlecolor = (BLACK, DARK_RED)
-        button_hovercolor = (CYAN, RED)
-        button_clickcolor = (RED, DARK_GREEN)
-
-        # on button
-        # button_idlecolor = (BLACK, DARK_GREEN)
-        # button_hovercolor = (PURPLE, GREEN)
-        # button_clickcolor = (RED, DARK_GREEN)
-
         # each iteration height increments 55
         # zip function to handle parallel iterator variables
         config_states = self.config.values()
-        button_text = []
+        button_toggle = []
         for value in config_states:
             if value is True:
-                button_text.append("ON")
+                button_toggle.append("on")
             elif value is False:
-                button_text.append("OFF")
+                button_toggle.append("off")
             else:
                 raise Exception("Invalid value in config.json")
 
-        for text, height, identifier in zip(button_text,
-                                            range(250,
-                                                  250+100*len(button_text),
-                                                  100),
-                                            self.config.keys()):
-            button = Button(80, 50, text, 30, "middle_left",
-                            button_idlecolor, button_hovercolor,
-                            button_clickcolor, WINDOW_WIDTH/2 + 200, height,
-                            identifier="config_" + identifier)
+        for toggle, height, identifier in zip(button_toggle,
+                                              range(250,
+                                                    250+100*len(button_toggle),
+                                                    100),
+                                              self.config.keys()):
+            button = ToggleButton(80, 50, toggle, 30, "middle_left",
+                                  WINDOW_WIDTH/2 + 200, height,
+                                  identifier="config_" + identifier)
             self.sprites.add(button)
             self.buttons.add(button)
 
